@@ -1,0 +1,74 @@
+\documentclass[a4paper,11pt,twoside]{style}
+
+\input{packages}
+\input{acronym}
+
+\begin{document}
+
+\input{title}
+
+\dominitoc
+
+\pagenumbering{roman}
+
+\cleardoublepage
+
+ \begin{flushright}
+\textit{``O sed fugit interea fugit irreparabile tempus audeamus nunc.''}\\
+-- Ril\'es
+\end{flushright}
+\cleardoublepage
+
+\dedicatory{TODO}
+\cleardoublepage
+
+\section*{Acknowledgements}
+
+\begin{vcenterpage}
+	\todo{write it}
+\end{vcenterpage}%\printnomenclature
+
+
+\cleardoublepage
+
+\section*{Abstract}
+
+\begin{vcenterpage}
+	\todo{write it}
+\end{vcenterpage}
+
+\section*{Publications}
+
+	\todo{write it}
+
+\section*{R\'esum\'e}
+
+	\todo{write it}
+
+\cleardoublepage
+
+\tableofcontents
+\addcontentsline{toc}{chapter}{\listfigurename}
+\mtcaddchapter
+\listoffigures
+\addcontentsline{toc}{chapter}{\listtablename}
+\mtcaddchapter
+\listoftables
+
+\mainmatter
+
+\include{chapitres/introduction/main}
+\include{chapitres/background/main}
+\include{chapitres/state-of-the-art/main}
+\include{chapitres/test-improvement/main}
+\include{chapitres/behavioral-change-detection-for-commit/main}
+\include{chapitres/prettify-ampified-test/main}
+\include{chapitres/future/main}
+\include{chapitres/conclusion/main}
+
+\appendix
+
+\bibliographystyle{style}
+\bibliography{references}
+
+\end{document}
