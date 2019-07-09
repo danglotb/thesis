@@ -12,6 +12,34 @@
 
 \graphicspath{{.}{chapitres/dspot/}}
 
+% ---------------------------------------------------------------------------------------
+% definitions
+% ---------------------------------------------------------------------------------------
+\section{Definitions}
+
+We first define the core terminology of \dspot in the context of object-oriented Java programs.
+
+\textbf{Test suite} is a set of test classes.
+
+\textbf{Test class} is a class that contains test methods. A test class is neither deployed nor executed in production.
+
+\textbf{Test method} or \textbf{test case} is a method that sets up the system under test into a specific state and checks that the actual state at the end of the method execution is the expected state.
+
+\textbf{Unit test} is a test method that specifies a targeted behavior of a program. 
+Unit tests are usually independent from each other and execute a small portion of the code, \ie a single unit or a single component of the whole system.
+
+\textbf{System test} or \textbf{Integration test} is a test method that specifies a large and complex behavior of a program.
+System tests are usually large, long to be executed and use a lot of different component of the program.
+
+\textbf{Test-criterion} is a measure of the quality of the test suite according to an engineering goal.
+For instance, one can measure the execution speed of its test suite, and consider that the faster it is executed the better it is.
+The most popular would be probably the execution coverage, which can be measured a different level: branches, statements, instructions.
+It measures the proportion of the program that the test suite executes.
+The more it executes, the better is considered the test suite since it is likely to verify more behavior.
+
+\textbf{Amplified test suite} is an existing test suite to which we add amplified test methods.
+
+\textbf{Amplified test method} is a test method that has been amplified, \ie it has been obtained using an test amplification process and an existing test method.
 
 \section{Principle}
 \label{sec:dspot:principle}
@@ -73,25 +101,6 @@ In essence, developers value changes in test code if they enable them to catch n
 This is also reflected in the \ms: if the \ms increases, it means that a code element, say a statement, is better specified than before. 
 In other words, \dspot uses the \ms to steer the test case improvement, following the original conclusions of DeMillo \etal who observed that mutants provide hints to generate test data \cite{demillo1978hints}.
 To sum up, \dspot aims at producing better tests that have a higher potential to catch bugs.
-
-
-% ---------------------------------------------------------------------------------------
-% definitions
-% ---------------------------------------------------------------------------------------
-
-
-\section{Definitions}
-
-We first define the core terminology of \dspot in the context of object-oriented Java programs. 
-
-\textbf{Test suite} is a set of test classes.
-
-\textbf{Test class} is a class that contains test methods. A test class is neither deployed nor executed in production.
-
-\textbf{Test method} or \textbf{test case} is a method that sets up the system under test into a specific state and checks that the actual state at the end of the method execution is the expected state.
-
-\textbf{Unit test} is a test method that specifies a targeted behavior of a program. Unit tests are usually independent of each other and execute a small portion of the code, i.e. a single unit or a single component of the whole system.
-
 
 \begin{lstlisting}[caption={An example of an object-oriented test case  (inspired from Apache Commons Collections)},label=lst:archetype,float,language=java,numbers=left] 
 testIterationOrder() {
