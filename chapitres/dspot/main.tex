@@ -41,12 +41,19 @@ The more it executes, the better is considered the test suite since it is likely
 
 \textbf{Amplified test method} is a test method that has been amplified, \ie it has been obtained using an test amplification process and an existing test method.
 
+\textbf{Test input} is the first key component of test methods. 
+It is responsible to set the program into a specific state using objects, method calls and literals.
+
+\textbf{Assertion} or \textbf{oracle} is the second key component of test methods. 
+It is responsible to verify that the state of the program, when the test input (the first component) is executed, is the expected one. 
+It takes the form of comparison between hard-coded values and program's values, or the presence / absence of errors.
+
 \section{Principle}
 \label{sec:dspot:principle}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=.6\linewidth]{dspot_principle.pdf}
+	\fbox{\includegraphics[width=.6\linewidth]{dspot_principle.pdf}}
 	\caption{
 		\dspot's principle: \dspot takes as input a program, an existing test suite, and a test-criterion. 
 		\dspot outputs a set of amplified test methods.
@@ -66,41 +73,60 @@ This amplified test suite will execute more branches than the exiting test suite
 
 \dspot's principle is summarize in \autoref{fig:dspot:principle}.
 
-\section{\dspot}
+\section{Algorithm}
+\label{sec:dspot:algorithm}
 
-\dspot is an automatic test improvement tool for Java unit tests. It is built upon the algorithms of Tonella \cite{tonella} and Xie \cite{TaoXie2006}.
+\subsection{Input}
+\label{subsec:dspot:algorithm:input}
 
-\subsection{\dspot inputs}
+\dspot's inputs are a program, a set of existing test methods and a test-criterion.
+The program is used as ground truth: in \dspot we consider the program used during the amplification correct.
+The existing test methods are used as a seed for the amplification.
+\dspot applies transformation individually to these test methods in order to improve the overall quality of the test suite with respect to the specified test-criterion.
 
-The input of \dspot consists in a set of existing test cases, manually written by the developers.
-As output, \dspot produces variants of the given test cases. These variants are meant to be added to the test suite. By putting together existing test cases and their variants, we aim at strictly improving the overall test suite quality. By construction, the enhanced test suite is at least as good, or better than the original one w.r.t. the considered criterion.
+\subsection{Output}
+\label{subsec:dspot:algorithm:output}
 
-Concretely, \dspot synthesizes suggestions in the form of diffs that are proposed to the developer: \autoref{fig:diff-protostuff} shows such a test improvement.  
+\dspot produces variants of the test methods provided as input.
+We call these variants \emph{amplified test methods}, since there are test methods that has been obtained using an amplification process.
+These amplified test methods are meant to be added to the test suite.
+By adding amplified test methods to the existing test suite, it creates an amplified test methods that improve the overall test suite quality.
+By construction, the amplified test suite is at least as good, or better than the original one with respect to the specified criterion.
 
-\begin{figure}[!ht]
-	\centering\fbox{\includegraphics[width=0.98\textwidth, trim=4.15cm 17.52cm 8.05cm 10.76cm, clip]{protostuff.pdf}}
+An amplified test method's integration can be done in two way:
+1) the developer integrates as it is the amplified test method into the test suite;
+2) the developer integrate only the changes between the original test method and the amplified test method.
+This enrich directly an existing test method.
+
+\begin{figure}[h]
+	\centering\fbox{\includegraphics[width=0.98\textwidth, trim=4.15cm 17.52cm 4.05cm 10.76cm, clip]{protostuff.pdf}}
 	\caption{Example of what \dspot produces: a diff to improve an existing test case.}
 	\label{fig:diff-protostuff}
 \end{figure}
 
-\dspot is an automatic test improvement system because it only modifies existing test cases. As such, all test improvements, by construction, are modifications to existing test cases.
-\dspot's novelty is twofold: 1) first, it combines those algorithms in a way that scales to modern, large Java software 2) second, it makes no assumption on the tests to be improved, and works with any arbitrary \junit test.
+\autoref{fig:diff-protostuff} shows an example of changes' set obtained using DSpot.
 
+By construction, all \dspot's amplification can be represented as a diff on an existing test method since amplified test methods are variants of existing ones.
 
-\subsection{\dspot's Workflow}
+\subsection{Workflow}
+\label{subsec:dspot:algorithm:workflow}
 
-The main workflow of \dspot{} is composed of 2 main phases:
-1) the transformation of the test code to create new test inputs inspired by Tonella's technique, we call this ``input space exploration''; this phase consists in changing new test values and objects and adding new method calls, the underlying details will be explained in details in \autoref{subsec:input-space-exploration}.
-2) the addition of new assertions per Xie's technique~\cite{TaoXie2006}, we call this phase ``assertion improvement''. The behavior of the system under test is considered as the oracle of the assertion, see \autoref{subsec:new-assertions}.
+\begin{figure}[h]
+	\centering\fbox{\includegraphics{dspot-workflow.pdf}}
+	\caption{DSpot's workflow in three main steps: 1) the modification of test code's inputs, called ``input space exploration''; 2) the addition of new assertions called ``assertion improvement''; 3) the amplified test methods selection}
+	\label{fig:dspot-workflow}
+\end{figure}
+
+The main workflow of \dspot is composed of 3 main phases:
+1) the modification of test code's inputs inspired by Tonella's technique~\cite{tonella}, called ``input space exploration''; 
+this phase consists in modifying test values (\eg literals), objects and methods calls, the underlying details will be explained in details in \autoref{subsec:dspot:algorithm:input-space-exploration}.
+2) the addition of new assertions per Xie's technique~\cite{TaoXie2006}, this phase is called ``assertion improvement''.
+The behavior of the system under test is considered as the oracle of the assertion, see \autoref{subsec:dspot:algorithm:new-assertions}.
 In \dspot, the combination of both techniques, \ie the combination of input space exploration and assertion improvement is called ``test amplification''.
+3) the amplified test methods selection according to a given test-criterion, \eg branch coverage.
 
-% use of mutation score
-\dspot keeps the modifications that add the most value for the developers.
-To do so, \dspot uses the \ms as a proxy to the developers' assessed value of quality.
-In essence, developers value changes in test code if they enable them to catch new bugs, that is if the improved test better specifies a piece of code.
-This is also reflected in the \ms: if the \ms increases, it means that a code element, say a statement, is better specified than before. 
-In other words, \dspot uses the \ms to steer the test case improvement, following the original conclusions of DeMillo \etal who observed that mutants provide hints to generate test data \cite{demillo1978hints}.
-To sum up, \dspot aims at producing better tests that have a higher potential to catch bugs.
+\subsection{Modern Test Cases}
+\label{subsec:dspot:algorithm:appliance-to-unit-test}
 
 \begin{lstlisting}[caption={An example of an object-oriented test case  (inspired from Apache Commons Collections)},label=lst:archetype,float,language=java,numbers=left] 
 testIterationOrder() {
@@ -118,10 +144,7 @@ assertEquals(2, it.next().intValue());(*@\label{assertion-2}@*)
 }
 \end{lstlisting}
 
-\subsection{Modern Test Cases}
-\label{subsec:test-case-explanation}
-
-\dspot improves the test cases of modern Java programs, which are typically composed of two parts: input setup and assertions. 
+\dspot amplifies modern Java program's test methods, which are typically composed of two parts: test inputs and assertions. 
 The input setup part is responsible for driving the program into a specific state.
 For instance, one creates objects and invokes methods on them to produce a specific state.
 
