@@ -291,10 +291,10 @@ urlcolor=linkcol %couleur des liens pour les url
 	%  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
 	basicstyle=\small\ttfamily,        % the size of the fonts that are used for the code
 	captionpos=b,                    % sets the caption-position to bottom
-	commentstyle=\small\color{cyan},    % comment style
+	commentstyle=\small\color{ForestGreen},    % comment style
 	escapeinside={(*@}{@*)},          % if you want to add LaTeX within your code
 	keywordstyle=\color{blue},       % keyword style
-	stringstyle=\color{green},       % keyword style
+	stringstyle=\color{purple},       % keyword style
 	numberstyle=\tiny\color{black}, % the style that is used for the line-numbers
 	stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
 	title=\lstname,                   % show the filename of files included with \lstinputlisting; also try caption instead of title
@@ -306,7 +306,9 @@ urlcolor=linkcol %couleur des liens pour les url
 	showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
 	showstringspaces=false,          % underline spaces within strings only
 	showtabs=false,                  % show tabs within strings adding particular underscores
-	tabsize=1                       % sets default tabsize to 2 spaces
+	tabsize=1,                       % sets default tabsize to 2 spaces
+	framexleftmargin=15pt,
+	frame = single
 }
 
 \newcommand{\rev}[1]{\textcolor{orange}{#1}\GenericWarning{}{LaTeX Warning: Revision: #1}}
