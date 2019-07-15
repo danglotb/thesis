@@ -182,83 +182,84 @@ This experimental protocol has been designed to study to what extent \dspot and 
 \begin{itemize}
 	\item \textbf{\rqpullrequest}
 	% process
-	To answer to \rqpullrequest, we create pull-request on notable open-source projects.
-	We automatically improve 19 test classes of real world applications and propose one test improvement to the main developers of each project under consideration. We propose the improvement as a pull request on \gh. A PR is composed of a title, a short text that describes the purpose of changes and a set of code change (aka a patch).
+	To answer to \rqpullrequest, I create pull-request on notable open-source projects.
+	I automatically improve 19 test classes of real world applications and propose one test improvement to the main developers of each project under consideration.
+	I propose the improvement as a pull request on \gh.
+	A PR is composed of a title, a short text that describes the purpose of changes and a set of code change (aka a patch).
 	The main developers review, discuss and decide to merge or not each pull request.
-	We base the answer on the subjective and expert assessment from projects' developers.
+	I base the answer on the subjective and expert assessment from projects' developers.
 	If a developer merges an improvement synthesized by \dspot, it validates the relevance of \dspot.
 	The more developers accept and merge test improvements produced by \dspot into their test suite, the more the amplification is considered successful.
 	
-	
 	\item \textbf{\rqcandidates{}}
-	To answer \rqcandidates{}, we compute the number of suggested improvements, to verify that the developer is not overwhelmed with suggestions.
-	We compute the number of focused amplified test cases, per the technique described in \autoref{subsubsec:test:cases:selection:for:pr}, for each project in the benchmark. We present and discuss the proportion of focused tests out of all proposed amplified tests.
+	To answer \rqcandidates{}, I compute the number of suggested improvements, to verify that the developer is not overwhelmed with suggestions.
+	I compute the number of focused amplified test cases, per the technique described in \autoref{subsubsec:test:cases:selection:for:pr}, for each project in the benchmark.
+	I present and discuss the proportion of focused tests out of all proposed amplified tests.
 	
 	\item \textbf{\rqeffectiveness}
-	To answer \rqeffectiveness, we see whether the value that is taken as proxy to the developer value -- the mutation score -- is appropriately improved.
-	For 40 real-world classes, we first run the mutation testing tool \pitest (see \autoref{subsub:pitest}) on the test class. This gives the \ams for this original class. Then, we amplify the test class under consideration and we compute the new \ams after amplification. 
-	Finally, we compare and analyze the results. 
-	
+	To answer \rqeffectiveness, I see whether the value that is taken as proxy to the developer value -- the \ms -- is appropriately improved.
+	For 40 real-world classes, I first run the mutation testing tool \pitest (see \autoref{subsec:test-improvement:introduction:test-criterion}) on the test class. 
+	This gives the \ams for this original class. 
+	Then, I amplify the test class under consideration and I compute the new \ams after amplification. 
+	Finally, I compare and analyze the results. 
 	
 	% A-Ampl I-Ampl
 	\item \textbf{\rqAmplVersusIAmpl}
-	To answer \rqAmplVersusIAmpl, we compute the number of \Aampl{} and \Iampl{} amplifications. The former means that the suggested improvement is very short hence easy to be accepted by the developer while the latter means that more time would be required to understand the improvement.
-	First, we collect three series of metrics: 
-	1) we compute \ams for the original test class; 
-	2) we improve the test class under consideration using only \Aampl{} and compute the new \ams after amplification; 
-	3) we improve the test class under consideration using \Iampl{} as well as \Aampl{} (the standard complete \dspot workflow) and compute the \ams after amplification. Then, we compare the increase of \ms obtained by using \Aampl{} only and \Iampl{} + \Aampl{}.\footnote{Note that the relative contribution of \Iampl{} cannot be evaluated alone, because as soon as we modify the inputs in a test case, it is also necessary to change and improve the oracle (which is the role of \Aampl{}).}
+	To answer \rqAmplVersusIAmpl, I compute the number of \Aampl{} and \Iampl{} amplifications. 
+	The former means that the suggested improvement is very short hence easy to be accepted by the developer while the latter means that more time would be required to understand the improvement.
+	First, I collect three series of metrics: 
+	1) I compute \ams for the original test class; 
+	2) I improve the test class under consideration using only \Aampl{} and compute the new \ams after amplification; 
+	3) I improve the test class under consideration using \Iampl{} as well as \Aampl{} (the standard complete \dspot workflow) and compute the \ams after amplification. 
+	Then, I compare the increase of \ms obtained by using \Aampl{} only and \Iampl{} + \Aampl{}.\footnote{Note that the relative contribution of \Iampl{} cannot be evaluated alone, because as soon as I modify the inputs in a test case, it is also necessary to change and improve the oracle (which is the role of \Aampl{}).}
 \end{itemize}
 
-Research questions 3 and 4 focus on the mutation score to assess the value of amplified test methods. This experimental design choice is guided by our approach to select ``focused'' test methods, which are likely to be selected by the developers (described in \autoref{subsubsec:test:cases:selection:for:pr}). 
-Recall that the number of killed mutants by the amplified test is the key focus indicator. Hence, the more \dspot is able to improve the mutation score, the more likely we are to find good candidates for the developers.%This is why we perform this evaluation that generalize the potential of producing a correct input for the heuristic.
-
-% Time
-%\subsubsection{RQ5}
-%\todo{write it, to Cemetery?}
+Research questions 3 and 4 focus on the \ms to assess the value of amplified test methods.
+This experimental design choice is guided by the approach to select ``focused'' test methods, which are likely to be selected by the developers (described in \autoref{subsec:test-improvement:experiment-protocol:test-preparation}). 
+Recall that the number of killed mutants by the amplified test is the key focus indicator. 
+Hence, the more \dspot is able to improve the \ms, the more likely there are good candidates for the developers.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % RESULTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Experimental Results}
-\label{sec:results}
-
-We first discuss how automated test improvements done by \dspot are received by developers of notable open-source projects (\rqpullrequest{}).
-Then, \rqcandidates{}, \rqeffectiveness{} and \rqAmplVersusIAmpl{} are based on a large scale quantitative experiments over 40 real-world test classes, whose main results are reported in \autoref{tab:overall-results:high_pms}. % and \autoref{tab:overall-results:low_pms}.
-For the sake of open-science, all experimental results are made publicly available online:\\
-\url{https://github.com/STAMP-project/dspot-experiments/}.
-
+\label{sec:test-improvement:experiment-results}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%% RQ : case study
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % !TEX root = main.tex
 
-
 \subsection{Answer to \rqpullrequest}
-\label{subsubsec:answer-rqpullrequest}
+\label{subsec:test-improvement:experiment-results:rq1}
 
 \textbf{\rqpullrequest: Would developers be ready to permanently accept automatically improved test cases into the test repository?}
 
 \subsubsection{Process}
 
-In this research question, our goal is to propose a new test to the lead developers of the open-source projects under consideration. 
-The  improved test is proposed through a ``pull-request'', which is a way to reach developers with patches on collaborative development platforms such as Github.
+In this research question, the goal is to propose a new test to the lead developers of the open-source projects under consideration. 
+The improved test is proposed through a ``pull-request'', which is a way to reach developers with patches on collaborative development platforms such as \gh.
 
-In practice, short pull requests (\ie with small test modifications) with clear purpose, \ie what for it has been opened, have much more chance of being reviewed, discussed and eventually merged. So we aim at providing improved tests which are easy to review.
-As shown in \autoref{subsec:input-space-exploration}, \dspot generates several amplified test cases, and we cannot propose them all to the developers.
-To select the new test case to be  proposed as a pull request, we look for an amplified test that kills mutants located in the same method.
+In practice, short pull requests (\ie with small test modifications) with clear purpose, \ie what for it has been opened, have much more chance of being reviewed, discussed and eventually merged. 
+So the goal is to provide improved tests which are easy to review.
+As shown in \autoref{subsec:dspot:algorithm:input-space-exploration}, \dspot generates several amplified test cases, and all of them cannot be proposed to the developers.
+To select the new test case to be proposed as a pull request, I look for an amplified test that kills mutants located in the same method.
 From the developer's viewpoint, it means that the intention of the test is clear: it specifies the behavior provided by a given method or block.
 
-The selection of amplified test methods is done as described in \autoref{subsubsec:test:cases:selection:for:pr}. For each selected  method, we compute and minimize the diff between the original method and the amplified one and then we submit the diff as a pull request.
+The selection of amplified test methods is done as described in \autoref{subsec:test-improvement:experiment-protocol:test-preparation}.
+For each selected  method, I compute and minimize the diff between the original method and the amplified one and then we submit the diff as a pull request.
 %The selection of amplified test methods to be given as pull-requests is done as follows: 1) we sort the amplified test methods by the ratio between the number of new killed mutants and the number of \Aampl and \Iampl, in descending order; 2) we take the top; 3) we look at the location of the newly killed mutants; 4) if they are all in the same location it means that there is a clear purpose in the amplified test method to specify this previously untested location and thus we keep it
 %5) we compute and minimize the diff between the original method and the amplified one;
 %6) we submit the diff as a pull-request.
-A second point in the preparation of the pull request relates to the length of the amplified test: once a test method has been selected as a candidate pull request, we make the diff as concise as possible for the review to be fast and easy.
+A second point in the preparation of the pull request relates to the length of the amplified test: once a test method has been selected as a candidate pull request, I make the diff as concise as possible for the review to be fast and easy.
 
 \subsubsection{Overview}
 
-
-In total, we have created 19 pull requests, as shown in \autoref{tab:res-pr}. In this table, the first column is the name of the project, the second is number of  opened pull requests, \ie the number of amplified test methods proposed to developers. The third column is the number of amplified test methods accepted by the developers and permanently integrated in their test suite. The fourth column is the number of amplified test methods rejected by the developers. The fifth column is the number of pull requests that are still being discussed, \ie nor merged nor closed. (This number might change over time if pull-requests are merged or closed.)
+In total, 19 pull requests has been created, as shown in \autoref{tab:res-pr}. 
+In this table, the first column is the name of the project, the second is number of opened pull requests, \ie the number of amplified test methods proposed to developers. 
+The third column is the number of amplified test methods accepted by the developers and permanently integrated in their test suite. 
+The fourth column is the number of amplified test methods rejected by the developers. 
+The fifth column is the number of pull requests that are still being discussed, \ie nor merged nor closed. (This number might change over time if pull-requests are merged or closed.)
 
 \begin{table}[]
 	\centering
@@ -272,86 +273,25 @@ In total, we have created 19 pull requests, as shown in \autoref{tab:res-pr}. In
 		stream-lib & 1 & 1 & 0 & 0\\
 		mustache & 2 & 2 & 0 & 0\\
 		twilio & 2 & 1 & 0 & 1\\
-		jsoup & 2 & 0 & 1 & 1\\
+		jsoup & 2 & 1 & 1 & 0\\
 		prostostuff & 2 & 2 & 0 & 0\\
 		logback & 2 & 0 & 0 & 2\\
 		retrofit & 0 & 0 & 0 & 0\\
 		\hline
-		total & 19 & 13 & 1 & 5
+		total & 19 & 14 & 1 & 5
 	\end{tabular}
 	\label{tab:res-pr}
 \end{table}
 
-
-Overall 13 over 19 have been merged. Only 1 has been rejected by developers. There are 5 under discussion.
-In the following, we perform a manual analysis of one pull-request per project.
+Overall 14 over 19 have been merged. 
+Only 1 has been rejected by developers. 
+There are 5 under discussion.
+In the following, I perform a manual analysis of one pull-request per project.
 \autoref{tab:list-urls-prs} contains the URLs of pull requests proposed in this experimentation.
 
-\begin{table}[]
-	\label{tab:list-urls-prs}
-	\centering
-	\caption{List of URLs to the pull-requests created in this experiment.}
-	\begin{tabular}{l|l}
-		project & pull request urls \\
-		\hline
-		javapoet & 
-		\begin{tabular}{l}
-			\url{https://github.com/square/javapoet/pull/669}\\
-			\url{https://github.com/square/javapoet/pull/668}\\
-			\url{https://github.com/square/javapoet/pull/667}\\ 
-			\url{https://github.com/square/javapoet/pull/544}
-		\end{tabular} \\
-		\hline
-		mybatis-3 & 
-		\begin{tabular}{l}
-			\url{https://github.com/mybatis/mybatis-3/pull/1331}\\
-			\url{https://github.com/mybatis/mybatis-3/pull/912}
-		\end{tabular} \\
-		\hline
-		traccar &
-		\begin{tabular}{l}
-			\url{https://github.com/traccar/traccar/pull/2897}\\
-			\url{https://github.com/traccar/traccar/pull/4012}
-		\end{tabular} \\
-		\hline
-		stream-lib &
-		\begin{tabular}{l}
-			\url{https://github.com/addthis/stream-lib/pull/128}\\
-		\end{tabular} \\
-		\hline
-		mustache &
-		\begin{tabular}{l}
-			\url{https://github.com/spullara/mustache.java/pull/210}\\
-			\url{https://github.com/spullara/mustache.java/pull/186}
-		\end{tabular} \\
-		\hline
-		twilio &
-		\begin{tabular}{l}
-			\url{https://github.com/twilio/twilio-java/pull/437}\\
-			\url{https://github.com/twilio/twilio-java/pull/334}
-		\end{tabular} \\
-		\hline
-		jsoup &
-		\begin{tabular}{l}
-			\url{https://github.com/jhy/jsoup/pull/1110}\\
-			\url{https://github.com/jhy/jsoup/pull/840}
-		\end{tabular} \\
-		\hline
-		protostuff &
-		\begin{tabular}{l}
-			\url{https://github.com/protostuff/protostuff/pull/250}\\
-			\url{https://github.com/protostuff/protostuff/pull/212}
-		\end{tabular} \\
-		\hline
-		logback &
-		\begin{tabular}{l}
-			\url{https://github.com/qos-ch/logback/pull/424}\\
-			\url{https://github.com/qos-ch/logback/pull/365}
-		\end{tabular} \\
-	\end{tabular}
-\end{table}
+\input{chapitres/test-improvement/table_list_prs}
 
-We now present one case study per project of our dataset.
+I now present one case study per project of our dataset.
 
 % -----------------------------------------------------------------------------
 % JAVAPOET
@@ -818,60 +758,6 @@ The main threat to \rqAmplVersusIAmpl{} relates to internal validity: since our 
 % faulty program, faulty amplified test method
 \dspot generates new assertions based on the current behavior of the program. If the program contains a bug, the resulting amplified test methods would enforce this bug. This is an inherent threat, inherited from \cite{Xie2006}, which is unavoidable when no additional oracle is available, but only the current version of the program. 
 To that extent, the best usage of \dspot is to improve the test suite of a supposedly almost correct version of the program.
-
-
-
-% ---------------------------------------------------------------------------------------
-% RELATED WORK
-% ---------------------------------------------------------------------------------------
-\section{Related Work}
-\label{sec:related}
-
-This work on test amplification  contributes to the field of genetic improvement (GI)  \cite{petke2017genetic}. 
-The key novelty is to consider a test suite as the object to be improved, while previous GI works improve the application code.
-(Yet, they use the test suite as a fitness function while  assessing the degree of improvement.) The work of Arcuri and Yao \cite{arcuri2008novel} and Wilkerson \etal \cite{wilkerson2010coevolutionary} are good examples of such work that use the test suite as fitness, while improving the program for automatic bug fixing. Both work follow a similar approach: evolve the input program into new versions that pass the regression test suite and that also pass the bug revealing test case (that fails on the original program). In this paper, we do not evolve the application code but the test code.
-
-Evosuite is a state of the art tool to generate test cases for Java program \cite{fraser2013whole}. Evosuite and \dspot have different goals. Evosuite generates new tests, while \dspot improves existing developer-written tests. The interaction between developers and synthesized tests is key here: in 2016, an empirical study demonstrated that developers who are asked to add oracles in test cases generated by Evosuite, produce test suites that are not better than manually written test suites at detecting bugs \cite{fraser2015does}. On the contrary, \dspot is designed to improve manually written test suites to detect more bugs, and  the relevance study of \rqpullrequest demonstrates that the outcome of \dspot is considered as valuable by developers in order to improve existing test suites. 
-
-Our work is related to previous work that aim at automatically generating test cases to improve the mutation score of a test suite.
-Liu \etal \cite{multiple-mutants} aim at generating small test cases, by targeting a path that covers multiple mutants to create test inputs. They evaluate their approach on five small projects. Fraser and Arcuri \cite{evosuite:emse14_mutation} propose a search-based approach to generate test suites that maximize the mutation score. However their work is different from ours since they generate new test cases from scratch, while \dspot always starts from developper-written tests. 
-Baudry \etal \cite{Baudry05a} improve the mutation score of test suites using a bacteriological algorithm. They run experiments on a small dataset and confirm that their approach is able to increase the mutation score of tests. However, the scope of the study is limited to small programs, and they do not consider the synthesis of assertions.
-
-Other works aim at increasing fault detection capacities of test suites.
-Zhang \etal \cite{Zhang:2016:IRT:2950290.2950313}, propose the Isomorphic Regression Testing system and its implementation in ISON. It considers two versions of a program P and P'(for instance P' is the updated version of P, on which we want to detect any regression). First, ISON identifies isomorphims, that is to say, code fragments that have the same behavior. Then, they run the test suite on P and P' to identify which of the branches are uncovered in the isomorphic part, and they  collect the output. In order to cover all branches, they compute a branch condition to execute the uncovered code. They compare ISON to Evosuite,  and conclude that Evosuite achieves a better branch coverage, while ISON is able to detect faults that Evosuite does not.
-
-Harder \etal \cite{Harder03} start from an existing test suite. They evaluate the quality of this initial test suite with respect to operational abstractions, i.e., an abstract description of the behavior covered by the test suite. Their work is about selecting new valuable tests, while ours is about synthesizing new valuable tests.
-
-Then, they generate novel test cases and keep only the ones that change the operational abstraction.
-The new test cases are generated by mining invariants using Daikon.  They evaluate their approach on 8 C programs, and show that it generates test cases with good fault-detection capabilities.
-
-
-Milani \etal \cite{milani2014} propose an approach which combines the advantages of manually written tests and automatic test generation. They exploit the knowledge of existing tests and then combine it with the power of automated crawling. It has been shown that the approach can effectively improve the fault detection rate of the original test suite.
-Test amplification, as considered in this work, is different, as it aims at enhancing the fault detection power of manually written test suites.
-
-Yoo \etal  \cite{Yoo:2012:TDR:2237756.2237758} propose Test Data Regeneration(TDR), which is a kind of test amplification. They use hill climbing on existing test data (set of input) that meets a test objective (\eg cover all branch of a function). The algorithm is based on \emph{neighborhood} and a \emph{fitness} functions as the classical hill climbing algorithm. The goal is to create new test data inputs, that have the same behavior as the original one (\eg cover same branches). 
-The key novelties of our work with respect to the work of Yoo \etal \cite{Yoo:2012:TDR:2237756.2237758} are as follow: they mutate only literals in existing test cases, while \dspot's \Iampl also amplifies method calls and can synthesize new objects when needed, \Aampl{} makes the synthesis of assertions an integral part of our test suite improvement process and we evaluate the relevance of the synthesized test cases by proposing them to the developers.
-
-Xie \cite{Xie2006} proposes a technique to add assertions into existing test methods. His approach is similar to what we propose with \Aampl{}. However, this work does not consider the synthesis of new test inputs (\Iampl) and hence cannot cover new execution paths. This is the novelty of \dspot and our experiments showed that this is an essential mechanism to improve the test suite.
-
-
-We now discuss a group of papers together. Pezz\`e \etal \cite{Pezze:2013:GEI:2510665.2511580} synthesize integration test cases from unit test cases. The idea is to combine unit test cases, which test simple functionalities on specific objects, to create new integration test cases supported by the fact that unit test cases are early developed, and integration test cases require more effort to do so.
-R{\"o}$\beta$ler et al. \cite{robetaler2012isolating} aim to isolate failure causes. They propose BugEx, a system that starts from a single failing test as input and generates test cases. It extracts the differences in path execution between failing and passing tests. They evaluate BugEx on 7 failures and show that it is able to lead to the failure root causes in 6 cases.
-Yu \etal \cite{Yu2013} augment test suites to enhance fault localization. They use test input transformations to generate new test cases in existing test suites. They transform iteratively some existing failing tests to derive new test cases potentially useful to localize the specific encountered fault, similarly at \Iampl. Their tool is designed to target GUI applications.
-To reproduce a crash occurred in production, Xuan \etal \cite{Xuan:2015:CRV:2786805.2803206} propose to transform existing test cases. The approach first selects relevant test cases based on the stack trace in the crash, followed by the elimination of assertions in selected test cases, and finally uses a set of predefined transformations to produce new test cases that can help to reproduce the crash.
-None of those works have evaluated whether the technique scales on object-oriented applications of the size considered here, and whether the synthesized tests are considered valuable by senior developers.
-
-It can be noted that several test generation techniques start from a seed and evolve it to produce a good test suite. This is the case for techniques such as concolic test generation \cite{godefroid2005dart}, search-based test generation \cite{fraser2012seed}, or random  test generation \cite{groce2007randomized}. The main difference between all these works and \dspot lies in the nature of the seed: previous work use input values in the form of numerical or String values, vectors or files, and do not consider any form of oracle. On the contrary, we consider as a seed a real test case.
-It means the seed is a complete program, which creates objects, manipulates the state of these objects, calls methods on these objects and asserts properties on their behavior. This is the contribution of \dspot: using real and complex object-oriented tests as seed.
-
-
-Almasi \etal \cite{IndustrialEvalAlmasi2017} investigate the efficiency and effectiveness of automated test generation on a production ready application named \emph{LifeCalc}. They use 25 real faults from \emph{LifeCalc} to evaluate two state-of-the-art tools, Evosuite and Randoop, by asking feedback from the developers about the generated test methods. The result are as follows:  overall the tools found 19 over 25 real faults; 
-The developers state that the assertions and the readability of generated test methods must be improved. The developers also suggest that such tools should be implemented in continuous integration.
-The reason of the 7 faults that remain undetected is that they either require complex test data input or specific assertions. Our experiment is larger in scope, we evaluate \dspot on 10 notable open-source software from GitHub, by proposing amplified test methods in pull requests.
-
-Allamanis \etal \cite{pull:request:evaluation} devised a technique to rename elements in code and evaluate their approach through five pull requests where four of them have been accepted. Their work and ours both rely on independent evaluation through pull-requests. One important difference is that, in the description of the pull request, they say that the improvements are generated by a tool, while in our case, we did not say anything about the research project underlying our pull requests.
-
-
 
 % ---------------------------------------------------------------------------------------
 % CONCLUSION
