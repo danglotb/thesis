@@ -622,41 +622,60 @@ To conclude, according to this benchmark, \dspot{} proposes at least one and foc
 % 17 + 8
 In 26 out of 40 cases, \dspot{} is able to amplify existing test cases and improves the \ms ($MS$) of the original test class.
 % example
-For example, let us consider the first row, corresponding to \texttt{TypeNameTest}. This test class originally includes 12 test methods that kill 599 mutants. The improved, amplified version of this test class kills 715 mutants, \ie{} 116 new mutants are killed. This corresponds to an increase of 19\% in the number of killed mutants.
+For example, let us consider the first row, corresponding to \texttt{TypeNameTest}. 
+This test class originally includes 12 test methods that kill 599 mutants. 
+The improved, amplified version of this test class kills 715 mutants, \ie 116 new mutants are killed.
+ This corresponds to an increase of 19\% in the number of killed mutants.
 
 % STRONG TEST
-We first discuss the amplification of the test classes that can be considered as being already good tests since they originally have a high \ms: those good test classes are the 24 tests in \autoref{tab:overall-results:high_pms}.
-There is a positive increase of killed mutants for 17 cases. This means that even when human developers write good test cases, \dspot{} is able to improve the quality of these test cases by increasing the number of mutants killed. 
+First, let's discuss the amplification of the test classes that can be considered as being already good tests since they originally have a high \ms: those good test classes are the 24 tests in \autoref{tab:overall-results:high_pms}.
+There is a positive increase of killed mutants for 17 cases.
+This means that even when human developers write good test cases, \dspot{} is able to improve the quality of these test cases by increasing the number of mutants killed. 
 In addition, in 15 cases, when the amplified tests kill more mutants, this goes along with an increase of the number of expressions covered with respect to the original test class.
 
-For those 24 well-test classes, the increase in killed mutants varies from 0,3\%, up to 53\%. A remarkable aspect of these results is that \dspot{} is able to improve test classes that are initially extremely strong, with an original \ms of 92\% (ID:8) or even 99\% (ID:20 and ID:21). The improvements in these cases clearly come from the double capacity of \dspot{} at exploring more behaviors than the original test classes and at synthesizing new assertions.
+For those 24 well-test classes, the increase in killed mutants varies from 0,3\%, up to 53\%.
+A remarkable aspect of these results is that \dspot is able to improve test classes that are initially extremely strong, with an original \ms of 92\% (ID:8) or even 99\% (ID:20 and ID:21). 
+The improvements in these cases clearly come from the double capacity of \dspot at exploring more behaviors than the original test classes and at synthesizing new assertions.
 
-Still looking to the upper part of \autoref{tab:overall-results:high_pms} (the well-tested classes), we now focus on the relative increase in killed mutants (column ``Increase killed''). 
+Still looking to the upper part of \autoref{tab:overall-results:high_pms} (the well-tested classes), focus now on the relative increase in killed mutants (column ``Increase killed''). 
 The two extreme cases are \texttt{CallTest} (ID:24) with a small increase of 0.3\% and \texttt{CodeInputTest} (ID:18) with an increase of 53\%.
-\texttt{CallTest} (ID:24) initially includes 35 test methods that kill 69\% of 920 covered mutants. Here, \dspot{} runs for 53 minutes and succeeds in generating only 3 new test cases that kill 2 more mutants than the original test class, and the increase in \ms is only minimal. The reason is that input amplification does not trigger any new behavior and assertion amplification fails to observe new parts of the program state. 
-Meanwhile, \dspot{} succeeds in increasing the number of mutants killed by \texttt{CodeInputTest} (ID:18) by 53\%. Considering that the original test class is very strong, with an initial \ms of 60\%, this is a very good achievement for test amplification. In this case, the \Iampl applied easily finds new behaviors based on the original test code.
+\texttt{CallTest} (ID:24) initially includes 35 test methods that kill 69\% of 920 covered mutants. 
+Here, \dspot runs for 53 minutes and succeeds in generating only 3 new test cases that kill 2 more mutants than the original test class, and the increase in \ms is only minimal. 
+The reason is that input amplification does not trigger any new behavior and assertion amplification fails to observe new parts of the program state. 
+Meanwhile, \dspot succeeds in increasing the number of mutants killed by \texttt{CodeInputTest} (ID:18) by 53\%.
+Considering that the original test class is very strong, with an initial \ms of 60\%, this is a very good achievement for test amplification. 
+In this case, the \Iampl applied easily finds new behaviors based on the original test code.
 It is also important to notice that the amplification and the improvement of the test class goes very fast here (only 52 seconds). 
 
-One can notice 4 cases (IDs:3, 13, 15, 24) where the number of new test cases is greater than the number of newly killed mutants. This happens because \dspot{} amplifies test cases with different operators in parallel. While we keep only test cases that kill new mutants, it happens that the same mutant is newly killed by two different amplified tests generated in parallel threads. In this case, \dspot{} keeps both test cases.
+One can notice 4 cases (IDs:3, 13, 15, 24) where the number of new test cases is greater than the number of newly killed mutants. 
+This happens because \dspot{} amplifies test cases with different operators in parallel. 
+While we keep only test cases that kill new mutants, it happens that the same mutant is newly killed by two different amplified tests generated in parallel threads. \\
+In this case, \dspot{} keeps both test cases.
 
 %Interpretation not able to kills
-There are 7 cases with high \ms for which \dspot{} does not improve the number of killed mutants. In 5 of these cases, the original \ms is greater than 87\% (IDs: 2, 7, 12, 21, 22), and \dspot{} does not manage to synthesize improved inputs to cover new mutants and eventually kill them. In some cases \dspot{} cannot improve the test class because they rely on an external resource (a jar file), or use utility methods that are not considered as test methods by \dspot and hence are not modified by our tool.
+There are 7 cases with high \ms for which \dspot{} does not improve the number of killed mutants. 
+In 5 of these cases, the original \ms is greater than 87\% (IDs: 2, 7, 12, 21, 22), and \dspot does not manage to synthesize improved inputs to cover new mutants and eventually kill them.
+In some cases \dspot cannot improve the test class because they rely on an external resource (a jar file), or use utility methods that are not considered as test methods by \dspot and hence are not modified by our tool.
 
 % WEAK TESTS
-Now we consider the tests in the lower part of \autoref{tab:overall-results:high_pms}. %\autoref{tab:overall-results:low_pms}.  
+Now consider the tests in the lower part of \autoref{tab:overall-results:high_pms}. %\autoref{tab:overall-results:low_pms}.  
 Those tests are weaker because they have a lower \ms. 
 %They might be a better reflection  of tests written by the majority of developers.
-When amplifying  weak test classes,  \dspot{} improves the number of killed mutants in  9 out of 16 cases. On a per test class basis, this does not differ much from the well tested classes. However, there is a major difference when one considers the increase itself: the increases in number of killed mutants range from 24\% to 428\%. Also, we observe a very strong distinction between test classes that are greatly improved and test classes that are not improved at all (9 test classes are much improved, 7 test classes cannot be improved at all, the increase is 0\%). In the former case, we find test classes that provide a good seed for amplification. In the latter case, we have test classes that are designed in a way that prevents amplification because they use external processes, or depend on administration permission, shell commands and external data sources; or extensively use mocks or factories; or simply very small test cases that do not provide a good potential to \dspot to perform effective amplification.
+When amplifying  weak test classes, \dspot improves the number of killed mutants in 9 out of 16 cases. 
+On a per test class basis, this does not differ much from the well tested classes. 
+However, there is a major difference when one considers the increase itself: the increases in number of killed mutants range from 24\% to 428\%. 
+Also, one can observe a very strong distinction between test classes that are greatly improved and test classes that are not improved at all (9 test classes are much improved, 7 test classes cannot be improved at all, the increase is 0\%). 
+In the former case, test classes provide a good seed for amplification. 
+In the latter case, there are test classes that are designed in a way that prevents amplification because they use external processes, or depend on administration permission, shell commands and external data sources; or extensively use mocks or factories; or simply very small test cases that do not provide a good potential to \dspot to perform effective amplification.
 
 ~\\
 \begin{mdframed}
 	\textit{\rqeffectiveness: To what extent do improved  test classes kill more mutants than manual test classes?}\\
-	Answer: In our novel quantitative experiment on automatic test improvement, \dspot significantly improves the capacity of test classes at killing mutants in 26 out 40 of test classes, even in cases where the original test class is already very strong. 
+	Answer: In this novel quantitative experiment on automatic test improvement, \dspot significantly improves the capacity of test classes at killing mutants in 26 out 40 of test classes, even in cases where the original test class is already very strong. 
 	Automatic test improvement works particularly well for weakly tested classes (lower part of \autoref{tab:overall-results:high_pms}): the \ms of three classes is increased by more than 200\%.
-	%Increases range from 0.22\% to 492.86\%.
 \end{mdframed}
 ~\\
-The most notable point of this experiment is that we have considered tests that are already really strong (\autoref{tab:overall-results:high_pms}), with \ms in average of 78\%, with the surprising case of a test class with 99\% \ms that \dspot is able to improve. 
+The most notable point of this experiment is that there are considered tests that are already really strong (\autoref{tab:overall-results:high_pms}), with \ms in average of 78\%, with the surprising case of a test class with 99\% \ms that \dspot is able to improve. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
