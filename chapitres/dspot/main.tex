@@ -2,10 +2,17 @@
 \label{chapter:dspot}
 
 \begin{chaptersummary}
-		In this chapter, I expose the major output of this thesis. \dspot is a test amplification tool that have the ambition to improve the test suite of real projects, and the global quality of continuous integration process.
-		\dspot achieves this by providing a set of automated procedures, and work at two majors levels:\\
-		1) it amplifies the test suite offline, and the outputted amplified test methods can be used to growth and improve in the project's test suite;\\
-		2) it amplified the test suite inside the Continuous Integration to enhance the developers' confidence in their changes, or increase the ability of the test suite to detect potential regression.
+		In this chapter, I expose the major output of this thesis: \dspot.
+		\dspot is a test amplification tool that have the ambition to improve the test suite of real projects, and the global quality of continuous integration process.
+		\dspot achieves this by providing a set of automated procedures done in three majors step:\\
+		1) it modifies the test inputs in order to trigger new behavior.\\
+		2) it generates assertions to verify the new behavior of the program.\\
+		3) it selects amplified test methods according to a specific test-criterion such as branch coverage.\\
+		\dspot's output is a set of amplified test methods that improve the original test suite according to the specified test-criterion.\\
+		In this chapter, I first define key concepts in \autoref{sec:dspot:definitions};
+		Then, I expose an overview of \dspot with its principle, input, output, and its workflow in \autoref{sec:dspot:overview};
+		Followed by explanation of \dspot's algorithm in \autoref{sec:dspot:algorithm};
+		Eventually, I detail the implementation and the ecosystem of \dspot in \autoref{sec:dspot:implemention}.
 \end{chaptersummary}
 
 \minitoc
@@ -16,6 +23,7 @@
 % definitions
 % ---------------------------------------------------------------------------------------
 \section{Definitions}
+\label{sec:dspot:definitions}
 
 We first define the core terminology of \dspot in the context of object-oriented Java programs.
 

@@ -1,0 +1,67 @@
+	\begin{table}[ht]
+		
+		\scriptsize
+		\begin{tabular}{l|l|r|r|l}
+			\label{tab:dataset}
+			project & 
+			description &
+			\# LOC & \# PR &considered test classes\\
+			\hline
+			\rowcolor[HTML]{EEEEEE}
+			javapoet & Java source file generator & 
+			3150 & 93 &
+			\begin{tabular}{@{}l@{}}
+				TypeNameTest$^h$~~NameAllocatorTest$^h$\\FieldSpecTest$^l$~~ParameterSpecTest$^l$
+			\end{tabular}\\
+			mybatis-3 & Object-relational mapping framework &
+			20683 & 288 &
+			\begin{tabular}{@{}l@{}}
+				MetaClassTest$^h$~~ParameterExpressionTest$^h$\\WrongNamespacesTest$^l$~~WrongMapperTest$^l$
+			\end{tabular}\\
+			\rowcolor[HTML]{EEEEEE}
+			traccar & Server for GPS tracking devices &
+			32648 & 373 &
+			\begin{tabular}{@{}l@{}}
+				GeolocationProviderTest$^h$~~MiscFormatterTest$^h$\\ObdDecoderTest$^l$~~At2000ProtocolDecoderTest$^l$
+			\end{tabular}\\
+			stream-lib & Library for summarizing data in streams &
+			4767 & 21 &
+			\begin{tabular}{@{}l@{}}
+				TestLookup3Hash$^h$~~TestDoublyLinkedList$^h$\\TestICardinality$^l$~~TestMurmurHash$^l$
+			\end{tabular}\\
+			\rowcolor[HTML]{EEEEEE}
+			mustache.java & Web application templating system &
+			3166 & 11 &
+			\begin{tabular}{@{}l@{}}
+				ArraysIndexesTest$^h$~~ClasspathResolverTest$^h$\\ConcurrencyTest$^l$~~AbstractClassTest$^l$
+			\end{tabular}\\
+			twilio-java & Library for communicating with Twilio REST API &
+			54423 & 87 &
+			\begin{tabular}{@{}l@{}}
+				RequestTest$^h$~~PrefixedCollapsibleMapTest$^h$\\AllTimeTest$^l$~~DailyTest$^l$
+			\end{tabular}\\
+			\rowcolor[HTML]{EEEEEE}
+			jsoup & HTML parser &
+			10925 & 72 &
+			\begin{tabular}{@{}l@{}}
+				TokenQueueTest$^h$~~CharacterReaderTest$^h$\\AttributeTest$^l$~~AttributesTest$^h$
+			\end{tabular}\\
+			protostuff& Data serialization library &
+			4700 & 35 &
+			\begin{tabular}{@{}l@{}}
+				TailDelimiterTest$^h$~~LinkBufferTest$^h$\\CodedDataInputTest$^l$~~CodedInputTest$^h$
+			\end{tabular}\\
+			\rowcolor[HTML]{EEEEEE}
+			logback & Logging framework &
+			15490 & 104 &
+			\begin{tabular}{@{}l@{}}
+				FileNamePatternTest$^h$~~SyslogAppenderBaseTest$^h$\\FileAppenderResilience\_AS\_ROOT\_Test$^l$~~Basic$^l$
+			\end{tabular}\\
+			retrofit & HTTP client for Android. & 
+			2743 & 249 &
+			\begin{tabular}{@{}l@{}}
+				RequestBuilderAndroidTest$^h$~~CallAdapterTest$^h$\\ExecutorCallAdapterFactoryTest$^h$~~CallTest$^h$
+			\end{tabular}\\
+		\end{tabular}
+		\caption{Dataset of 10 active \gh projects considered on our relevance study (RQ1) and quantitative experiments (RQ2, RQ3).}
+	\end{table}

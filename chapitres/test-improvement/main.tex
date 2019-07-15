@@ -1,61 +1,56 @@
-\chapter{Test Improvement}
+\chapter{Test Amplification To Improve Artificial Behavioral Changes Detection}
 
-\begin{center}
-	\begin{mdframed}
-		\large
-%		\TODO{TODO}
-	\end{mdframed}
-\end{center}
+\begin{chaptersummary}
+	In this chapter, I detail a first evaluation of \dspot. 
+	This evaluation is based on the mutation score as test-criterion.
+	Mutation score measures the test suite's ability to detect artificial behavioral changes.
+	I performed this evaluation 40 test classes from 10 projects from \gh and show that \dspot improve \todo{xx} of them.
+	I also confronted \dspot's output to the real by proposing the amplified test methods to the developers through pull-requests.
+	These pull requests showed developers' interest in the result of \dspot.
+	The remainder of this chapter is as follows:
+	\autoref{sec:test-improvement:introduction} introduces this chapter;
+	\autoref{sec:test-improvement:experiment-protocol} presents the experimental protocol of our study;
+	\autoref{sec:results} analyses our empirical results.;
+	\autoref{sec:threats} discusses the threats to validity;
+	\autoref{sec:related} discusses the related work;
+	and \autoref{sec:conclusion} concludes this chapter;
+	Note that this chapter has been published~\cite{Danglot2019}.
+\end{chaptersummary}
 
 \minitoc
 
-\graphicspath{{.}{chapitres/test-improvement//}}
+\graphicspath{{.}{chapitres/test-improvement/}}
 
 % ---------------------------------------------------------------------------------------
 % INTRODUCTION
 % ---------------------------------------------------------------------------------------
 \section{Introduction}
+\label{sec:test-improvement:introduction}
 
-% context 
-Over the last decade, strong unit testing has become an essential component of any serious software project, whether in industry or academia. The agile development movement has contributed to this cultural change with the global dissemination of test-driven development techniques \cite{beck2003test}.
-More recently, the DevOps movement has further strengthened the testing practice with an emphasis on continuous and automated testing \cite{Roche2013Devops}. 
+\subsection{Test-criterion: \ms}
+\label{subsec:test-improvement:introduction:test-criterion}
 
-In this paper we study how such modern test suites can benefit from the major results of automatic test generation research.
-We explore whether one can automatically improve tests written by humans, an activity that can be called ``automatic test improvement''. 
-There are few works in this area: the closest related techniques are those that consider manually written tests as the starting point for an automatic test generation process \cite{Harder03,fraser2012seed,Xuan:2014:TCP:2635868.2635906,Yoo:2012:TDR:2237756.2237758,danglot2017emerging,Xuan:2015:CRV:2786805.2803206}. To this extent, automatic test improvement can be seen as forming a sub-field of test generation.
-Automatic test improvement aims at synthesizing modifications of existing test cases, where those modifications are meant to be presented to developers. As such, the modifications must be deemed relevant by the developers themselves (the corollary being that they should not only maximize some criterion). 
+% MS
+This chapter relates the first study of the \dspot's effectiveness.
+To do this evaluation, I had to choose the test-criterion to select amplified test methods.
+I choose to use \ms.
+\ms measures the test suite's ability to detect artificial behavioral changes.
+Briefly, \ms is measured as follow:
+First, it injects a fault, or an artificial behavioral change, in the source code, \eg changes a $\ge$ by a $>$.
+This modified program is called ``mutants''.
+It generates different mutants with different artificial behavioral change;
+Second, it executes the test suite on the mutant;
+Third, it collects the result of the execution.
+If no test methods fail, it means that the test suite is not able to detect the fault. 
+It is said that the mutant remains alive.
+If at least on test method fails, it means that the test suite is able to detect the fault.
+It is said that the test suite kills the mutant.
+Eventually, to compute the \ms, one must compute the percentage of mutants killed over the mutants generated.
+The more mutants the test suite kills, the better is considered the test suite.
+\ms aims at emulating faults that a developer could integrate in its code.
+If the test suite has a high \ms, the probability that it detect such fault decrease.
 
-For our original study of automatic test improvement, we have developed \dspot, a tool for automatic test improvement in Java.  \dspot  adapts and combines two notable test generation techniques: evolutionary test construction \cite{tonella} and regression oracle generation \cite{Xie2006}. The essential adaptation consists in starting the generation process from the full-fledged abstract syntax trees of manually written test cases. The combination of both techniques is essential so that changes in the setup together are captured by changes in the assertion part of tests. 
-
-Our study considers 10 mature Java open source projects. It focuses  on three points that have little, or never, been assessed. First, we propose 19 test improvements  generated by \dspot to the developers of the considered open source projects. We present them  the improvement in the form of pull requests, and we ask them whether they would like to merge the test improvements in the main repository. In this part of the study, we extensively discuss their feedback, to help the research community understand the nature of good test improvements. This reveals the key role of case studies, as presented by Flyvberg \cite{flyvbjerg2006}, to assess the relevance of our technique for developers.
-Second, we perform a quantitative assessment of the improvements of 40 real-world test classes from our set of 10 open-source projects. In particular, we consider the difficult case of improving strong test classes.
-Third, we explore the relative contribution of evolutionary test construction and of assertion generation in the improvement process.
-
-Our key results are as follows: first, thirteen \gh pull requests consisting of automatic test improvements have been definitively accepted by the developers; second, an interesting empirical fact is that \dspot has been able to improve a test class with a 99\% initial \ms (\ie a really strong test); and finally, our experiment shows that valuable test improvements can be obtained within minutes.
-
-To sum up, our contributions are:
-\begin{itemize}
-	\item  \dspot, a system that performs automatic test improvement of Java unit tests; 
-	
-	\item the design and execution of an experiment to assess the relevance of automatically improved tests, based on feedback from the developers of mature projects;
-	
-	\item a large scale quantitative study of the improvement of 40 real-world test classes taken from 10 mature open-source Java projects.
-	
-	\item fully open-science code and data: both \dspot\footnote{\url{https://github.com/STAMP-project/dspot/}} and our experimental data are made publicly available for future research\footnote{\url{https://github.com/STAMP-project/dspot-experiments/}}
-	
-\end{itemize}
-
-The remainder of this article is as follows.
-Section~\ref{sec:dspot} presents the main concepts of automatic test improvement and \dspot.
-Section~\ref{sec:protocol} presents the experimental protocol of our study.
-Section~\ref{sec:results} analyses our empirical results. 
-Section~\ref{sec:threats} discusses the threats to validity.
-Section~\ref{sec:related} discusses the related work.
-and Section~\ref{sec:conclusion} concludes the article.
-Note that a previous version of this paper can be found as Arxiv's working paper~\cite{BaudryARM15}.
-
-\label{subsub:pitest}
-In this paper, we aim at improving the \ms of test classes.  In \dspot, we use \pitest\footnote{We use the latest version released: 1.2.0.\url{https://github.com/hcoles/pitest/releases/tag/1.2.0}} because:
+\dspot uses \pitest \footnote{latest version released at the time of the experimentation: 1.2.0.\url{https://github.com/hcoles/pitest/releases/tag/1.2.0}} because:
 1) it targets Java programs, 
 2) it is mature and well-regarded,
 3) it has an active community. 
@@ -74,25 +69,40 @@ negate conditionals mutator;
 return values mutator;
 void method calls mutator.
 
-%The detailed explanation can be found on the web site\footnote{\url{http://pitest.org/quickstart/mutators/}} of \pitest.
+\subsection{Mutation score versus coverage}
+\label{subsec:test-improvement:introduction:mutation-score-vs-coverage}
+In this experimentation, I use the \ms rather than coverage because \ms is consider stronger than coverage.
+The purpose of test suites is to check the program's behavior.
+In one hand, coverage is only based on the execution of the program and do not require any oracles.
+Coverage does not measure the proportion of the behavior tested but only the proportion of code executed.
+In the other hand, \ms requires oracles and thus to have a high \ms, the test suite must contains oracles.
+
+To sum up, the contributions of this chapter are:
+\begin{itemize}
+	\item the design and execution of an experiment to assess the relevance of \dspot, based on feedback from the developers of mature projects;
+	\item a large scale quantitative study of the improvement of 40 real-world test classes taken from 10 mature open-source Java projects.	
+	\item fully open-science code and data: both \dspot\footnote{\url{https://github.com/STAMP-project/dspot/}} and our experimental data are made publicly available for future research\footnote{\url{https://github.com/STAMP-project/dspot-experiments/}}
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % EVALUATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Experimental  Protocol}
-\label{sec:protocol}
+\label{sec:test-improvement:experiment-protocol}
 
-Automatic test improvement has been evaluated with respect to evolutionary test inputs \cite{tonella} and new assertions \cite{TaoXie2006}. However:
+\TODO{Automatic test improvement ?????}
+Automatic test improvement has been evaluated with respect to evolutionary test inputs \cite{tonella} and new assertions \cite{TaoXie2006}.
+However:
 1) the two topics have never been studied in conjunction
 2) they have never been studied on large modern Java programs
 3) most importantly, the quality of improved tests has never been assessed by developers.
 
-We set up a novel experimental protocol that addresses those three points.
+I set up a novel experimental protocol that addresses those three points.
 First, the experiment is based on \dspot, which combines test input exploration and assertion generation.
 Second, the experiment is made on 10 active \gh projects.
-Third, we have proposed improved tests to developers under the form of pull-requests.
+Third, I have proposed improved tests to developers under the form of pull-requests.
 
-We answer the following research questions:
+I answer the following research questions:
 
 \newcommand\rqpullrequest{RQ1\xspace}
 \newcommand\rqcandidates{RQ2\xspace}
@@ -105,133 +115,69 @@ We answer the following research questions:
 \textbf{\rqAmplVersusIAmpl}: What is the relative contribution of \Iampl{} and \Aampl{} to the effectiveness of automatic test improvement?\\
 
 \subsection{Dataset}
-\label{subsec:dataset}
+\label{subsec:test-improvement:experiment-protocol:dataset}
 
-We evaluate \dspot by amplifying test classes of large-scale, notable, open-source projects. We include projects that fulfill the following criteria:  
+We evaluate \dspot by amplifying test classes of large-scale, notable, open-source projects. The dataset includes projects that fulfill the following criteria:  
 1) the project must be written in Java; 
 2) the project must have a test suite based on \junit;
 3) the project must be compiled and tested with Maven;
 4) the project must have an active community as defined by the presence of pull requests on \gh, see \autoref{subsubsec:answer-rqpullrequest}. 
 
-\begin{landscape}
-	\vspace{-3cm}
-	\begin{table}[ht]
-		\caption{Dataset of 10 active Github projects considered on our relevance study (RQ1) and quantitative experiments (RQ2, RQ3).}
-		\begin{tabular}{l|l|r|r|l}
-			\label{tab:dataset}
-			project & 
-			description &
-			\# LOC & \# PR &considered test classes\\
-			\hline
-			\rowcolor[HTML]{EEEEEE}
-			javapoet & Java source file generator & 
-			3150 & 93 &
-			\begin{tabular}{@{}l@{}}
-				TypeNameTest$^h$~~NameAllocatorTest$^h$\\FieldSpecTest$^l$~~ParameterSpecTest$^l$
-			\end{tabular}\\
-			mybatis-3 & Object-relational mapping framework &
-			20683 & 288 &
-			\begin{tabular}{@{}l@{}}
-				MetaClassTest$^h$~~ParameterExpressionTest$^h$\\WrongNamespacesTest$^l$~~WrongMapperTest$^l$
-			\end{tabular}\\
-			\rowcolor[HTML]{EEEEEE}
-			traccar & Server for GPS tracking devices &
-			32648 & 373 &
-			\begin{tabular}{@{}l@{}}
-				GeolocationProviderTest$^h$~~MiscFormatterTest$^h$\\ObdDecoderTest$^l$~~At2000ProtocolDecoderTest$^l$
-			\end{tabular}\\
-			stream-lib & Library for summarizing data in streams &
-			4767 & 21 &
-			\begin{tabular}{@{}l@{}}
-				TestLookup3Hash$^h$~~TestDoublyLinkedList$^h$\\TestICardinality$^l$~~TestMurmurHash$^l$
-			\end{tabular}\\
-			\rowcolor[HTML]{EEEEEE}
-			mustache.java & Web application templating system &
-			3166 & 11 &
-			\begin{tabular}{@{}l@{}}
-				ArraysIndexesTest$^h$~~ClasspathResolverTest$^h$\\ConcurrencyTest$^l$~~AbstractClassTest$^l$
-			\end{tabular}\\
-			twilio-java & Library for communicating with Twilio REST API &
-			54423 & 87 &
-			\begin{tabular}{@{}l@{}}
-				RequestTest$^h$~~PrefixedCollapsibleMapTest$^h$\\AllTimeTest$^l$~~DailyTest$^l$
-			\end{tabular}\\
-			\rowcolor[HTML]{EEEEEE}
-			jsoup & HTML parser &
-			10925 & 72 &
-			\begin{tabular}{@{}l@{}}
-				TokenQueueTest$^h$~~CharacterReaderTest$^h$\\AttributeTest$^l$~~AttributesTest$^h$
-			\end{tabular}\\
-			protostuff& Data serialization library &
-			4700 & 35 &
-			\begin{tabular}{@{}l@{}}
-				TailDelimiterTest$^h$~~LinkBufferTest$^h$\\CodedDataInputTest$^l$~~CodedInputTest$^h$
-			\end{tabular}\\
-			\rowcolor[HTML]{EEEEEE}
-			logback & Logging framework &
-			15490 & 104 &
-			\begin{tabular}{@{}l@{}}
-				FileNamePatternTest$^h$~~SyslogAppenderBaseTest$^h$\\FileAppenderResilience\_AS\_ROOT\_Test$^l$~~Basic$^l$
-			\end{tabular}\\
-			retrofit & HTTP client for Android. & 
-			2743 & 249 &
-			\begin{tabular}{@{}l@{}}
-				RequestBuilderAndroidTest$^h$~~CallAdapterTest$^h$\\ExecutorCallAdapterFactoryTest$^h$~~CallTest$^h$
-			\end{tabular}\\
-		\end{tabular}
-	\end{table}
-\end{landscape}
+\input{chapitres/test-improvement/table_dataset}
 
-We implement those criteria as a query on top of TravisTorrent \cite{msr17challenge}. We randomly selected 10 projects from the result of the query which produces, the dataset presented in \autoref{tab:dataset}.
+Those criteria has been implemented as a query on top of TravisTorrent \cite{msr17challenge}. 
+I randomly selected 10 projects from the result of the query which produces, the dataset presented in \autoref{tab:dataset}.
 This table gives the project name, a short description, the number of pull-requests on \gh (\#PR), and the considered test classes.
-For instance, javapoet is a strongly-tested and active project, which implements a Java file generator, it has had 93 pull-requests in 2016.
+For instance, \emph{javapoet} is a strongly-tested and active project, which implements a Java file generator, it has had 93 pull-requests in 2016.
 
 
-\subsection{Test Case Selection Process for Test-suite Improvement}
-\label{subsec:test_preparation}
+\subsection{Test Case Selection Process}
+\label{subsec:test-improvement:experiment-protocol:test-preparation}
 
-For each project, we select 4 test classes to be amplified. Those test classes are chosen as follows.
+For each project, I select 4 test classes to be amplified. 
+Those test classes are chosen as follows.
 
 % Unit Tests
-First, we select unit-test classes only,
-because our approach focuses on unit test amplification. We use the following heuristic to discriminate unit test cases from others: we keep a test class if it executes less than an arbitrary threshold of N statements, \ie if it covers a small portion of the code. In our experiment, we use $N=1500$ based on our initial pilot experiments.
+First, the test class must be a unit-test classes only, because our approach focuses on unit test amplification. 
+I use the following heuristic to discriminate unit test cases from others: test classes kept are test classes which executes less than an arbitrary threshold of N statements, \ie if it covers a small portion of the code. 
+In this experiment, $N=1500$.
 
+Among the unit-tests, 4 classes has been selected as follows.
+Since I want to analyze the performance of \dspot when it is provided with both good and bad tests, selected test classes has been split into two groups: 
+one group with strong tests, one other group with low quality tests.
+\ms has been used to distinguish between good and bad test classes.
+Accordingly, the selection process has five steps: 
+1) Compute the original \ms of each class with \pitest (see \autoref{subsec:test-improvement:introduction:test-criterion};
+2) Discard test classes that have 100\% \ms, because they can already be considered as perfect tests 
+(this is the case for eleven classes, showing that the considered projects in the dataset are really well-tested projects);
+3) Sort the classes by \ms ( see \autoref{subsec:test-improvement:experiment-protocol:metrics}), in ascending order;
+4) Split the set of test classes into two groups: high \ms( $> 50\%$) and low \ms  ($< 50\%$);
+5) Randomly select 2 test classes in each group.
 
-Among the unit-tests, we select 4 classes as follows. Since we want to analyze the performance of \dspot{} when it is provided with both good and bad tests, we select two groups of classes: one group with strong tests, one other group with low quality tests.
-We use the \ms to distinguish between good and bad test classes.
-Accordingly, our selection process has five steps: 
-1) we compute the original \ms of each class with \pitest (see \autoref{subsub:pitest};
-2) we discard test classes that have 100\% \ms, because they can already be considered as perfect tests (this is the case for eleven classes, showing that the considered projects in our dataset are really well-tested projects);
-3) we sort the classes by \ms ( see \autoref{subsec:metrics}), in ascending order;
-4) we split the set of test classes into two groups: high \ms( $> 50\%$) and low \ms  ($< 50\%$);
-5) we randomly select 2 test classes in each group.
+This selection results with 40 test classes: 24 in high mutation group score and 16 in low \ms group. 
+The imbalance is due to the fact that there are three projects really well tested for which there are none or a single test class with a low \ms (projects protostuff, jsoup, retrofit).
+Consequently, those three projects are represented with 3 or 4 well-tested classes (and 1 or 0 poorly-tested class). 
+In \autoref{tab:dataset}, the last column contains the name of the selected test classes. 
+Each test class name is indexed by a ``h'' or a ``l'' which means respectively that the class have a high \ms or a low \ms.
 
-This selection results with 40 test classes: 24 in high mutation group score and 16 in low \ms group. The imbalance is due to the fact that there are three projects really well tested for which there are none or a single test class with a low \ms (projects protostuff, jsoup, retrofit). Consequently, those three projects are represented with 3 or 4 well-tested classes (and 1 or 0 poorly-tested class). In \autoref{tab:dataset}, the last column contains the name of the selected test classes. Each test class name is indexed by a ``h'' or a ``l'' which means respectively that the class have a high \ms or a low \ms.
+\subsection{Metrics}	
+\label{subsec:test-improvement:experiment-protocol:metrics}
 
+\textbf{Number of Killed Mutants} ($\#Killed.Mutants$): is the absolute number of mutants killed by a test class. 
+It used to compare the fault detection power of an original test class and the one of its amplified version.
 
-\subsection{Metrics}
-\label{subsec:metrics}
+\textbf{Mutation Score}: is the percentage of killed mutants over the number of executed mutants.
+ Mathematically, it is computed as follow: $$\frac{\#Killed.Mutants}{\#Exec.Mutants} \time 100$$.
 
-We use the following metrics during our experiment.
-
-%\textbf{Number of Executed Mutants} ($\#Exec.Mutants$): is the absolute number of mutants executed by a test class. This metric captures the size of the execution trace of the test class under consideration. It is used to discard large integration tests in order to only concentrate on unit tests.
-
-\textbf{Number of Killed Mutants} ($\#Killed.Mutants$): is the absolute number of mutants killed by a test class. We use it to compare the fault detection power of an original test class and the one of its amplified version.
-
-\textbf{Mutation Score}: is the percentage of killed mutants over the number of executed mutants. Mathematically, it is computed as follow:
-$$\frac{\#Killed.Mutants}{\#Exec.Mutants} \time 100$$.
-
-\textbf{Increase Killed}: is the relative increase of the number of killed mutants by an original test class $T$ and the number of killed mutants by its amplified version $T_a$.  It is computed as follows:
+\textbf{Increase Killed}: is the relative increase of the number of killed mutants by an original test class $T$ and the number of killed mutants by its amplified version $T_a$.
+It is computed as follows:
 $$\frac{\#Killed.Mutants_{T_a} - \#Killed.Mutants_T}{\#Killed.Mutants_T}$$
-The goal of \dspot is to improve tests such that the number of killed mutants  increases.
+The goal of \dspot is to improve tests such that the number of killed mutants increases.
 
 \subsection{Methodology}
-\label{sec:methodo}
-%Can the amplified test cases be included into the test repository maintained by developers?
+\label{subsec:test-improvement:experiment-protocol:methodology}
 
-Our experimental protocol is designed to 
-study to what extent the test improvements
-are valuable for the developer.
+This experimental protocol has been designed to study to what extent \dspot and its result are valuable for the developer.
 
 \begin{itemize}
 	\item \textbf{\rqpullrequest}
