@@ -177,7 +177,7 @@ In this chapter, I propose a novel approach to detect behavioral changes based o
 \label{sec:dci:techniques}
 
 \subsection{Overview of DCI}
-\label{subsec:global_overview}
+\label{sec:dci:techniques:overview}
 
 DCI takes as input a program, its test suite, and a commit modifying the program.
 The commit, as done in version control systems, is basically the diff between two consecutive versions of the program.
@@ -187,8 +187,8 @@ DCI outputs new test methods that detect the behavioral difference between the p
 The new tests pass on a given version, but fail on the other, demonstrating the presence of a behavioral change captured.% by an assertion.
 
 DCI computes the code coverage of the diff and selects test methods accordingly. % to this diff coverage.
-Then, it applies two kinds of test amplification to generate new test methods that detect the behavioral change.
-%
+Then it applies \dspot to amplify and generation generate new test methods that detect the behavioral change.
+
 \autoref{fig:global_approach} sums up the different phases of the approach:
 1) Compute the diff coverage and select the tests to be amplified;
 2) Amplify the selected tests based on the pre-commit version;
@@ -197,13 +197,12 @@ This process produces test methods that pass on the pre-commit version, fail on 
 
 \begin{figure}
     \fbox{\includegraphics[width=.95\linewidth]{img/global_flow.pdf}}
-    \caption{Overview of our approach to detect behavioral changes in commits.}
+    \caption{Overview of the approach to detect behavioral changes in commits.}
     \label{fig:global_approach}
 \end{figure}
 
 \subsection{Test Selection and Diff Coverage}
 \label{subsec:compute_diff_coverage}
-%We need to know which tests executed what lines of the diff.
 DCI implements a feature that:
 \begin{enumerate*}
 \item reports the diff coverage of a commit, and
@@ -214,156 +213,16 @@ To do so, DCI first computes the code coverage for the whole test suite.
 Second, it identifies the test methods that hit the statements modified by the diff. 
 Third, it produces the two outcomes elicited earlier: the diff coverage, computed as the ratio of statements in the diff covered by the test suite over the total number of statements in the diff and the list of test methods that cover the diff.
 %
-Then, we select only test methods that are present in pre-commit version (\ie, we ignore the test methods added in the commit, if any).
+Then, it selects only test methods that are present in pre-commit version (\ie, it ignores the test methods added in the commit, if any).
 The final list of test methods that cover the diff is then used to seed the amplification process.
 
 \subsection{Test Amplification}
+\label{sec:dci:techniques:amplification}
 
-Once we have the initial tests that cover the diff, we want to make them detect the behavioral change and assess the new behavior.
-This process of extending the scope of a test case is called test amplification~\cite{zhang2012}.
-In DCI, we build upon Xie's technique~\cite{TaoXie2006} and Tonella's evolutionary algorithm~\cite{tonella} to perform test amplification.
-
-%   A-AMPL
-\subsubsection{Assertion Amplification}
-\label{subsec:aampl}
-
-A test method consists of a setup and assertions.
-The former is responsible for putting the program under test into a specific state; the latter is responsible for verifying that the actual state of the program at the end of the test is the expected one.
-To do this, assertions compare actual values against expected values: if the assertion holds, the program is considered correct, if not, the test case has revealed the presence of a bug.
-
-Assertion amplification (\aampl) has been proposed by \cite{TaoXie2006}.
-It takes as input a program and its test suite, and it synthesizes new assertions on public methods that capture the program state.
-The targeted public methods are those that take no parameter, return a result, and match a Java naming convention of getters, \eg the method starts with \emph{get} or \emph{is}. The standard method \emph{toString()} is also used.
-If a method used returns a complex Java Object, \aampl recursively uses getters on this object to generate deeper assertions.
-
-In case the test method sets the program into an incorrect state and an exception is thrown, \aampl generates a test for this exception by wrapping the test method body in a \emph{try/catch} block. 
-It also inserts a \emph{fail} statement at the end of the body of the \emph{try}, \ie it means that if the exception is not thrown the test method fails.
-
-\begin{algorithm}[h]
-\begin{algorithmic}[1]
-\Require{Program $P$}
-\Require{Test Suite $TS$}
-\Ensure{An Amplified Test Suite $ATS$}
-\State{$ATS \leftarrow \emptyset$}
-\For{$Test$ in $TS$}
-    \State{$NoAssertTest \leftarrow removeAssertions(Test)$}
-    \State{$InstrTest \leftarrow instrument(NoAssertTest)$}
-    \State{$execute(InstrTest)$}
-    \State{$AmplTest \leftarrow NoAssertTest.clone()$}
-    \For{$Observ$ in $InstrTest.observations()$}
-        \State{$Assert \leftarrow generateAssertion(Observ)$}
-        \State{$AmplTest \leftarrow AmplTest.add(Assert)$}
-    \EndFor
-    \State{$ATS.add(select(AmplTest))$}
-    \State{$ATS.add(AmplTest)$}
-\EndFor
-\Return $ATS$
-\end{algorithmic}
-\caption{\aampl: Assertion amplification algorithm.}
-\label{algo:aampl}
-\end{algorithm}
-
-We present \aampl's pseudo-code in Algorithm \autoref{algo:aampl}. First, it initializes an empty set of tests $ATS$ (Line 1). 
-For each $Test$ method in the test suite $TS$ (Line 2), it removes the existing assertions to obtain $NoAssertTest$ (Line 3). 
-Then, it instruments $NoAssertTest$ with observation points (Line 4) that allow retrieving values from the program at runtime, which results in $InstrTest$. 
-In order to collect the values, it executes $InstrTest$ (Line 5).
-Eventually, for each observation $Observ$ of the set of observations from $InstrTest$ (Line 7 to 10), it generates an assertion (Line 8) and adds it to the amplified tests $AmplTest$ (Line 9).
-At the end, it selects amplified test according to a specific test criterion using the method $select()$ (Line 11) and add selected amplified test methods to the set of test methods $AmplTest$, in other words, an amplified test suite (Line 13).
-
-To sum up, \aampl increases the number of assertions. 
-By construction, it specifies more behaviors than the original test suite.
-DCI$_{AAMPL}$ is the \aampl mode for DCI.
-
-%
-%   I-AMPL
-%
-\subsubsection{Search-based Amplification}
-\label{subsec:sbampl}
-Search-based test amplification consists in running stochastic transformations on test code~\cite{tonella}.
-%
-For DCI$_{AAMPL}$, this process consists in
-%of search-based amplification is as follows:
-%\begin{enumerate}
-a) generating a set of original test methods by applying code transformations;
-b) running \aampl to synthesize new assertions for these amplified test methods;
-%\item select amplified tests to be kept, according to a given test criterion;
-c) repeating this process $nb$ times\footnote{by default, $nb=3$}, each time seeding with the previously amplified test methods.
-%\end{enumerate}
-%
-This final step allows the search-based algorithm to explore more inputs, and thus improve the chance of triggering new behaviors.
-
-\begin{algorithm}[h]
-\begin{algorithmic}[1]
-\Require{Program $P$}
-\Require{Program $P'$}
-\Require{Test Suite $TS$}
-\Require{Iterations number $Nb$}
-\Ensure{An Amplified Test Suite $ATS$}
-\State{$ATS \leftarrow \emptyset$}
-\State{$TmpTests \leftarrow \emptyset$}
-\For{$Test$ in $TS$}
-    \State{$TmpTests \leftarrow Test$}
-    \For{$i \leftarrow 0, i < Nb$}
-        \State{$TransformedTests \leftarrow transform(TmpTests)$}
-        \State{$AmplifiedTests \leftarrow aampl(TransformedTests)$}
-        %\STATE{$ATS.add(AmplifiedTests)$}
-        \State{$ATS.add(select(AmplifiedTests))$}
-        \State{$TmpTests \leftarrow AmplifiedTests$}
-    \EndFor
-\EndFor
-\Return $ATS$
-\end{algorithmic}
-\caption{\sbampl: Search based amplification algorithm}
-\label{algo:sbampl}
-\end{algorithm}
-
-We present the search-based amplification algorithm in Algorithm \autoref{algo:sbampl}.
-This algorithm is a basic Hill Climbing algorithm.
-It takes as input a program with two distinct versions $P$ and $P'$, its test suite $TS$ and a number of iterations $nb$, (in our case $nb=3$).
-It produces an amplified test suite that contains test methods that pass on $P$ but fail on $P'$.
-To do so, it initializes an empty set of amplified test methods $ATS$ (Line 1), which will be the final output, and $TmpTests$ (Line 2) which is a temporary set.
-Then, for each test method in the test suite $TS$ (Line 3), it applies the following operations: 
-1) transform the current set of test methods (Line 6) to obtain $TransformedTests$;
-2) apply \aampl on $TransformedTests$ (Line 7, see \autoref{algo:aampl}) to obtain $AmplifiedTests$; 
-3) select amplified test methods using the method $select()$, and add them to $ATS$ 
-(the method $select()$ executes the amplified tests on $P'$ and keeps only tests that fail, \ie that detect a behavioral change);
-and Finally, 4) affects $AmplifiedTests$ to $TmpTests$ in order to stack transformations.
-
-In our study, we consider the following test transformations:
-\begin{itemize}
-\item On numbers:
-    \begin{enumerate*}
-        \item add 1 to an integer
-        \item minus 1 to an integer
-        \item replace an integer by zero
-        \item replace an integer by the maximum value (Integer.MAX\_VALUE in Java)
-        \item replace an integer by the minimum value (\texttt{Integer.MIN\_VALUE} in Java).
-    \end{enumerate*}
-\item On booleans:
-    \begin{enumerate*}
-        \item negate the value.
-    \end{enumerate*}
-\item On string literals:
-    \begin{enumerate*}
-        \item replace a string with another existing string 
-        \item replace a string with white space, or a system path separator, or a system file separator.
-        \item add 1 random character to the string
-        \item remove 1 random character from the string
-        \item replace 1 random character in the string by another random character
-        \item replace the string with a random string of the same size
-        \item replace the string with the \texttt{null} value
-    \end{enumerate*}
-\item On methods :
-    \begin{enumerate*}
-        \item remove a method call
-        \item duplicate a method call
-    \end{enumerate*}.
-\end{itemize}
-
-DCI$_{SBAMPL}$ is the search-based amplification mode for DCI.
+Once DCI have the initial tests that cover the diff, DCI amplifies them using DSpot.
 
 \subsection{Execution and Change Detection}
-\label{sec:change-detection}
+\label{sec:dci:techniques:execution-change-detection}
 
 The final step performed by DCI consists in checking whether that the amplified test methods detect behavioral changes.
 Because DCI amplifies test methods using the pre-commit version, all amplified test methods pass on this version, by construction. 
@@ -371,7 +230,7 @@ Consequently, for the last step, DCI runs the amplified test methods only on the
 Every test that fails is in fact detecting a behavioral change introduced by the commit, and is a success. DCI keeps the tests that successfully detect behavioral changes.
 
 \subsection{Implementation}
-\label{sub:implementation}
+\label{sec:dci:techniques:implementation}
 
 DCI is implemented in Java and is built on top of the OpenClover and Gumtree~\cite{falleri:hal-01054552} libraries.
 It computes the global coverage of the test suite with OpenClover, which instruments and executes the test suite.
@@ -381,7 +240,7 @@ Through its Maven plugin, DCI can be seamlessly implemented into continuous inte
 DCI is publicly available on \gh.\footnote{\url{https://github.com/STAMP-project/dspot.git}}
 
 \section{Evaluation}
-\label{sec:evaluation}
+\label{sec:dci:evaluation}
 
 To evaluate the DCI approach, we design an experimental protocol to answer the following research questions:
 
@@ -473,15 +332,6 @@ We note that our benchmark is only composed of recent commits from notable open-
 
 \subsection{Protocol}
 \label{subsec:protocol}
-
-%To answer \textbf{RQ1},
-%we compute and study the main metrics of the commits in the benchmark. 
-%we collect the following information for each commit:
-%1) the date of the commit;
-%2) the number of tests in the test suite at the date of the commit;
-%3) the number of tests added or modified by the commit;
-%4) the size of the diff, in terms of line insertions and deletions;
-%5) the coverage of the diff by the test suite.
 
 To answer \textbf{RQ1}, we run DCI$_{AAMPL}$ and DCI$_{SBAMPL}$ on the benchmark projects.
 We then report the total number of behavioral changes successfully detected by DCI, \ie the number of commits for which DCI generates at least 1 test method that passes on the pre-commit version but fails on the post-commit version.
@@ -1038,156 +888,6 @@ Since the standard deviations are not all equal, the associated p-value would no
 This is why we choose to use a Kruskal-Willis test.
 
 In addition to this, we perform it for only 11 seeds, which a small samples.
-
-% -----------------------
-%  RELATED - WORK
-% -----------------------
-\section{Related Work}
-\label{sec:related_work}
-
-\subsection{Commit-based test generation}
-
-Person \etal~\cite{dse} present differential symbolic execution (DSE). DSE combines symbolic execution and a new approximation technique to highlight behavioral changes.
-They use symbolic execution summary to find equivalences and difference and generate a set of inputs that trigger different behavior.
-This is done in three steps: 1) they execute both versions of the modified method; 2) they find equivalences and differences, thanks to the analysis of symbolic execution summary;  3) they generate a set of inputs that trigger the different behaviors in both versions.
-The main difference with our work is that they have the strong assumption to have a program whose semantics is fully handled by the symbolic execution engine. 
-In the context of Java, to our knowledge, no symbolic execution engine works on arbitrary Java program.
-Symbolic execution engines do not scale to the size and complexity of the programs we targeted.
-On the contrary, our approach, being more lightweight, is meant to work on all Java programs.
-
-Marinescu and Cadar~\cite{marinescu2013katch} present Katch, a system that aims at covering the code included in a patch.
-This approach first determines the differences of a program and its previous version.
-It targets modified and not executed by the existing test suite lines.
-Then, it selects the closest input to each target from existing tests using a static minimum distance over the control flow graph.
-The proposal is evaluated on Unix tools. 
-They examine patches from a period of 3 years. In average, they automatically increase coverage from 35\% to 52\% with respect to the manually written test suite.
-Contrary to our work, they only aim at increasing the coverage, not at detecting behavioral changes.
-
-A posterior work of the same group~\cite{palikareva2016shadow,Kuchta:2018:SSE:3276753.3208952} focuses on finding test inputs that execute different behaviors in two program versions. 
-They devise a technique, named ShaddowKlee, built on top of Klee \cite{klee}. 
-They require the code to be annotated at changed places. 
-Then they select from the test suite those test cases that cover the changed code. The unified program is used in a two stage dynamic symbolic execution guided by the selected test cases.
-They first look for branch points where the conditions are evaluated in both program versions.
-Then, a constraint solver generates new test inputs for divergent scenarios. The program versions are then normally executed with the generated inputs and the result is validated to check the presence of a bug or of an intended difference.
-The evaluation of the proposed method is based on the CoREBench~\cite{bohme2014corebench} data set that contains documented regression bugs of the GNU Coreutils program suite. 
-
-
-Noller \etal~\cite{jpfshadow} aim at detecting regression bugs. 
-They apply shadow symbolic execution, originally from Palikevera~\cite{dse,palikareva2016shadow} that has been discussed in the previous paragraph, on Java programs. 
-Their approach has been implemented as an extension of Java Path Finder Symbolic (jpf-symbc)\cite{jpfsymb}, named jpf-shadow. 
-Shadow symbolic execution generate test inputs that trigger the new program behavior. 
-They use a merged version of both version of the same program, i.e. the previous version, so called old, and the changed version, called new.
-This is done by instrumenting the code with method calls ``change()''.
-The method change() takes two inputs: the old statement and the new one.
-Then, a first step collects divergence points, i.e. conditional where the old version and the new version do not take the same branch.
-On small examples, they show that jpf-shadow generates less unit test cases yet cover the same number of path. 
-Jpf-shadow only aims at covering the changes and not at detecting the behavioral change with an assertion.
-
-Menarini \etal~\cite{semantics:code:review} proposes a tool, GETTY, based on invariants mined by Daikon.
-GETTY provides to code reviewers a summary of the behavioral changes, based on the difference of invariants for various combinations of programs and test suites.
-They evaluate GETTY on 6 open source project, and showed that their behavioral change summaries can detect bugs earlier than with normal code review.
-While they provide a summary, DCI provides a concrete test method with assertions that detect the behavioral changes. 
-
-Lahiri \etal~\cite{differential-assertion-checking} propose differential assertion checking (DAC): checking two versions of a program with respect to a set of assertions. DAC is based on filtering false alarms of verification analysis. They evaluate DAC on a set of small example.
-The main difference is that DAC requires to manually write specifications, while DCI is completely automated with normal code as input.
-
-Yang \etal~\cite{Yang:2014:PDI:2568225.2568319} introduce IProperty, a  way to annotate  correctness properties of programs. They evaluate their approach on the triangle problem.
-The key novelty of our work is to perform an evaluation on real commits from large scale open source software.
-
-Campos \etal~\cite{Campos:2014:CTG:2642937.2643002} extended EvoSuite to adapt test generation techniques to continuous integration.
-Their contribution is the design of a time budget allocation strategy: it allocates more time budget to specific classes that are involved in the changes.
-They evaluated their approach on 10 projects from the SF100 corpus, on 8 of the most popular open-source projects from GitHub, and on 5 industrial projects.
-They limit their evaluation to the 100 last consecutive commits.
-They observe an increase of +58\% branch coverage, +69\% thrown undeclared exceptions, while reducing the time consumption by up to 83\% compared to the baseline.
-The major difference compared to our approach, they do not aim at specifically obtaining test methods that detect the behavioral changes but rather obtain better branch coverage and detect undeclared exceptions. They also do not generate any assertions.
-However, from the point of view practitioners, integrating a time budget strategy into DCI would increase its usability, practicability and potential adoption.
-
-
-\subsection{Behavioral change detection}
-
-Evans \etal \cite{evans2007differential} devise the differential testing.
-This approach aims at alleviating the test repair problem and detects more changes than regression testing alone.
-They use an automated characterization test generator (ACTG) to generate test suite for both version of the program.
-They then categorizes the tests of these 2 test suites into 3 groups:
-1) $T_{preserved}$ which are the tests that pass on the both versions;
-2) $T_{regressed}$ which are the tests that pass on the previous version but not on the new one;
-3) $T_{progressed}$ which are the tests that pass on the new version but not on the previous one;
-Then, they define also $T_{different}$ which is the union of both $T_{regressed}$ and $T_{progressed}$.
-The approach is to execute $T_{different}$ on both versions and observe progressed and regressed behaviors.
-They evaluate their approach on a small use case from the SIR dataset on 38 diffrent changes, for version of the program.
-They showed that their approach detects 21\%, 34\%, and 21\% more behavior changes than regression testing alone for respectively version 1, version 2 and version 3.
-In DCI, the amplified test methods obtained would lie into the $T_{regressed}$ group.
-However, we could also amplified test methods using the new version of the program and obtain a $T_{progressed}$.
-We would obtain a $T_{different}$ of amplified test methods and it might improve the performance of DCI.
-About the evaluation, we run experimentation of 60 commits which the double than their dataset, and on real 
-projects and real commits from \gh.
-
-Wei Jin \etal \cite{automated-behavioral-regression-testing} propose BEhavioral Regression
-Testing BERT.
-BERT aims at assisting practitioners during development to identify potential regression.
-It has been implemented as a plugin for the IDE Eclipse.
-Each time a developer make a change in their code base and Eclipse compiles, BERT is triggered.
-BERT works in 3 phases:
-1) it analyzes what are the classes modified and runs a test generation tools, such as Randoop, to create new test input for these classes.
-2) it executes the generated tests on both version of the program and collect multiples values such as the values of the fields of objects, the returned values by methods, etc.
-3) it produces a report containing all the differences of behaviors based on the collected values.
-Then the developer used this report to decide whether or not the changes are correct.
-They evaluated BERT on a small and artificial project, showing that about 60\% of the automatically generated test inputs were able to reveal the behavioral difference that indicates the regression fault
-In addition to this proof-of-concept, they evaluated in on JODA-time, which is a mature and widely used library.
-They evaluated on 54 pairs of versions.
-They reported 36 behavioral differences.
-However, they could establish only for one of them was a regression fault.
-There are two major differences with DCI:
-1) DCI works at commit level and not to the class changes level.
-2) DCI produces real and actionable test methods.
-
-Taneja \etal \cite{Taneja:2008:DAR:1642931.1642986} present DiffGen, a tool that generate regression tests for two version of the same class.
-Their approach works as follow:
-First, they detect the changes between the two version of the class.
-It is done using the textual representation and at method level.
-Second, they generate what they call a test driver, which is a class that contains a method for each modified method.
-These methods takes as input an instance of the old version of the class and the inputs required by the modified method.
-They also make all the field public to compare their values between the old version and the new one.
-These comparison have the form of branches.
-The intuition is if the test generator engine is able to cover these branches, it will reveal the behavioral differences.
-Third, they generate test using a test generator and the test driver.
-Eventually, they execute the generated tests to see whether or not there is a behavioral difference.
-They evaluated DiffGen on 8 artificial classes from the state of the art.
-They compared the mutation score of their generated test suite to an existing method from the state of the art.
-They showed that that DiffGen has an Improvement Factor IF2 varying from 23.4\% to 100\% for all the subjects.
-They also performed an evaluation on larger subjects from the SIR dataset.
-They detected 5 more faults than the state of the art.
-DiffGen must modified the application code to be efficient while DCI does not required any modification of it.
-Thus, is makes generated tests by DiffGen unused by developers since they must expose all the fields of their classes.
-
-\subsection{Test amplification}
-
-Yoo \etal \cite{Yoo:2012:TDR:2237756.2237758} devise Test Data Regeneration(TDR). They use hill climbing on existing test data (set of input) that meets a test objective (\eg cover all branch of a function).
-The algorithm is based on \emph{neighborhood} and a \emph{fitness} functions as the classical hill climbing algorithm.
-The key difference with DCI is that they at fulfilling a test criterion, such as branch coverage, while we aim at obtaining test methods that detect the behavioral changes.
-
-It can be noted that several test generation techniques start from a seed and evolve it to produce a good test suite. This is the case for techniques such as concolic test generation \cite{godefroid2005dart}, search-based test generation \cite{fraser2012seed}, or random  test generation \cite{groce2007randomized}.
-The key novelty of DCI relies in the very nature of the tests we used as seed.
-DCI uses complete program, which creates objects, manipulates the state of these objects, calls methods on these objects and asserts properties on their behavior. That is to say real and complex object-oriented tests as seed
-
-\subsection{Continuous Integration}
-
-Hilton \etal~\cite{Hilton:2016:UsageCI} conduct a study on the usage, costs and benefits of CI.
-To do this, they use three sources:  open-source code, builds from Travis, and they surveyed 442 engineers.
-Their studies show that the usage of CI services such as Travis is widely used and became the trend.
-The fact that CI is widely used shows that relevance of behavioral change detection.
-
-Zampetti \etal~\cite{static:analysis:in:ci} investigate the usage of Automated Static Code Analysis Tools (ASCAT) in CI.
-There investigation is done on 20 projects on \gh.
-According to their findings, coding guideline checkers are the most used static analysis tools in CI.
-This paper shows that dynamic analysis, such as DCI, is the next step for getting more added-value from CI.   
-
-Spieker \etal~\cite{Spieker:RL:selection} elaborate a new approach for test case prioritization in continuous integration based on reinforcement learning.
-Test case prioritization is different from behavioral change detection.
-
-Waller \etal~\cite{Waller:2015:IPB:2735399.2735416} study the portability of performance tests in continuous integration.
-They show little variations of performance tests between runs (every night) and claim that the performance tests must be integrated in the CI, early as possible in the development of Software.
-Performance testing is also one kind of dynamic analysis for the CI, but different in nature from behavioral change detection.
 
 \section{Conclusion}
 \label{sec:conclusion}
