@@ -1,18 +1,20 @@
-\chapter{Test Amplification To Improve Artificial Behavioral Changes Detection}
+\chapter{Test Amplification For Artificial Behavioral Changes Detection}
+\label{chap:test-improvement}
 
 \begin{chaptersummary}
 	In this chapter, I detail a first evaluation of \dspot. 
 	This evaluation is based on the mutation score as test-criterion.
 	Mutation score measures the test suite's ability to detect artificial behavioral changes.
-	I performed this evaluation 40 test classes from 10 projects from \gh and show that \dspot improve \todo{xx} of them.
+	I performed this evaluation 40 test classes from 10 projects from \gh and show that \dspot improve 26 of them.
 	I also confronted \dspot's output to the real by proposing the amplified test methods to the developers through pull-requests.
 	These pull requests showed developers' interest in the result of \dspot.
-	The remainder of this chapter is as follows:
-	\autoref{sec:test-improvement:introduction} introduces this chapter;
-	\autoref{sec:test-improvement:experiment-protocol} presents the experimental protocol of our study;
-	\autoref{sec:test-improvement:experiment-results} analyses our empirical results.;
-	\autoref{sec:test-improvement:threats} discusses the threats to validity;
-	and \autoref{sec:test-improvement:conclusion} concludes this chapter;
+	
+	To sum up, the contributions of this chapter are:
+	\begin{itemize}
+		\item the design and execution of an experiment to assess the relevance of \dspot, based on feedback from the developers of mature projects;
+		\item a large scale quantitative study of the improvement of 40 real-world test classes taken from 10 mature open-source Java projects.	
+		\item fully open-science code and data: both \dspot\footnote{\url{https://github.com/STAMP-project/dspot/}} and our experimental data are made publicly available for future research\footnote{\url{https://github.com/STAMP-project/dspot-experiments/}}
+	\end{itemize}
 	Note that this chapter has been published~\cite{Danglot2019}.
 \end{chaptersummary}
 
@@ -76,12 +78,12 @@ In one hand, coverage is only based on the execution of the program and do not r
 Coverage does not measure the proportion of the behavior tested but only the proportion of code executed.
 In the other hand, \ms requires oracles and thus to have a high \ms, the test suite must contains oracles.
 
-To sum up, the contributions of this chapter are:
-\begin{itemize}
-	\item the design and execution of an experiment to assess the relevance of \dspot, based on feedback from the developers of mature projects;
-	\item a large scale quantitative study of the improvement of 40 real-world test classes taken from 10 mature open-source Java projects.	
-	\item fully open-science code and data: both \dspot\footnote{\url{https://github.com/STAMP-project/dspot/}} and our experimental data are made publicly available for future research\footnote{\url{https://github.com/STAMP-project/dspot-experiments/}}
-\end{itemize}
+The remainder of this chapter is as follows:
+\autoref{sec:test-improvement:introduction} introduces this chapter;
+\autoref{sec:test-improvement:experiment-protocol} presents the experimental protocol of our study;
+\autoref{sec:test-improvement:experiment-results} analyses our empirical results.;
+\autoref{sec:test-improvement:threats} discusses the threats to validity;
+and \autoref{sec:test-improvement:conclusion} concludes this chapter;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % EVALUATION
