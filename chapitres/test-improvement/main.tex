@@ -10,10 +10,9 @@
 	The remainder of this chapter is as follows:
 	\autoref{sec:test-improvement:introduction} introduces this chapter;
 	\autoref{sec:test-improvement:experiment-protocol} presents the experimental protocol of our study;
-	\autoref{sec:results} analyses our empirical results.;
-	\autoref{sec:threats} discusses the threats to validity;
-	\autoref{sec:related} discusses the related work;
-	and \autoref{sec:conclusion} concludes this chapter;
+	\autoref{sec:test-improvement:experiment-results} analyses our empirical results.;
+	\autoref{sec:test-improvement:threats} discusses the threats to validity;
+	and \autoref{sec:test-improvement:conclusion} concludes this chapter;
 	Note that this chapter has been published~\cite{Danglot2019}.
 \end{chaptersummary}
 
@@ -571,6 +570,7 @@ To the best of my knowledge, this is the first public report of automatically im
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Answer to \rqcandidates{}}
+\label{subsec:test-improvement:experiment-results:rq2}
 
 \textbf{\rqcandidates{} To what extent are improved test methods considered as focused?}
 
@@ -616,6 +616,7 @@ To conclude, according to this benchmark, \dspot{} proposes at least one and foc
 
 %To what extent does an amplified test class kills more mutants than a manual test class?
 \subsection{Answer to \rqeffectiveness}
+\label{subsec:test-improvement:experiment-results:rq3}
 
 \textbf{\rqeffectiveness: To what extent do improved test classed kill more mutants than developer-written test classes?}
 
@@ -682,79 +683,95 @@ The most notable point of this experiment is that there are considered tests tha
 %%%%%%%%%% RQ 4
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Answer to \rqAmplVersusIAmpl}
+\label{subsec:test-improvement:experiment-results:rq4}
 
 \textbf{What is the contribution of \Iampl{} and \Aampl{} to the effectiveness of automated test improvement?}
 
-The relevant results are reported in the tenth and eleventh column of \autoref{tab:overall-results:high_pms}. %and \autoref{tab:overall-results:low_pms}.
+The relevant results are reported in the tenth and eleventh column of \autoref{tab:overall-results:high_pms}.
 They give the \ams and the relative increase of the number of killed mutants when only using \Aampl.
 
 % example
-For instance, for \texttt{TypeNameTest} (first row, id \#1), using only \Aampl kills 599 mutants, which is exactly the same number of the original test class. In this case, both the absolute and relative increase are obviously zero.
+For instance, for \texttt{TypeNameTest} (first row, id \#1), using only \Aampl kills 599 mutants, which is exactly the same number of the original test class. 
+In this case, both the absolute and relative increase are obviously zero.
 On the contrary, for \texttt{WrongNamespacesTest} (id \#27), using only \Aampl  is very effective, it enables \dspot to kill 249 mutants, which, compared to the 78 originally killed mutants, represents an improvement of 219\%. 
 
-Now, if we aggregate over all test classes, our results indicate that \Aampl only is able to increase the number of mutants killed in 7 / 40 test classes. Increments range from 0.31\% to 13\%. 
+Now, if when aggregating over all test classes, the results indicate that \Aampl only is able to increase the number of mutants killed in 7 / 40 test classes. 
+Increments range from 0.31\% to 13\%. 
 Recall that when \dspot runs both \Iampl{} and \Aampl, it increases the number of mutants killed in 26 / 40 test classes, which shows that it is indeed the combination of \Aampl and \Iampl which is effective.
 
-We note that \Aampl{} performs as well as \Iampl + \Aampl in only 2/40 cases (ID:27 and ID:28). In this case, all the improvement comes from the addition of new assertions, and this improvement is dramatic (relative increase of 219\% and 235\%).
+Note that \Aampl{} performs as well as \Iampl + \Aampl in only 2/40 cases (ID:27 and ID:28). In this case, all the improvement comes from the addition of new assertions, and this improvement is dramatic (relative increase of 219\% and 235\%).
 
-The limited impact of \Aampl alone has several causes. First, many assertions in the original test cases are already good and precisely specify the expected behavior for the test case.
+The limited impact of \Aampl alone has several causes. 
+First, many assertions in the original test cases are already good and precisely specify the expected behavior for the test case.
 Second, it might be due to the limited observability of the program under test (\ie, there is a limited number of points where assertions over the program state can be expressed).
-Third, it happens when one test case covers global properties across many methods: test \#28 \texttt{WrongMapperTest} specifies global properties, but is not well suited to observe fine grained behavior with additional assertions. This latter case is common among the weak test classes of the lower part of \autoref{tab:overall-results:high_pms}.
+Third, it happens when one test case covers global properties across many methods: test \#28 \texttt{WrongMapperTest} specifies global properties, but is not well suited to observe fine grained behavior with additional assertions. 
+This latter case is common among the weak test classes of the lower part of \autoref{tab:overall-results:high_pms}.
 %\autoref{tab:overall-results:low_pms}.
-
-
+\
 ~\\
 
 \begin{mdframed}
 	\textit{\rqAmplVersusIAmpl: What is the contribution of \Iampl{} and \\\Aampl{} to the effectiveness of test amplification?}\\
-	Answer: The conjunct run of \Iampl{} and \Aampl{} is the best strategy for \dspot{} to improve manually-written test classes. This experiment has shown that \Aampl{} is ineffective, in particular on tests that are already strong.
+	Answer: The conjunct run of \Iampl{} and \Aampl{} is the best strategy for \dspot{} to improve manually-written test classes. 
+	This experiment has shown that \Aampl{} is ineffective, in particular on tests that are already strong.
 \end{mdframed}
 ~\\
 
-To the best of our knowledge, this experiment is the first to evaluate the relative contribution of \Iampl and \Aampl to the effectiveness of automatic test improvement.
+To the best of my knowledge, this experiment is the first to evaluate the relative contribution of \Iampl and \Aampl to the effectiveness of automatic test improvement.
 
 \section{Threats to Validity}
-\label{sec:threats}
+\label{sec:test-improvement:threats}
 
 \textbf{\rqpullrequest{}}
 The major threat to \rqpullrequest{} is that there is a potential bias in the acceptance of the proposed pull requests.
-For instance, if we propose pull requests to colleagues, they are more likely to merge them.
+For instance, if I propose pull requests to colleagues, they are more likely to merge them.
 However, this is not the case here.
-In this evaluation, the pull requests are submitted by the first author, who is unknown to all considered projects. 
+In this evaluation, I am unknown to all considered projects. 
 The developers who study the \dspot pull requests are independent from our group and social network.
-Since the first author is unknown for the pull request reviewer, this is not a specific bias towards acceptance or rejection of the pull request.
+Since I was unknown for the pull request reviewer, this is not a specific bias towards acceptance or rejection of the pull request.
 % \rev{}{\textbf{Manual Minimization.} Before proposing pull request, we manually removes unnecessary statements, renames elements (test method name, variable name, etc..) and integrated into the existing test suite. One major threats of our result is that this process is not yet automatized. However, we created a first version of an algorithm able to remove unnecessary statements and research on naming and integration of amplified test methods are in our plan to make the approach totally automatized. The naming convention could be based on machine learning to recognize convention used in the existing test suite and we created an heuristic that extract the specific intent of amplified test methods.}
 
 \textbf{\rqcandidates{}}
-The technique used to select focused candidates is based on the proportion of mutant killed and the absolute number of modification done by  the amplification. However, it may happen that some improvements that are not focused per our definition would still be considered as valuable by developers. Having such false negative is a potential threat to validity.
+The technique used to select focused candidates is based on the proportion of mutant killed and the absolute number of modification done by the amplification. 
+However, it may happen that some improvements that are not focused per our definition would still be considered as valuable by developers. 
+Having such false negative is a potential threat to validity.
 
 \textbf{\rqeffectiveness{}}
 A threat to \rqeffectiveness{} relates to external validity: if the considered projects and tests are written by amateurs, our findings would not hold for serious software projects.
-However, we only consider real-world applications, maintained by professional and esteemed open-source developers. This means we tried to automatically improve tests that are arguably among the best of the open-source world, aiming at as strong construct validity as possible.
+However, the experimentation only considers real-world applications, maintained by professional and esteemed open-source developers. 
+This means that considered tests are arguably among the best of the open-source world, aiming at as strong construct validity as possible.
 
 \textbf{\rqAmplVersusIAmpl{}.}
-The main threat to \rqAmplVersusIAmpl{} relates to internal validity: since our results are of computational nature, a bug in our implementation or experimental scripts may threaten our findings. We have put all our code publicly-available for other researchers to reproduce our experiment and spot the bugs, if any.
+The main threat to \rqAmplVersusIAmpl{} relates to internal validity: since our results are of computational nature, a bug in the implementation or experimental scripts may threaten our findings. 
+All the code is publicly-available for other researchers to reproduce the experiment and spot the bugs, if any.
 
 \textbf{Oracle.}
-% faulty program, faulty amplified test method
-\dspot generates new assertions based on the current behavior of the program. If the program contains a bug, the resulting amplified test methods would enforce this bug. This is an inherent threat, inherited from \cite{Xie2006}, which is unavoidable when no additional oracle is available, but only the current version of the program. 
+\dspot generates new assertions based on the current behavior of the program. 
+If the program contains a bug, the resulting amplified test methods would enforce this bug. 
+This is an inherent threat, inherited from \cite{Xie2006}, which is unavoidable when no additional oracle is available, but only the current version of the program. 
 To that extent, the best usage of \dspot is to improve the test suite of a supposedly almost correct version of the program.
 
 % ---------------------------------------------------------------------------------------
 % CONCLUSION
 % ---------------------------------------------------------------------------------------
 \section{Conclusion}
-\label{sec:conclusion}
+\label{sec:test-improvement:conclusion}
 
-We have presented \dspot, a novel approach to automatically improve existing developer-written test classes.
-We have shown that \dspot is able to strengthen real unit test classes in Java from 10 real-world projects. 
-Our experiment with real developers indicates that they are ready to merge test cases improved by \dspot into their test suite. 
+\todo{Is it conclusion or future works ????}
+I have shown that \dspot is able to strengthen real unit test classes in Java from 10 real-world projects. 
+The experiment with real developers indicates that they are ready to merge test cases improved by \dspot into their test suite. 
 The road ahead for automatic synthesis of test case improvements is exciting.
 
-First, there is a need to study how to generate meaningful natural language explanations of the suggested test improvements: generation of well named tests, generation of text accompanying the pull request, we dream of using natural-language deep-learning for this task.
+First, there is a need to study how to generate meaningful natural language explanations of the suggested test improvements: generation of well named tests, generation of text accompanying the pull request, the dream would be using natural-language deep-learning for this task.
 
-Second, we aim at automating even more the process of integrating the amplification result in a ready-to-use pull request. This requires two major steps: first, one needs to identify which parts of the amplified test methods are ``valuable''. 
-Second, we need to choose between modifying an existing test method or create a new one that is derived from an existing one, even if the new method is by construction an extension of an existing one. 
-Such a decision procedure must be made based on the intention of the existing test methods and the potentially new intention of the amplified test. If we find an existing test method that carries the same intention, \ie it tests the same portion of code as the amplification, one would preferably add changes there rather than creating a new test methods. This challenging vision of mining and comparing test purposes is the main area of our future work.
+Second, the automation of even more the process of integrating the amplification result in a ready-to-use pull request. 
+This requires two major steps: 
+first, one needs to identify which parts of the amplified test methods are ``valuable'';
+second, we need to choose between modifying an existing test method or create a new one that is derived from an existing one, even if the new method is by construction an extension of an existing one. 
 
-Third, and finally, we envision to integrate \dspot in a continuous integration service (CI) where test classes would be amplified on-the-fly for each commit. This would greatly improve the direct industrial applicability of this software engineering research.
+Such a decision procedure must be made based on the intention of the existing test methods and the potentially new intention of the amplified test. 
+If an existing test method that carries the same intention is found, \ie it tests the same portion of code as the amplification, one would preferably add changes there rather than creating a new test methods. 
+This challenging vision of mining and comparing test purposes is the main area of our future work.
+
+Third, and finally, the integration of \dspot in a continuous integration service (CI) where test classes would be amplified on-the-fly for each commit. 
+This would greatly improve the direct industrial applicability of this software engineering research.
