@@ -61,7 +61,7 @@ To sum up, our contributions are:
 \end{itemize}
 
 In \Autoref{sec:background} we motivate the need to have commits include a test case that specifies the behavioral change. In \Autoref{sec:techniques} we introduce our technical contribution: an approach for commit-based test selection and amplification. \Autoref{sec:evaluation} introduces our benchmark of commits, the evaluation protocol and the results of our experiments on 50 real commits. 
-\rev{Section \ref{sec:threats} relates the threats validity and actions that have been taken to overcome them. In Section  \ref{sec:related_work}, we expose the related work, their evaluation and the differences with our work and eventually we conclude in Section \ref{sec:conclusion}.}
+Section \ref{sec:threats} relates the threats validity and actions that have been taken to overcome them. In Section  \ref{sec:related_work}, we expose the related work, their evaluation and the differences with our work and eventually we conclude in Section \ref{sec:conclusion}.
 
 % -----------------------
 %  MOTIVATION
@@ -116,15 +116,15 @@ The current amplified test method cannot be added to the test suite, since it fa
 However, this test method is still useful, since one has only to negate the failing assertions, \eg change an \texttt{assertTrue} into an \texttt{assertFalse}, to obtain a valid and passing test method that explicitly executes the new behavior.
 This can be done manually or automatically with approaches such as ReAssert\cite{ReAssert}.
 
-\rev{From our experience, unit tests (vs integration test) are the best target for DCI}
-\rev{The reasons are behind the very nature of unit tests:}
-\rev{First, they have a small scope, which allow DCI to intensify its search while an integration test, that contains a lot of code, would make DCI explore the neighborhood in different ways.}
-\rev{Second, that is a consequence of the first, the unit tests are fast to be executed against integration test.}
-\rev{Since DCI needs to execute 5 times the tests under amplification, it means that DCI would be executed faster when it amplifies unit tests than when it amplified integration tests.}
+From our experience, unit tests (vs integration test) are the best target for DCI
+The reasons are behind the very nature of unit tests:
+First, they have a small scope, which allow DCI to intensify its search while an integration test, that contains a lot of code, would make DCI explore the neighborhood in different ways.
+Second, that is a consequence of the first, the unit tests are fast to be executed against integration test.
+Since DCI needs to execute 5 times the tests under amplification, it means that DCI would be executed faster when it amplifies unit tests than when it amplified integration tests.
 
-\rev{DCI has been designed to be easy to use.}
-\rev{The only cost of DCI is the time to set it up: in the ideal, happy-path case, it is meant to be a single command line through Maven goals.}
-\rev{Once DCI is set up in continuous integration, it automatically runs at each commit and developers directly benefit from amplified test methods that strengthen the existing test suite.}
+DCI has been designed to be easy to use.
+The only cost of DCI is the time to set it up: in the ideal, happy-path case, it is meant to be a single command line through Maven goals.
+Once DCI is set up in continuous integration, it automatically runs at each commit and developers directly benefit from amplified test methods that strengthen the existing test suite.
 
 %
 %   Behavioral Change
@@ -193,8 +193,6 @@ This process produces test methods that pass on the pre-commit version, fail on 
 
 \subsection{Test Selection and Diff Coverage}
 \label{subsec:compute_diff_coverage}
-
-%TODO: Entire paragraph is repetitive, could be condensed.
 %We need to know which tests executed what lines of the diff.
 DCI implements a feature that:
 \begin{enumerate*}
@@ -310,7 +308,7 @@ This final step allows the search-based algorithm to explore more inputs, and th
 \end{algorithm}
 
 We present the search-based amplification algorithm in Algorithm \Autoref{algo:sbampl}.
-\rev{This algorithm is a basic Hill Climbing algorithm.}
+This algorithm is a basic Hill Climbing algorithm.
 It takes as input a program with two distinct versions $P$ and $P'$, its test suite $TS$ and a number of iterations $nb$, (in our case $nb=3$).
 It produces an amplified test suite that contains test methods that pass on $P$ but fail on $P'$.
 To do so, it initializes an empty set of amplified test methods $ATS$ (Line 1), which will be the final output, and $TmpTests$ (Line 2) which is a temporary set.
@@ -387,14 +385,14 @@ To evaluate the DCI approach, we design an experimental protocol to answer the f
 \begin{itemize}
 % \item \rqcharacteristics
 \item \rqdetection
-\item \rev{\rqiteration}
+\item \rqiteration
 \item \rqselection
 \item \rqhuman
 \end{itemize}
 
 \subsection{Benchmark}
 \label{sec:benchmark}
-To the best of our knowledge, there is no benchmark of commits \rev{in Java} with behavioral changes in the literature. Consequently, we devise a project and commit selection procedure in order to construct a benchmark for our approach.
+To the best of our knowledge, there is no benchmark of commits in Java with behavioral changes in the literature. Consequently, we devise a project and commit selection procedure in order to construct a benchmark for our approach.
 
 \paragraph{Project selection}
 We need software projects that are
@@ -403,8 +401,6 @@ We need software projects that are
 3) and use continuous integration.
 %
 We pick the projects from the dataset in \cite{descartes} and \cite{dspot-emse}, which is composed of mature Java projects from \gh.
-
-\rev{}
 
 \paragraph{Commit selection}
 %To select commits, we apply the following procedure.
@@ -426,7 +422,7 @@ Together, these criteria ensure that all selected commits:
 1) introduce behavioral changes,
 2) provide or modify a manually written test case that detects a behavioral change (which will be used as ground-truth for comparing generated tests), and
 3) that there is at least 1 test in the pre-commit version of the program that executes the diff and can be used to seed the amplification process.
-\rev{4) There is no structural change in the commit between both versions, \eg no change in method signature and deletion of classes (this is ensured since the pre-commit test suite compiles and runs against the post-commit version of the program and vice-versa.)}
+4) There is no structural change in the commit between both versions, \eg no change in method signature and deletion of classes (this is ensured since the pre-commit test suite compiles and runs against the post-commit version of the program and vice-versa.)
 
 \paragraph{Final benchmark}
 \begin{table}[h]
@@ -442,7 +438,7 @@ LOC &
 \begin{tabular}{c}end\\date\end{tabular}&
 \begin{tabular}{c}\#total\\commits\end{tabular}&
 \begin{tabular}{c}\#discarded\\commits\end{tabular}&
-\begin{tabular}{c}\#\rev{matching}\\\rev{commits}\end{tabular}&
+\begin{tabular}{c}\#matching\\commits\end{tabular}&
 \begin{tabular}{c}\#selected\\commits\end{tabular}\\
 \hline
 \scriptsize{commons-io}	&	59607	&	9/10/2015	&	9/29/2018	&	385	&	375	&	16(4.16\%)	&	10	\\
@@ -459,10 +455,10 @@ LOC &
 \end{table}
 
 \Autoref{tab:benchmark} shows the main statistics on the benchmark dataset. % construction.
-\rev{The first column is the name of the considered project;}
-\rev{The second column is the date at which we did the analysis;}
-\rev{The third column is the date of the oldest commit for the project;}
-\rev{The fourth, fifth, sixth and seventh are respectively the total number of commit we analyze, the total number of commits we discard, the number of commits that match all our criteria but the third (there is no test in the pre-commit that execute the change and the number of commit we select).}
+The first column is the name of the considered project;
+The second column is the date at which we did the analysis;
+The third column is the date of the oldest commit for the project;
+The fourth, fifth, sixth and seventh are respectively the total number of commit we analyze, the total number of commits we discard, the number of commits that match all our criteria but the third (there is no test in the pre-commit that execute the change and the number of commit we select).
 We note that our benchmark is only composed of recent commits from notable open-source projects and is available on \gh at \url{https://github.com/STAMP-project/dspot-experiments}.
 
 \subsection{Protocol}
@@ -481,16 +477,16 @@ To answer \textbf{RQ1}, we run DCI$_{AAMPL}$ and DCI$_{SBAMPL}$ on the benchmark
 We then report the total number of behavioral changes successfully detected by DCI, \ie the number of commits for which DCI generates at least 1 test method that passes on the pre-commit version but fails on the post-commit version.
 We also discuss 1 case study of a successful behavioral change detection.
 
-\rev{To answer \textbf{RQ2}, we run DCI$_{SBAMPL}$ for 1, 2 and 3 iterations on the benchmark projects.}
-\rev{We report the number of behavioral changes successfully detected for each number of iterations in the main loop.}
-\rev{We report also the number amplified test methods that detect the behavioral changes for each commit for 10 different seeds to study the impact of the randomness on the output of DSpot}
-\rev{We perform a Kruskal-Wallis test statistic on these numbers.}
+To answer \textbf{RQ2}, we run DCI$_{SBAMPL}$ for 1, 2 and 3 iterations on the benchmark projects.
+We report the number of behavioral changes successfully detected for each number of iterations in the main loop.
+We report also the number amplified test methods that detect the behavioral changes for each commit for 10 different seeds to study the impact of the randomness on the output of DSpot
+We perform a Kruskal-Wallis test statistic on these numbers.
 
-\rev{The null hypothesis is the following: The population median of all of the groups are equal}
+The null hypothesis is the following: The population median of all of the groups are equal
 
-\rev{The alternative hypothesis is: at least one population median of one group is different from the population median of at least one other group}
+The alternative hypothesis is: at least one population median of one group is different from the population median of at least one other group
 
-\rev{We take a confidence level of 95\%, or $\alpha = 0.05$.}
+We take a confidence level of 95\%, or $\alpha = 0.05$.
 
 For \textbf{RQ3}, the test selection method is considered effective if the tests selected to be amplified semantically relate to the code changed by the commit. 
 To assess this, we perform a manual analysis.% as follows.
@@ -532,7 +528,7 @@ The tenth and the eleventh are respectively a \cmark with the number of amplifie
 
 %We consider the first columns (under \textbf{RQ1} meta column) of \Autoref{tab:overall_result}, which describe the characteristics of our novel benchmark.
 %The columns under the \textbf{RQ1} meta column
-\rev{In  this section, we describe the the characteristics of commits introducing behavioral changes in the context of continuous integration}
+In  this section, we describe the the characteristics of commits introducing behavioral changes in the context of continuous integration
 The first five columns in \Autoref{tab:overall_result} describe the characteristics of our benchmark.
 % date
 The commit dates show that the benchmark is only composed of recent commits.
@@ -645,26 +641,26 @@ Since \DCII also uses \aampl to generate assertions, all \DCIA's commits are con
 \subsubsection{\rqiteration}
 \label{subsubsec:answerqiteration}
 
-\rev{The results are reported in } \Autoref{tab:overall_result_iteration}
-\rev{This table can be read as follow:}
-\rev{the first column is the name of the project;}
-\rev{the second column is the commit identifier;}
-\rev{then, the third, fourth, fifth, sixth, seventh and eighth provide the amplification results and execution time for each number of iteration 1, 2, and 3. A \cmark indicates with the number of amplified tests that detect a behavioral change and a \textit{-} denotes that DCI did not succeed in generating a test that detects a change.}
+The results are reported in \Autoref{tab:overall_result_iteration}
+This table can be read as follow:
+the first column is the name of the project;
+the second column is the commit identifier;
+then, the third, fourth, fifth, sixth, seventh and eighth provide the amplification results and execution time for each number of iteration 1, 2, and 3. A \cmark indicates with the number of amplified tests that detect a behavioral change and a \textit{-} denotes that DCI did not succeed in generating a test that detects a change.
 
 % number of detection
-\rev{Overall, \DCII generates amplified tests that detect 21, 23, and 24 out of 60 behavioral changes for respectively $iteration=1$, $iteration=2$ and $iteration=3$.}
-\rev{The more iteration \DCII does, the more it explores, the more it generates amplified tests that detect the behavioral changes but the more it takes time also.}
+Overall, \DCII generates amplified tests that detect 21, 23, and 24 out of 60 behavioral changes for respectively $iteration=1$, $iteration=2$ and $iteration=3$.
+The more iteration \DCII does, the more it explores, the more it generates amplified tests that detect the behavioral changes but the more it takes time also.
 % difference in number of behavioral changes we detect
-\rev{When \DCII is used with $iteration=3$, it generates amplified test methods that detect 3 more behavioral changes than when it is used with $iteration=1$ and 1 then when it is used with $iteration=2$. It represents an increase of 14\% and 4\% for respectively $iteration=1$ and $iteration=2$.}
+When \DCII is used with $iteration=3$, it generates amplified test methods that detect 3 more behavioral changes than when it is used with $iteration=1$ and 1 then when it is used with $iteration=2$. It represents an increase of 14\% and 4\% for respectively $iteration=1$ and $iteration=2$.
 
 % number of test generated
-\rev{In average, \DCII generates 18, 53, and 116 amplified tests for respectively $iteration=1$, $iteration=2$ and $iteration=3$. }
-\rev{This number increases by 544\% from $iteration=1$ to $iteration=3$.}
-\rev{This increase is explained by the fact that \DCII explores more with more iteration and thus is able to generate more amplified test methods that detect the behavioral changes.}
+In average, \DCII generates 18, 53, and 116 amplified tests for respectively $iteration=1$, $iteration=2$ and $iteration=3$. 
+This number increases by 544\% from $iteration=1$ to $iteration=3$.
+This increase is explained by the fact that \DCII explores more with more iteration and thus is able to generate more amplified test methods that detect the behavioral changes.
 
 % time
-\rev{In average \DCII takes 23, 64, and 105 minutes to perform the amplification for respectively $iteration=1$, $iteration=2$ and $iteration=3$.}
-\rev{This number increases by 356\% from $iteration=1$ to $iteration=3$.}
+In average \DCII takes 23, 64, and 105 minutes to perform the amplification for respectively $iteration=1$, $iteration=2$ and $iteration=3$.
+This number increases by 356\% from $iteration=1$ to $iteration=3$.
 
 \begin{table*}
 \small
@@ -681,11 +677,11 @@ Since \DCII also uses \aampl to generate assertions, all \DCIA's commits are con
 
 \paragraph{Impact of the randomness}
 
-\rev{The number of amplified test methods obtained by the different seeds are reported in }\Autoref{tab:overall_result_seeds}.
-\rev{The result of the Kruskal-Wallis test is:  p-value=0.96.}
-\rev{$p-value>\alpha$ which means that we keep the null hypothesis: }
-\rev{The population median of all of the groups are equal.}
-\rev{This means that, in general, the choice of the seeds has not a significant impact of the overall result of DCI.}
+The number of amplified test methods obtained by the different seeds are reported in \Autoref{tab:overall_result_seeds}.
+The result of the Kruskal-Wallis test is:  p-value=0.96.
+$p-value>\alpha$ which means that we keep the null hypothesis: 
+The population median of all of the groups are equal.
+This means that, in general, the choice of the seeds has not a significant impact of the overall result of DCI.
 
 \begin{table*}
 \small
@@ -700,8 +696,8 @@ Since \DCII also uses \aampl to generate assertions, all \DCIA's commits are con
 
 %recap RQ2
 \begin{mdframed}
-\rev{Answer to \textbf{RQ2}: \DCII detects  21, 23, and 24 behavioral changes out of 60 for respectively $iteration=1$, $iteration=2$ and $iteration=3$.}
-\rev{The number of iteration done by \DCII impacts the number of behavioral changes detected, the number of amplified test methods obtained and the execution time.}
+Answer to \textbf{RQ2}: \DCII detects  21, 23, and 24 behavioral changes out of 60 for respectively $iteration=1$, $iteration=2$ and $iteration=3$.
+The number of iteration done by \DCII impacts the number of behavioral changes detected, the number of amplified test methods obtained and the execution time.
 \end{mdframed}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -743,10 +739,10 @@ Here, the test selection is relevant.
 Actually, the ground-truth manual test added in the commit is also in the \texttt{XmlTreeBuilderTest} class.
 If DCI proposes a new test there to capture the behavioral change, the developer will understand its relevance and its relation to the change.
 
-\rev{\textsc{Mustache.java\#88718bc}}\footnote{\url{https://github.com/spullara/mustache.java/commit/88718bc}}\rev{, our test selection returns the \texttt{testInvalidDelimiters} test method defined in the \texttt{com.github.mustachejava.InterpreterTest} test class.}
- \rev{The commit improves an error message when an invalid delimiter is used.}
-\rev{Here, the test selection is relevant since it selected \texttt{testInvalidDelimiters} which is the dedicated test to the usage of the test invalid delimiters.}
-\rev{This ground-truth test method is also in the test class \texttt{com.github.mustachejava.InterpreterTest}.}
+\textsc{Mustache.java\#88718bc}\footnote{\url{https://github.com/spullara/mustache.java/commit/88718bc}}, our test selection returns the \texttt{testInvalidDelimiters} test method defined in the \texttt{com.github.mustachejava.InterpreterTest} test class.
+The commit improves an error message when an invalid delimiter is used.
+Here, the test selection is relevant since it selected \texttt{testInvalidDelimiters} which is the dedicated test to the usage of the test invalid delimiters.
+This ground-truth test method is also in the test class \texttt{com.github.mustachejava.InterpreterTest}.
 
 \textsc{Xwiki-commons\#848c984}\footnote{\url{https://github.com/xwiki/xwiki-commons/commit/848c984}} our test selection returns a single test method \texttt{createReference} from test class \texttt{XWikiDocumentTest}.
 The main modification of this commit is on class \texttt{XWikiDocument}.
@@ -898,9 +894,9 @@ But, \DCII generates amplified tests that detect 2 of 5 behavioral changes: addi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MUSTACHE JAVA
-\rev{\textsc{Mustache.java\#774ae7a}}\footnote{\url{https://github.com/spullara/mustache.java/commit/774ae7a}}\rev{: This commit fixes an issue with the usage of a dot in a  relative path on Window in the method \texttt{getReader} of class \texttt{ClasspathResolver}.}
-\rev{The test method \texttt{getReaderNullRootDoesNotFindFileWithAbsolutePath} has been used as seed by DCI. It modifies the existing string literal with another string used somewhere else in the test class and generates 3 new assertions.}
-\rev{The behavioral change is detected thanks to the modified strings: it produces the right test case containing a space.}
+\textsc{Mustache.java\#774ae7a}\footnote{\url{https://github.com/spullara/mustache.java/commit/774ae7a}}: This commit fixes an issue with the usage of a dot in a  relative path on Window in the method \texttt{getReader} of class \texttt{ClasspathResolver}.
+The test method \texttt{getReaderNullRootDoesNotFindFileWithAbsolutePath} has been used as seed by DCI. It modifies the existing string literal with another string used somewhere else in the test class and generates 3 new assertions.
+The behavioral change is detected thanks to the modified strings: it produces the right test case containing a space.
 
 \begin{figure}[h]
 \centering
@@ -909,13 +905,13 @@ But, \DCII generates amplified tests that detect 2 of 5 behavioral changes: addi
 \label{fig:ampl_mustache}
 \end{figure}
 
-\rev{The developer proposed two tests that verify that the object reader is not null when getting it with dots in the path.}
-\rev{There are shown in } \Autoref{fig:diff_mustache}.
-\rev{These tests invoke the method \texttt{getReader} which is the modified method in the commit.}
+The developer proposed two tests that verify that the object reader is not null when getting it with dots in the path.
+There are shown in \Autoref{fig:diff_mustache}.
+These tests invoke the method \texttt{getReader} which is the modified method in the commit.
 %
-\rev{The difference is that the \DCII's amplified test method provides a non longer valid input for the method \texttt{getReader}.}
-\rev{However, providing such inputs produce errors afterward which signal the behavioral change.}
-\rev{In this case, the amplified test is complementary to the human test since it verifies that the wrong inputs are no longer supported and that the system immediately throws an error.}
+The difference is that the \DCII's amplified test method provides a non longer valid input for the method \texttt{getReader}.
+However, providing such inputs produce errors afterward which signal the behavioral change.
+In this case, the amplified test is complementary to the human test since it verifies that the wrong inputs are no longer supported and that the system immediately throws an error.
 
 \begin{figure}[h]
 \centering
@@ -975,23 +971,23 @@ Even though human tests can be better, DCI can be complementary and catch missed
 In this section, we overview the current limitations of DCI and the key factors that prevent DCI from amplifying test methods that detect behavioral changes.
 
 \textbf{Time consumption}
-\rev{From our experiments, we see that the time consumption to complete the amplification is the main limitation of DCI.}
-\rev{\textsc{jsoup\#2c4e79b}, almost 5 hours have been spent with no result. }
-\rev{For the sake of our experimentation, we choose to use a pre-defined number of iteration to bound the exploration.}
-\rev{In practice, we recommend to set a time budget (\eg at most one hour per pull-request).}
+From our experiments, we see that the time consumption to complete the amplification is the main limitation of DCI.
+\textsc{jsoup\#2c4e79b}, almost 5 hours have been spent with no result.
+For the sake of our experimentation, we choose to use a pre-defined number of iteration to bound the exploration.
+In practice, we recommend to set a time budget (\eg at most one hour per pull-request).
 
 \textbf{Importance of test seeds}
-\rev{By construction, DCI's effectiveness is correlated to the test methods used as seed.}
-\rev{For example, see the row of \texttt{commons-lang\#c8e61af} in }\Autoref{tab:overall_result_iteration}
-\rev{where one can observe that whatever the number of iteration, DCI takes the same time to complete the amplification.}
-\rev{The reason is that the seed tests are only composed of assertions statements.}
-\rev{Such tests are bad seeds for DCI and they prevent any good input amplification.}
+By construction, DCI's effectiveness is correlated to the test methods used as seed.
+For example, see the row of \texttt{commons-lang\#c8e61af} in \Autoref{tab:overall_result_iteration}
+where one can observe that whatever the number of iteration, DCI takes the same time to complete the amplification.
+The reason is that the seed tests are only composed of assertions statements.
+Such tests are bad seeds for DCI and they prevent any good input amplification.
 
 \textbf{False positive}
-\rev{The risk of false positives is a potential  limitation of your approach.}
-\rev{A false positive would be an amplified test method that passes or fails on both versions, which means that the amplified test method does not detect the behavioral difference between both versions.}
-\rev{We manually  analyzed 6 commits and none of them are false positives.}
-\rev{While this is not a proof that DCI would never produce such confusing test methods, we are confident in the soundness of our implementation.}
+The risk of false positives is a potential  limitation of your approach.
+A false positive would be an amplified test method that passes or fails on both versions, which means that the amplified test method does not detect the behavioral difference between both versions.
+We manually  analyzed 6 commits and none of them are false positives.
+While this is not a proof that DCI would never produce such confusing test methods, we are confident in the soundness of our implementation.
 
 % -----------------------
 %  THREATS
@@ -1008,16 +1004,16 @@ In our benchmark, there are 60 commits. Our result may be not be generalizable t
 % flaky amplified test
 Last but not least threat is the potential flakiness of generated test methods.
 However we take care that our approach does not produce flaky test methods, and we make sure to observe a stable and different state of the program between different executions. 
-\rev{To do this, we execute 3 times each amplified test in order to check weather or not there are stable.}
-\rev{If the outcome of a at least one execution is different than the others, we discard the amplified test.}
+To do this, we execute 3 times each amplified test in order to check weather or not there are stable.
+If the outcome of a at least one execution is different than the others, we discard the amplified test.
 
 % weak statiscal test
-\rev{For the evaluation of the randomness, we use a Kruskal-Willis, which is known to be weaker than ANOVA test.}
-\rev{To perform an ANOVA test, the data must fulfull the following criteria:}
-\rev{1) The samples are independent;}
-\rev{2) Each sample is from a normally distributed population;}
-\rev{3) The population standard deviations of the groups are all equal. This property is known as homoscedasticity.}
-\rev{The two first are fulfilled while the third is not:}
+For the evaluation of the randomness, we use a Kruskal-Willis, which is known to be weaker than ANOVA test.
+To perform an ANOVA test, the data must fulfull the following criteria:
+1) The samples are independent;
+2) Each sample is from a normally distributed population;
+3) The population standard deviations of the groups are all equal. This property is known as homoscedasticity.
+The two first are fulfilled while the third is not:
 \begin{table*}
 \def\arraystretch{1}%  1 is the default, change whatever you need
 \setlength\tabcolsep{3pt} % default value: 6pt
@@ -1028,10 +1024,10 @@ seed     & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
 std     & 63.38&63.55&62.56&61.27&61.33&61.66&63.76&60.91&61.25&63.35
 \end{tabular}
 \end{table*}
-\rev{Since the standard deviations are not all equal, the associated p-value would not be valid.}
-\rev{This is why we choose to use a Kruskal-Willis test.}
+Since the standard deviations are not all equal, the associated p-value would not be valid.
+This is why we choose to use a Kruskal-Willis test.
 
-\rev{In addition to this, we perform it for only 11 seeds, which a small samples.}
+In addition to this, we perform it for only 11 seeds, which a small samples.
 
 % -----------------------
 %  RELATED - WORK
@@ -1043,10 +1039,10 @@ std     & 63.38&63.55&62.56&61.27&61.33&61.66&63.76&60.91&61.25&63.35
 
 Person \etal~\cite{dse} present differential symbolic execution (DSE). DSE combines symbolic execution and a new approximation technique to highlight behavioral changes.
 They use symbolic execution summary to find equivalences and difference and generate a set of inputs that trigger different behavior.
-\rev{This is done in three steps: 1) they execute both versions of the modified method; 2) they find equivalences and differences, thanks to the analysis of symbolic execution summary;  3) they generate a set of inputs that trigger the different behaviors in both versions.}
+This is done in three steps: 1) they execute both versions of the modified method; 2) they find equivalences and differences, thanks to the analysis of symbolic execution summary;  3) they generate a set of inputs that trigger the different behaviors in both versions.
 The main difference with our work is that they have the strong assumption to have a program whose semantics is fully handled by the symbolic execution engine. 
 In the context of Java, to our knowledge, no symbolic execution engine works on arbitrary Java program.
-\rev{Symbolic execution engines do not scale to the size and complexity of the programs we targeted.}
+Symbolic execution engines do not scale to the size and complexity of the programs we targeted.
 On the contrary, our approach, being more lightweight, is meant to work on all Java programs.
 
 Marinescu and Cadar~\cite{marinescu2013katch} present Katch, a system that aims at covering the code included in a patch.
@@ -1060,9 +1056,9 @@ Contrary to our work, they only aim at increasing the coverage, not at detecting
 A posterior work of the same group~\cite{palikareva2016shadow,Kuchta:2018:SSE:3276753.3208952} focuses on finding test inputs that execute different behaviors in two program versions. 
 They devise a technique, named ShaddowKlee, built on top of Klee \cite{klee}. 
 They require the code to be annotated at changed places. 
-\rev{Then they select from the test suite those test cases that cover the changed code. The unified program is used in a two stage dynamic symbolic execution guided by the selected test cases.}
-\rev{They first look for branch points where the conditions are evaluated in both program versions.}
-\rev{Then, a constraint solver generates new test inputs for divergent scenarios. The program versions are then normally executed with the generated inputs and the result is validated to check the presence of a bug or of an intended difference.}
+Then they select from the test suite those test cases that cover the changed code. The unified program is used in a two stage dynamic symbolic execution guided by the selected test cases.
+They first look for branch points where the conditions are evaluated in both program versions.
+Then, a constraint solver generates new test inputs for divergent scenarios. The program versions are then normally executed with the generated inputs and the result is validated to check the presence of a bug or of an intended difference.
 The evaluation of the proposed method is based on the CoREBench~\cite{bohme2014corebench} data set that contains documented regression bugs of the GNU Coreutils program suite. 
 
 
@@ -1070,10 +1066,10 @@ Noller \etal~\cite{jpfshadow} aim at detecting regression bugs.
 They apply shadow symbolic execution, originally from Palikevera~\cite{dse,palikareva2016shadow} that has been discussed in the previous paragraph, on Java programs. 
 Their approach has been implemented as an extension of Java Path Finder Symbolic (jpf-symbc)\cite{jpfsymb}, named jpf-shadow. 
 Shadow symbolic execution generate test inputs that trigger the new program behavior. 
-\rev{They use a merged version of both version of the same program, i.e. the previous version, so called old, and the changed version, called new.}
-\rev{This is done by instrumenting the code with method calls ``change()''.}
-\rev{The method change() takes two inputs: the old statement and the new one.}
-\rev{Then, a first step collects divergence points, i.e. conditional where the old version and the new version do not take the same branch.}
+They use a merged version of both version of the same program, i.e. the previous version, so called old, and the changed version, called new.
+This is done by instrumenting the code with method calls ``change()''.
+The method change() takes two inputs: the old statement and the new one.
+Then, a first step collects divergence points, i.e. conditional where the old version and the new version do not take the same branch.
 On small examples, they show that jpf-shadow generates less unit test cases yet cover the same number of path. 
 Jpf-shadow only aims at covering the changes and not at detecting the behavioral change with an assertion.
 
@@ -1094,77 +1090,75 @@ They evaluated their approach on 10 projects from the SF100 corpus, on 8 of the 
 They limit their evaluation to the 100 last consecutive commits.
 They observe an increase of +58\% branch coverage, +69\% thrown undeclared exceptions, while reducing the time consumption by up to 83\% compared to the baseline.
 The major difference compared to our approach, they do not aim at specifically obtaining test methods that detect the behavioral changes but rather obtain better branch coverage and detect undeclared exceptions. They also do not generate any assertions.
-\rev{However, from the point of view practitioners, integrating a time budget strategy into DCI would increase its usability, practicability and potential adoption.}
+However, from the point of view practitioners, integrating a time budget strategy into DCI would increase its usability, practicability and potential adoption.
 
 
 \subsection{Behavioral change detection}
 
-\rev{Evans \etal \cite{evans2007differential} devise the differential testing.}
-\rev{This approach aims at alleviating the test repair
-problem and detects more changes than regression testing alone.}
-\rev{They use an automated characterization test
-generator (ACTG) to generate test suite for both version of the program.}
-\rev{They then categorizes the tests of these 2 test suites into 3 groups:}
-\rev{1) $T_{preserved}$ which are the tests that pass on the both versions;}
-\rev{2) $T_{regressed}$ which are the tests that pass on the previous version but not on the new one;}
-\rev{3) $T_{progressed}$ which are the tests that pass on the new version but not on the previous one;}
-\rev{Then, they define also $T_{different}$ which is the union of both $T_{regressed}$ and $T_{progressed}$.}
-\rev{The approach is to execute $T_{different}$ on both versions and observe progressed and regressed behaviors.}
-\rev{They evaluate their approach on a small use case from the SIR dataset on 38 diffrent changes, for version of the program.}
-\rev{They showed that their approach detects 21\%, 34\%, and 21\% more behavior changes than regression testing alone for respectively version 1, version 2 and version 3.}
-\rev{In DCI, the amplified test methods obtained would lie into the $T_{regressed}$ group.}
-\rev{However, we could also amplified test methods using the new version of the program and obtain a $T_{progressed}$.}
-\rev{We would obtain a $T_{different}$ of amplified test methods and it might improve the performance of DCI.}
-\rev{About the evaluation, we run experimentation of 60 commits which the double than their dataset, and on real 
-projects and real commits from \gh.}
+Evans \etal \cite{evans2007differential} devise the differential testing.
+This approach aims at alleviating the test repair problem and detects more changes than regression testing alone.
+They use an automated characterization test generator (ACTG) to generate test suite for both version of the program.
+They then categorizes the tests of these 2 test suites into 3 groups:
+1) $T_{preserved}$ which are the tests that pass on the both versions;
+2) $T_{regressed}$ which are the tests that pass on the previous version but not on the new one;
+3) $T_{progressed}$ which are the tests that pass on the new version but not on the previous one;
+Then, they define also $T_{different}$ which is the union of both $T_{regressed}$ and $T_{progressed}$.
+The approach is to execute $T_{different}$ on both versions and observe progressed and regressed behaviors.
+They evaluate their approach on a small use case from the SIR dataset on 38 diffrent changes, for version of the program.
+They showed that their approach detects 21\%, 34\%, and 21\% more behavior changes than regression testing alone for respectively version 1, version 2 and version 3.
+In DCI, the amplified test methods obtained would lie into the $T_{regressed}$ group.
+However, we could also amplified test methods using the new version of the program and obtain a $T_{progressed}$.
+We would obtain a $T_{different}$ of amplified test methods and it might improve the performance of DCI.
+About the evaluation, we run experimentation of 60 commits which the double than their dataset, and on real 
+projects and real commits from \gh.
 
-\rev{Wei Jin \etal \cite{automated-behavioral-regression-testing} propose BEhavioral Regression
-Testing BERT.}
-\rev{BERT aims at assisting practitioners during development to identify potential regression.}
-\rev{It has been implemented as a plugin for the IDE Eclipse.}
-\rev{Each time a developer make a change in their code base and Eclipse compiles, BERT is triggered.}
-\rev{BERT works in 3 phases:}
-\rev{1) it analyzes what are the classes modified and runs a test generation tools, such as Randoop, to create new test input for these classes.}
-\rev{2) it executes the generated tests on both version of the program and collect multiples values such as the values of the fields of objects, the returned values by methods, etc.}
-\rev{3) it produces a report containing all the differences of behaviors based on the collected values.}
-\rev{Then the developer used this report to decide whether or not the changes are correct.}
-\rev{They evaluated BERT on a small and artificial project, showing that about 60\% of the automatically generated test inputs were able to reveal the behavioral difference that indicates the regression fault}
-\rev{In addition to this proof-of-concept, they evaluated in on JODA-time, which is a mature and widely used library.}
-\rev{They evaluated on 54 pairs of versions.}
-\rev{They reported 36 behavioral differences.}
-\rev{However, they could establish only for one of them was a regression fault.}
-\rev{There are two major differences with DCI:}
-\rev{1) DCI works at commit level and not to the class changes level.}
-\rev{2) DCI produces real and actionable test methods.}
+Wei Jin \etal \cite{automated-behavioral-regression-testing} propose BEhavioral Regression
+Testing BERT.
+BERT aims at assisting practitioners during development to identify potential regression.
+It has been implemented as a plugin for the IDE Eclipse.
+Each time a developer make a change in their code base and Eclipse compiles, BERT is triggered.
+BERT works in 3 phases:
+1) it analyzes what are the classes modified and runs a test generation tools, such as Randoop, to create new test input for these classes.
+2) it executes the generated tests on both version of the program and collect multiples values such as the values of the fields of objects, the returned values by methods, etc.
+3) it produces a report containing all the differences of behaviors based on the collected values.
+Then the developer used this report to decide whether or not the changes are correct.
+They evaluated BERT on a small and artificial project, showing that about 60\% of the automatically generated test inputs were able to reveal the behavioral difference that indicates the regression fault
+In addition to this proof-of-concept, they evaluated in on JODA-time, which is a mature and widely used library.
+They evaluated on 54 pairs of versions.
+They reported 36 behavioral differences.
+However, they could establish only for one of them was a regression fault.
+There are two major differences with DCI:
+1) DCI works at commit level and not to the class changes level.
+2) DCI produces real and actionable test methods.
 
-\rev{Taneja \etal \cite{Taneja:2008:DAR:1642931.1642986} present DiffGen, a tool that generate regression tests for two version of the same class.}
-\rev{Their approach works as follow:}
-\rev{First, they detect the changes between the two version of the class.}
-\rev{It is done using the textual representation and at method level.}
-\rev{Second, they generate what they call a test driver, which is a class that contains a method for each modified method.}
-\rev{These methods takes as input an instance of the old version of the class and the inputs required by the modified method.}
-\rev{They also make all the field public to compare their values between the old version and the new one.}
-\rev{These comparison have the form of branches.}
-\rev{The intuition is if the test generator engine is able to cover these branches, it will reveal the behavioral differences.}
-\rev{Third, they generate test using a test generator and the test driver.}
-\rev{Eventually, they execute the generated tests to see whether or not there is a behavioral difference.}
-\rev{They evaluated DiffGen on 8 artificial classes from the state of the art.}
-\rev{They compared the mutation score of their generated test suite to an existing method from the state of the art.}
-\rev{They showed that that DiffGen has an Improvement Factor IF2 varying from 23.4\% to 100\% for all the subjects.}
-\rev{They also performed an evaluation on larger subjects from the SIR dataset.}
-\rev{They detected 5 more faults than the state of the art.}
-\rev{DiffGen must modified the application code to be efficient while DCI does not required any modification of it.}
-\rev{Thus, is makes generated tests by DiffGen unused by developers since they must expose all the fields of their classes.}
+Taneja \etal \cite{Taneja:2008:DAR:1642931.1642986} present DiffGen, a tool that generate regression tests for two version of the same class.
+Their approach works as follow:
+First, they detect the changes between the two version of the class.
+It is done using the textual representation and at method level.
+Second, they generate what they call a test driver, which is a class that contains a method for each modified method.
+These methods takes as input an instance of the old version of the class and the inputs required by the modified method.
+They also make all the field public to compare their values between the old version and the new one.
+These comparison have the form of branches.
+The intuition is if the test generator engine is able to cover these branches, it will reveal the behavioral differences.
+Third, they generate test using a test generator and the test driver.
+Eventually, they execute the generated tests to see whether or not there is a behavioral difference.
+They evaluated DiffGen on 8 artificial classes from the state of the art.
+They compared the mutation score of their generated test suite to an existing method from the state of the art.
+They showed that that DiffGen has an Improvement Factor IF2 varying from 23.4\% to 100\% for all the subjects.
+They also performed an evaluation on larger subjects from the SIR dataset.
+They detected 5 more faults than the state of the art.
+DiffGen must modified the application code to be efficient while DCI does not required any modification of it.
+Thus, is makes generated tests by DiffGen unused by developers since they must expose all the fields of their classes.
 
 \subsection{Test amplification}
 
-\rev{Yoo \etal \cite{Yoo:2012:TDR:2237756.2237758} devise Test Data Regeneration(TDR). They use hill climbing on existing test data (set of input) that meets a test objective (\eg cover all branch of a function).}
-\rev{The algorithm is based on \emph{neighborhood} and a \emph{fitness} functions as the classical hill climbing algorithm.}
-\rev{The key difference with DCI is that they at fulfilling a test criterion, such as branch coverage, while we aim at obtaining test methods that detect the behavioral changes.}
+Yoo \etal \cite{Yoo:2012:TDR:2237756.2237758} devise Test Data Regeneration(TDR). They use hill climbing on existing test data (set of input) that meets a test objective (\eg cover all branch of a function).
+The algorithm is based on \emph{neighborhood} and a \emph{fitness} functions as the classical hill climbing algorithm.
+The key difference with DCI is that they at fulfilling a test criterion, such as branch coverage, while we aim at obtaining test methods that detect the behavioral changes.
 
-\rev{It can be noted that several test generation techniques start from a seed and evolve it to produce a good test suite. This is the case for techniques such as concolic test generation \cite{godefroid2005dart}, search-based test generation \cite{fraser2012seed}, or random  test generation \cite{groce2007randomized}.}
-\rev{The key novelty of DCI relies in the very nature of the tests we used as seed.}
-\rev{DCI uses complete program, which creates objects, manipulates the state of these objects, calls methods on these objects and asserts properties on their behavior. That is to say real and complex object-oriented tests as seed}
+It can be noted that several test generation techniques start from a seed and evolve it to produce a good test suite. This is the case for techniques such as concolic test generation \cite{godefroid2005dart}, search-based test generation \cite{fraser2012seed}, or random  test generation \cite{groce2007randomized}.
+The key novelty of DCI relies in the very nature of the tests we used as seed.
+DCI uses complete program, which creates objects, manipulates the state of these objects, calls methods on these objects and asserts properties on their behavior. That is to say real and complex object-oriented tests as seed
 
 \subsection{Continuous Integration}
 
