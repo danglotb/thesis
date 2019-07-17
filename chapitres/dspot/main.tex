@@ -251,7 +251,7 @@ First, in \autoref{lst:aampl-example-1} \dspot instruments the test method to co
 testIterationOrder() {
 	TreeList tl=new TreeList(); (*@\label{input-begin-aampl}@*)
 	tl.add(1);
-	tl.add(2);
+	tl.add(2);aampl
 	tl.removeAll();(*@\label{input-end-aampl}@*)
 	
 	// logging current behavior
@@ -315,6 +315,11 @@ testIterationOrder() {
 \dspot produces an Amplified Test Suite $ATS$, \ie a better version of the input Test Suite $TS$ according to a specific test criterion.
 For each test case $t$ in the test suite $TS$ (Line 1), \dspot first tries to add assertions without generating any new test input (Line 3), method $generateAssertions\left(t\right)$ is explained in \autoref{subsec:dspot:algorithm:new-assertions}.
 Note that adding missing assertions is the elementary way to improve existing tests.
+Consequently, in \dspot there are two modes:
+1) \dspot executes only assertion amplification.
+2) \dspot executes both input space exploration and assertion amplification.
+In the former mode, \dspot is fast but might not be very efficient to improve the test-criterion.
+In the latter mode, \dspot is slower but have more potential to improve the test-criterion.
 
 \dspot initializes a temporary list of tests $TMP$ and applies $n$ times the following steps (Line 6): 
 1) it applies each amplifier $amp$ on each tests of $TMP$ to build $V$ (Line 8-9 see \autoref{subsec:dspot:algorithm:input-space-exploration} \ie \Iampl);
