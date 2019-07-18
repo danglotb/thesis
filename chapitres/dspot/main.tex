@@ -3,7 +3,7 @@
 
 \begin{chaptersummary}
 		In this chapter, I expose the major output of this thesis: \dspot.
-		\dspot is a test amplification tool that have the ambition to improve the test suite of real projects, and the global quality of continuous integration process.
+		\dspot is a test amplification tool that have the ambition to improve the test suite of real projects.
 		\dspot achieves this by providing a set of automated procedures done in three majors step:\\
 		1) it modifies the test inputs in order to trigger new behavior.\\
 		2) it generates assertions to verify the new behavior of the program.\\
@@ -12,7 +12,8 @@
 		In this chapter, I first define key concepts in \autoref{sec:dspot:definitions};
 		Then, I expose an overview of \dspot with its principle, input\& output, and its workflow in \autoref{sec:dspot:overview};
 		Followed by the explanation of \dspot's algorithm in \autoref{sec:dspot:algorithm};
-		Eventually, I detail the implementation and the ecosystem of \dspot in \autoref{sec:dspot:implemention}.
+		Then, I detail the implementation and the ecosystem of \dspot in \autoref{sec:dspot:implemention}
+		Eventually, I conclude this chapter in \autoref{sec:dspot:conclusion}
 \end{chaptersummary}
 
 \minitoc
@@ -376,3 +377,25 @@ This plugin allows also developers to configure \dspot inside their own pom with
 Second, STAMP's partners developed an Eclipse plugin and Jenkins plugin. 
 The former allows developers to run \dspot inside Eclipse, with a friendly UI to configure it. 
 The latter allows developers to run \dspot as a Jenkins jobs in order to integrate \dspot in their continuous integration service.
+
+\section{Conclusion}
+\label{sec:dspot:conclusion}
+
+In this chapter, I gave technical details about \dspot.
+\dspot is a test amplification tool that improve the test suite.
+\dspot works in three main steps:
+
+1) it modifies the test inputs in order to trigger new behavior.
+
+2) it generates assertions to verify the new behavior of the program.
+
+3) it selects amplified test methods according to a specific test-criterion such as branch coverage.
+
+\dspot's output is a set of amplified test methods that improve the original test suite according to the specified test-criterion.\\
+
+In the two following chapters, I evaluate the performance of \dspot to improve existing test suite in two scenarios:
+
+A first scenario where \dspot improve the mutation score of existing test suite of open-source projects from \gh.
+The test-criterion improved is mutation score, and output of \dspot is evaluated by external developers.
+
+A second scenario where \dspot is enhanced to be executed inside the continuous in order to detect a behavioral changes introduced by commits done by developers on a version control platform such as \gh.
