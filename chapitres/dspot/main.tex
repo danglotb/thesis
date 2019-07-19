@@ -4,11 +4,16 @@
 \begin{chaptersummary}
 		In this chapter, I expose the major output of this thesis: \dspot.
 		\dspot is a test amplification tool that have the ambition to improve the test suite of real projects.
-		\dspot achieves this by providing a set of automated procedures done in three majors step:\\
-		1) it modifies the test inputs in order to trigger new behavior.\\
-		2) it generates assertions to verify the new behavior of the program.\\
-		3) it selects amplified test methods according to a specific test-criterion such as branch coverage.\\
-		\dspot's output is a set of amplified test methods that improve the original test suite according to the specified test-criterion.\\
+		\dspot achieves this by providing a set of automated procedures done in three majors step:
+		
+		1) it modifies the test inputs in order to trigger new behavior.
+		
+		2) it generates assertions to verify the new behavior of the program.
+		
+		3) it selects amplified test methods according to a specific test-criterion such as branch coverage.
+		
+		\dspot's output is a set of amplified test methods that improve the original test suite according to the specified test-criterion.
+		
 		In this chapter, I first define key concepts in \autoref{sec:dspot:definitions};
 		Then, I expose an overview of \dspot with its principle, input\& output, and its workflow in \autoref{sec:dspot:overview};
 		Followed by the explanation of \dspot's algorithm in \autoref{sec:dspot:algorithm};
@@ -167,6 +172,8 @@ assertEquals(1, it.next().intValue());(*@\label{assertion-1}@*)
 assertEquals(2, it.next().intValue());(*@\label{assertion-2}@*)
 }
 \end{lstlisting}
+
+\todo{talk about unit test ? Dspot is more applicable to unit test.}
 
 \section{Algorithm}
 \label{sec:dspot:algorithm}
@@ -348,7 +355,7 @@ Then it applies $n$ times the following steps (Line 6):
 \label{subsec:dspot:algorithm:flaky-test-elimination}
 The input space exploration (see \autoref{subsec:dspot:algorithm:input-space-exploration}) may produce test inputs that results in non-deterministic executions.
 This means that, between two independent executions, the state of the program is not the same.
-Since \dspot generates assertions where the expected value is a hard coded value from a specific run (see \autoref{subsec:dspot:algorithm:new-assertions}), the generated test case may become flaky: it passes or fails depending on the execution and whether the expected value is obtained or not.
+Since \dspot generates assertions woper showed their interest in amplified test methods.here the expected value is a hard coded value from a specific run (see \autoref{subsec:dspot:algorithm:new-assertions}), the generated test case may become flaky: it passes or fails depending on the execution and whether the expected value is obtained or not.
 
 To avoid such flaky tests, \dspot run $f$ times each new test case resulting from amplification ($f$ = 3 in the default configuration). 
 If a test fails at least once, \dspot throws it away. 
@@ -395,7 +402,7 @@ In this chapter, I gave technical details about \dspot.
 
 In the two following chapters, I evaluate the performance of \dspot to improve existing test suite in two scenarios:
 
-A first scenario where \dspot improve the mutation score of existing test suite of open-source projects from \gh.
-The test-criterion improved is mutation score, and output of \dspot is evaluated by external developers.
+A first scenario where \dspot improve existing test suite of open-source projects from \gh.
+\dspot's output is evaluated by external developers and the test-criterion to improve is the mutation score.
 
 A second scenario where \dspot is enhanced to be executed inside the continuous in order to detect a behavioral changes introduced by commits done by developers on a version control platform such as \gh.
