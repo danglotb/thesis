@@ -173,7 +173,14 @@ assertEquals(2, it.next().intValue());(*@\label{assertion-2}@*)
 }
 \end{lstlisting}
 
-\todo{talk about unit test ? Dspot is more applicable to unit test.}
+\subsubsection{Best target test}
+\label{subsubsec:dspot:overview:appliance-to-unit-test:target-test}
+
+By the algorithm's nature, unit tests (vs integration test) are the best target for \dspot.
+The reasons are behind the very nature of unit tests:
+First, they have a small scope, which allow \dspot to intensify its search while an integration test, that contains a lot of code, would make \dspot explore the neighborhood in different ways.
+Second, that is a consequence of the first, the unit tests are fast to be executed against integration test.
+Since \dspot needs to execute multiple times the tests under amplification, it means that \dspot would be executed faster when it amplifies unit tests than when it amplified integration tests.
 
 \section{Algorithm}
 \label{sec:dspot:algorithm}

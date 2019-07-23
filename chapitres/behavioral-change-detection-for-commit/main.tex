@@ -3,21 +3,26 @@
 
 
 \begin{chaptersummary}
-	In this chapter, I detail an extension of \dspot, called \DCI(dspot-CI), and its evaluation.
+	In this chapter, I detail an extension of \dspot, called \DCI(\dspot-CI), and its evaluation.
 	When developers use a version control management such as git, they make changes in the software in the form of commits.
-	\DCI consists of obtaining amplified test methods that detect the behavioral changes introduces by commits.
-	This evaluation is done on 60 commits from 6 open-source projects on \gh.
+	\DCI consists of obtaining amplified test methods that detect the behavioral changes introduced by commits.
+	This evaluation has be done on 60 commits from 6 open-source projects on \gh.
 	The result is that \DCI has been able to obtain amplified test methods detecting \todo{XX} behavioral changes.
 	
 	To sum up, the contributions of this chapter are:
 	\begin{itemize}
-		%\item The problem statement of behavioral change detection in the context of Continuous Integration.
-		\item \DCI (\textbf{D}etecting behavioral changes in \textbf{CI}), an approach based on \emph{test amplification} to generate new tests that detect the behavioral change introduced by a commit.
+		\item \DCI (\textbf{D}spot-\textbf{CI}), a complete approach to obtain automatically test methods that detect behavioral changes.
 		\item An open-source implementation of \DCI for Java.
 		\item A curated benchmark of 60 commits that introduce a behavioral change and include a test case to detect it, selected from 6 notable open source Java projects\footnote{\url{https://github.com/STAMP-project/dspot-experiments.git}}.
 		\item A comprehensive evaluation based on 4 research questions that combines quantitative and qualitative analysis with manual assessment.
 	\end{itemize}
-	Note that this chapter is an extension of a to be published article\cite{}.
+	Note that this chapter is a to be published article\cite{}.
+	The remainder of this chapter is as follows:
+	\autoref{sec:dci:background} motivates this chapter and gives the background.
+	\autoref{sec:dci:techniques} exposes the technical extension of \dspot: an approach for commit-based test selection. 
+	\autoref{sec:dci:evaluation} introduces our benchmark of commits, the evaluation protocol and the results of our experiments on 50 real commits. 
+	\autoref{sec:dci:threats} relates the threats validity and actions that have been taken to overcome them. 
+	and \autoref{sec:dci:conclusion} concludes this chapter;
 \end{chaptersummary}
 
 \graphicspath{{.}{chapitres/behavioral-change-detection-for-commit/}}
@@ -37,7 +42,8 @@ In collaborative software projects, developers work in parallel on the same code
 Every time a developer integrates her changes, she submits them in the form of a \emph{commit} to a version control system.
 The \emph{Continuous Integration} (CI) server~\cite{fowler2006continuous} merges the commit with the master branch, compiles and automatically runs the test suite to check that the commit behaves as expected.
 Its ability to detect bugs early makes CI an essential contribution to quality assurance~\cite{Hilton:2016:UsageCI,duvall2007continuous}.
-However, the effectiveness of Continuous Integration depends on one key property: each commit should include at least one test case $t_{new}$ that specifies the intended change.
+However, the effectiveness of Continuous Integration depends on one key property: 
+each commit should include at least one test case $t_{new}$ that specifies the intended change.
 For instance, assume one wants to integrate a bug fix.
 In this case, the developer is expected to include a new test method, $t_{new}$, that specifies the program's desired behavior after the bug fix is applied.
 This can be mechanically verified: $t_{new}$ should fail on the version of the code that does not include the fix (the \emph{pre-commit} version), and pass on the version that includes the fix (the \emph{post-commit} version).
@@ -47,7 +53,6 @@ This is the problem addressed in this chapter.
 
 \subsection{Goal}
 \label{subsec:dci:introduction:goal}
-\todo{Change the notation of $t_{gen}$}
 
 The goal is to automatically generate test methods for each commit that is submitted to the CI.
 In particular, a test method $t_{gen}$ that specifies the behavioral change of each commit.
@@ -57,14 +62,6 @@ To do so, I developed a new approach, called \DCI (\textbf{D}etecting behavioral
 First, it analyzes the test methods of the pre-commit version and select the ones that exercise the parts of the code modified by the commit.
 Second, it applies \dspot on this subset of test methods.
 The test selection is done only on amplified test methods that are relevant, \ie $t_{gen}$ \textit{passes} on the pre-commit version and \textit{fails} on the post-commit version.
-This process of automatic generation of $t_{gen}$ from existing tests is called \emph{test amplification}~\cite{zhang2012}.
-
-The remainder of this chapter is as follows:
-\autoref{sec:dci:background} motivates this chapter and gives the background.
-\autoref{sec:dci:techiques} exposes the technical extension of \dspot: an approach for commit-based test selection. 
-\autoref{sec:dci:evaluation} introduces our benchmark of commits, the evaluation protocol and the results of our experiments on 50 real commits. 
-\autoref{sec:dci:threats} relates the threats validity and actions that have been taken to overcome them. 
-and \autoref{sec:dci:conclusion} concludes this chapter;
 
 % -----------------------
 %  MOTIVATION
@@ -90,19 +87,20 @@ The developer did not write a test method nor modify an existing one.
 \end{figure}
 
 In this commit, the intent is to take into account the \texttt{version} (from method \texttt{getVersion}) in the \texttt{equals} method.
-This change impacts the behavior of all methods that use it, \texttt{equals} being a highly used method.
-Such a central behavioral change may impact the whole program, and the lack of a test case for this new behavior may have dramatic consequences in the future.
-Without a test case, this change could be reverted and go undetected by the test suite and the Continuous Integration server, \ie the build would still pass.
+This change impacts the behavior of all methods that use it, the method \texttt{equals} being a highly used.
+Such a central behavioral change may impact the whole program, and the lack of a test method for this new behavior may have dramatic consequences in the future.
+Without a test method, this change could be reverted and go undetected by the test suite and the Continuous Integration server, \ie the build would still pass.
 Yet, a user of this program would encounter new errors, because of the changed behavior.
 The developer took a risk when committing this change without a test case.
 
-This extension of \dspot in continuous integration aims at mitigating such risk: 
-test amplification aims at ensuring that every commit include a new test method or a modification of an existing test method.
+\DCI aims at mitigating such risk: 
+ensuring that every commit include a new test method or a modification of an existing test method.
 In this chapter, I study \dspot's ability to automatically obtain a test method that highlights the behavioral change introduced by a commit.
 This test method allows to identify the behavioral difference between the two versions of the program. 
 The goal is to use this new test method to ensure that any changed behavior can be caught in the future.
 
-What I propose is as follows: 
+
+Following, the vision of \DCI's usage:
 when Continuous Integration is triggered, 
 rather than just executing the test suite to find regressions, 
 it could also run an analysis of the commit to know if it contains a behavioral change, 
@@ -110,10 +108,10 @@ in the form of a new method or the modification of an existing one.
 If there is no appropriate test method to detect a behavioral change, the approach would provide one. 
 \DCI would take as input the commit and a test suite, and generate a new test method that detects the behavioral change.
 
-\subsection{Practibility}
-\label{subsec:dci:background:praticability}
+\subsection{Practicability}
+\label{subsec:dci:background:practicability}
 
-Following, a description of a complete scenario to sum up the vision of the approach's usage.
+Following, the vision of an integration scenario of \DCI:
 
 A developer commits a change into the program.
 The Continuous Integration service is triggered;
@@ -128,13 +126,6 @@ The current amplified test method cannot be added to the test suite, since it fa
 However, this test method is still useful, since one has only to negate the failing assertions, \eg change an \texttt{assertTrue} into an \texttt{assertFalse}, to obtain a valid and passing test method that explicitly executes the new behavior.
 This can be done manually or automatically with approaches such as ReAssert\cite{ReAssert}.
 
-\TODO{is this okay ? the definition of DSPOT says that dspot runs well on unit test}
-From my experience, unit tests (vs integration test) are the best target for \DCI
-The reasons are behind the very nature of unit tests:
-First, they have a small scope, which allow \DCI to intensify its search while an integration test, that contains a lot of code, would make \DCI explore the neighborhood in different ways.
-Second, that is a consequence of the first, the unit tests are fast to be executed against integration test.
-Since \DCI needs to execute 5 times the tests under amplification, it means that \DCI would be executed faster when it amplifies unit tests than when it amplified integration tests.
-
 \DCI has been designed to be easy to use.
 The only cost of \DCI is the time to set it up: in the ideal, happy-path case, it is meant to be a single command line through Maven goals.
 Once \DCI is set up in continuous integration, it automatically runs at each commit and developers directly benefit from amplified test methods that strengthen the existing test suite.
@@ -146,7 +137,7 @@ Once \DCI is set up in continuous integration, it automatically runs at each com
 \label{subsec:dci:background:behavioral-change}
 
 A \emph{behavioral change} is a source-code modification that triggers a new state for some inputs \cite{saff2004experimental}.
-Considering the pre-commit version $P$ and the post-commit version $P'$ of a program, the commit introduces a behavioral change if it is possible to implement a test case that can trigger and observe the change, \ie, it passes on $P$ and fails on $P'$, or the opposite.
+Considering the pre-commit version $P$ and the post-commit version $P'$ of a program, the commit introduces a behavioral change if it is possible to implement a test method that can trigger and observe the change, \ie, it passes on $P$ and fails on $P'$, or the opposite.
 In short, the behavioral change must have an impact on the observable behavior of the program.
 
 %
@@ -155,7 +146,7 @@ In short, the behavioral change must have an impact on the observable behavior o
 \subsection{Behavioral Change Detection}
 \label{subsec:dci:background:behavioral-change-detection}
 
-Behavioral change detection is the task of identifying or generating a test or an input that distinguishes a behavioral change between two versions of the same program.
+\emph{Behavioral change detection} is the task of identifying a behavioral change between two versions of the same program.
 In this chapter, I propose a novel approach to detect behavioral changes based on test amplification.
 
 % -----------------------
@@ -170,13 +161,14 @@ In this chapter, I propose a novel approach to detect behavioral changes based o
 
 \DCI takes as input a program, its test suite, and a commit modifying the program.
 The commit, as done in version control systems, is basically the diff between two consecutive versions of the program.
-%
+
 % output
 \DCI outputs new test methods that detect the behavioral difference between the pre- and post-commit versions of the program.
-The new tests pass on a given version, but fail on the other, demonstrating the presence of a behavioral change captured.% by an assertion.
+The new tests pass on a given version, but fail on the other, demonstrating the presence of a behavioral change captured.
 
-\DCI computes the code coverage of the diff and selects test methods accordingly. % to this diff coverage.
-Then it applies \dspot to amplify and generation generate new test methods that detect the behavioral change.
+\DCI computes the code coverage of the diff and selects test methods accordingly.
+Then it applies \dspot to amplify selected test methods.
+The resulting amplified test methods detect the behavioral change.
 
 \autoref{fig:global_approach} sums up the different phases of the approach:
 1) Compute the diff coverage and select the tests to be amplified;
@@ -219,7 +211,9 @@ Since \DCI uses \dspot, \DCI have also two mode:
 The final step performed by \DCI consists in checking whether that the amplified test methods detect behavioral changes.
 Because \DCI amplifies test methods using the pre-commit version, all amplified test methods pass on this version, by construction. 
 Consequently, for the last step, \DCI runs the amplified test methods only on the post-commit version. 
-Every test that fails is in fact detecting a behavioral change introduced by the commit, and is a success. \DCI keeps the tests that successfully detect behavioral changes.
+Every test that fails is in fact detecting a behavioral change introduced by the commit, and is a success.
+\DCI keeps the tests that successfully detect behavioral changes.
+Note that if the amplified test method is not executable on the post-commit version, \eg the API has been modified, the amplified test method is discarded.
 
 \subsection{Implementation}
 \label{sec:dci:techniques:implementation}
@@ -229,17 +223,17 @@ It computes the global coverage of the test suite with OpenClover, which instrum
 Then, it uses Gumtree to have an AST representation of the diff.
 \DCI matches the diff with the test that executes those lines. 
 Through its Maven plugin, \DCI can be seamlessly implemented into continuous integration.
-\DCI is publicly available on \gh.\footnote{\url{https://github.com/STAMP-project/dspot.git}}
+\DCI is publicly available on \gh.\footnote{\url{https://github.com/STAMP-project/dspot/tree/master/dspot-diff-test-selection}}
 
 \section{Evaluation}
 \label{sec:dci:evaluation}
 
-To evaluate the DCI approach, I design an experimental protocol to answer the following research questions:
+The evaluation of \DCI relies on 4 research questions:
 
 \newcommand{\rqdetection}{\RQ{1}{To what extent are \DCIA and \DCII able to produce amplified test methods that detect the behavioral changes?}}
+\newcommand{\rqiteration}{\RQ{2}{What is the impact of the number of iteration performed by \DCII?}}
 \newcommand{\rqselection}{\RQ{3}{What is the effectiveness of our test selection method?}}
 \newcommand{\rqhuman}{\RQ{4}{How do human and generated tests that detect behavioral changes differ?}}
-\newcommand{\rqiteration}{\RQ{2}{What  is the impact of the number of iteration performed by  \DCII?}}
 
 \noindent
 \rqdetection\\
@@ -250,12 +244,15 @@ To evaluate the DCI approach, I design an experimental protocol to answer the fo
 \subsection{Benchmark}
 \label{subsec:dci:evaluation:benchmark}
 To the best of my knowledge, there is no benchmark of commits in Java with behavioral changes in the literature. 
-Consequently, I devise a project and commit selection procedure in order to construct a benchmark for our approach.
+Consequently, I devise a project and commit selection procedure in order to construct a benchmark for the evaluation.
 
 \paragraph{Project selection}
 The evaluation needs software projects that are
-1) publicly-available,
-2) written in Java,
+
+1) publicly-available;
+
+2) written in Java;
+
 3) and use continuous integration.
 
 The projects has been selected from the dataset in \cite{descartes} and \cite{dspot-emse}, which is composed of mature Java projects from \gh.
@@ -265,22 +262,30 @@ The projects has been selected from the dataset in \cite{descartes} and \cite{ds
 Commits has been taken in inverse chronological order, from newest to oldest.
 %this result in commits buildable and analyzable with the current version of build and test tools;
 I select the first ten commits that match the following criteria:
-1) the commit modifies Java files (most behavioral changes are source code changes.\footnote{I'm aware that behavioral changes can be introduced in other ways, such as modifying dependencies or configuration files \cite{Test:Coverage:Evolution}.});
-% ground-truth
+
+1) the commit modifies Java files (most behavioral changes are source code changes.
+It is known that behavioral changes can be introduced in other ways, such as modifying dependencies or configuration files \cite{Test:Coverage:Evolution}.
+However, such modifications are not the target of \DCI.
+
 2) the commit provides or modifies a manually written test that detects a behavioral change. 
 To verify this property, I execute the test on the pre-commit version. 
 If it fails, it means that the test detects at least 1 behavioral change.
 This test will be used as a \textit{ground-truth test} in \textbf{RQ4}.
-3) The changes of the commit must be covered by the pre-commit test suite.
+
+3) the changes of the commit must be covered by the pre-commit test suite.
 To do so, I compute the diff coverage. 
-If the coverage is 0\%, we discard the commit. 
-This is done because if the change is not covered, any test methods cannot be selected to be amplified, which is what we want to evaluate.
+If the coverage is 0\%, the commit is discarded. 
+This is done because if the change is not covered, any test methods cannot be selected to be amplified, which is what a part of the evaluation.
 
 Together, these criteria ensure that all selected commits:
+
 1) introduce behavioral changes;
-2) provide or modify a manually written test case that detects a behavioral change (which will be used as ground-truth for comparing generated tests);
-3) that there is at least 1 test in the pre-commit version of the program that executes the diff and can be used to seed the amplification process;
-4) There is no structural change in the commit between both versions, \eg no change in method signature and deletion of classes (this is ensured since the pre-commit test suite compiles and runs against the post-commit version of the program and vice-versa).
+
+2) at least one test method can be used as ground-truth since it detects a behavioral change;
+
+3) at least one test method executes the diff and can be used to seed the amplification process;
+
+4) there is no structural change in the commit between both versions, \eg no change in method signature and deletion of classes (this is ensured since the pre-commit test suite compiles and runs against the post-commit version of the program and vice-versa).
 
 \paragraph{Final benchmark}
 \begin{table}[h]
@@ -314,35 +319,40 @@ LOC &
 
 \autoref{tab:benchmark} shows the main statistics on the benchmark dataset. % construction.
 The first column is the name of the considered project;
-The second column is the date at which we did the analysis;
+The second column is the date at which the analysis has been done;
 The third column is the date of the oldest commit for the project;
-The fourth, fifth, sixth and seventh are respectively the total number of commit analyzed, the total number of commits we discard, the number of commits that match all our criteria but the third (there is no test in the pre-commit that execute the change and the number of commit we select).
-Note that this benchmark is only composed of recent commits from notable open-source projects and is available on \gh at \url{https://github.com/STAMP-project/dspot-experiments}.
+The fourth, fifth, sixth and seventh are respectively the total number of commit analyzed, 
+the total number of commits discarded, 
+the number of commits that match all criteria but the third (there is no test in the pre-commit that execute the change).
+Note that this benchmark is available on \gh at \url{https://github.com/STAMP-project/dspot-experiments}.
 
 \subsection{Protocol}
 \label{subsec:dci:evaluation:protocol}
 
-To answer \textbf{RQ1}, I run \DCIA and \DCII on the benchmark projects.
-I report total number of behavioral changes successfully detected by \DCI, \ie the number of commits for which \DCI generates at least 1 test method that passes on the pre-commit version but fails on the post-commit version.
-I also discuss 1 case study of a successful behavioral change detection.
+To answer \textbf{RQ1}, \DCIA and \DCII is executed on the benchmark projects.
+The total number of behavioral changes successfully detected by \DCI is reported.
+That is to say the number of commits for which \DCI generates at least 1 test method that passes on the pre-commit version but fails on the post-commit version.
+Also, 1 case study of a successful behavioral change detection is discussed.
 
-To answer \textbf{RQ2}, I run \DCII for 1, 2 and 3 iterations on the benchmark projects.
-I report the number of behavioral changes successfully detected for each number of iterations in the main loop.
-I report also the number amplified test methods that detect the behavioral changes for each commit for 10 different seeds to study the impact of the randomness on the output of DSpot
-I perform a Kruskal-Wallis test statistic on these numbers.
+To answer \textbf{RQ2}, \DCII with 1, 2 and 3 iterations is executed on the benchmark projects.
+The number of behavioral changes successfully detected for each number of iterations in the main loop is reported.
+Also, the number amplified test methods that detect the behavioral changes for each commit for 10 different seeds to study the impact of the randomness on the output of \dspot is reported.
+A Kruskal-Wallis test statistic is performed on these numbers.
 
-The null hypothesis is the following: The population median of all of the groups are equals.
+The null hypothesis is the following: 
+
+The population median of all of the groups are equals.
 
 The alternative hypothesis is: at least one population median of one group is different from the population median of at least one other group.
 
-The confidence level is 95\%, or $\alpha = 0.05$.
+The confidence level is set at 95\%, or $\alpha = 0.05$.
 
 For \textbf{RQ3}, the test selection method is considered effective if the tests selected to be amplified semantically relate to the code changed by the commit. 
-To assess this, a manual analysis is performed.% as follows.
-I randomly select 1 commit per project in the benchmark, and manually analyze whether the automatically selected tests for this commit are semantically related to the behavioral changes in the commit. 
+To assess this, 1 commit per project in the benchmark is selected.
+Then the automatically selected tests for this commit is manually analyzed to tell whether there are semantically related to the behavioral changes in the commit. 
 
-To answer \textbf{RQ4}, I use the ground-truth tests written or modified by developers in the selected commits. % written by the humans.
-I manually compare the amplified test methods that detect behavioral changes to the human tests, for 1 commit per project.
+To answer \textbf{RQ4}, the ground-truth tests written or modified by developers in the selected commits is used.
+This ground-truth test method is compared to the amplified test methods that detect behavioral changes, for 1 commit per project.
 
 \subsection{Results}
 \label{subsec:result}
@@ -352,12 +362,10 @@ I manually compare the amplified test methods that detect behavioral changes to 
 \def\arraystretch{0.3}%  1 is the default, change whatever you need
 \setlength\tabcolsep{.35pt} % default value: 6pt
 \caption{Performance evaluation of \DCI on 60 commits from 6 large open-source projects.}
-%\rotvertical{
 \label{tab:overall_result}
 \begin{tabular}{l|c|rcccc|c|cc|cc|cc|cc}
 \input{chapitres/behavioral-change-detection-for-commit/table_content}
 \end{tabular}
-%}
 \end{table}
 
 The overall results are reported in \autoref{tab:overall_result}.
@@ -368,28 +376,19 @@ the fourth and fifth columns are respectively the number of tests modified or ad
 the sixth and seventh columns are respectively the diff coverage and the number of tests \DCI selected;
 the eighth column provides the amplification results for \DCIA, and it is either a \cmark with the number of amplified tests that detect a behavioral change or a \textit{-} if \DCI did not succeed in generating a test that detects a change;
 the ninth column displays the time spent on the amplification phase;
-The tenth and the eleventh are respectively a \cmark with the number of amplified tests for \DCII  (or - if a change is not detected) for 3 iterations.
+The tenth and eleventh columns are respectively a \cmark with the number of amplified tests for \DCII or a \textit{-} if \DCI did not succeed in generating a test that detects a change; for 3 iterations.
 
 \subsubsection{Characteristics of commits with behavioral changes in the context of continuous integration}
 \label{subsubsec:dci:evaluation:characteristics}
 
-In  this section, the characteristics of commits introducing behavioral changes in the context of continuous integration are described.
-The first five columns in \autoref{tab:overall_result} describe the characteristics of our benchmark.
-% date
-The commit dates show that the benchmark is only composed of recent commits.
-The most recent is \textsc{gson\#b1fb9ca}, authored 9/22/18, and the oldest is \textsc{commons-io\#5d072ef}, authored 9/10/15.
-% now the number of tests
+This section describes the characteristics of commits introducing behavioral changes in the context of continuous integration.
 The number of test methods at the time of the commit shows two aspects of our benchmark:
 1) there are only strongly tested projects;
 2) the number of tests evolve over time due to test evolution.
-%The fourth column shows that 
 Every commit in the benchmark comes with test modifications (new tests or updated tests), and commit sizes are quite diverse.
-%For instance, the first commit c6b8a38 has two modified tests.
-%The fifth column shows the size of the commit diff in terms of added and removed lines.
-%Overall, our selection criteria include a diversity of commit sizes. 
 The three smallest commits are \textsc{commons-io\#703228a}, \textsc{gson\#44cad04} and \textsc{jsoup\#e5210d1} with 6 modifications, and the largest is \textsc{Gson\#45511fd} with 334 modifications.
 %
-Finally, on average, commits have 66.11\% coverage. s
+Finally, on average, commits have 66.11\% coverage.
 The distribution of diff coverage is reported graphically by \autoref{fig:histdiffcoverage}: 
 in commons-io all selected commits have more than 75\% coverage.
 In XWiki-Commons, only 50\% of commits have more than 75\% coverage. 
@@ -403,27 +402,28 @@ This validates the correct implementation of the selection criteria that ensures
 \label{fig:histdiffcoverage}
 \end{figure}
 
-% recap of RQ1.
-Thanks to the selection criteria, I have curated benchmark of 50 commits with a behavioral change, coming from notable open-source projects, and covering a diversity of commit sizes. 
+Thanks to the selection criteria, 
+a curated benchmark of 50 commits with a behavioral change is available for the evaluation.
+This benchmark comes from notable open-source projects, and covers a diversity of commit sizes. 
 The benchmark is publicly available and documented for future research on this topic.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% RESULTS RQ2
+%% RESULTS RQ1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{\rqdetection}
 \label{subsubsec:dci:evaluation:rq1}
 
-Let's now focus on the last 4 columns of \autoref{tab:overall_result}.
-For instance, for \textsc{commons-io\#f00d97a} (4$^{th}$ row), \DCII generated 39 amplified tests that detect the behavioral change. 
-For \textsc{commons-io\#81210eb} (8$^{th}$ row), only the \sbampl version of DCI detects the change.
-%
-Overall, using only \aampl, DCI generates amplified tests that detect 9 out of 60 behavioral changes.
-Meanwhile, using both \aampl and \sbampl, DCI generates amplified tests that detect 25 out of 60 behavioral changes.
+The last 4 columns of \autoref{tab:overall_result} are dedicated to \textbf{RQ$_1$}.
+For example, \DCIA and \DCII generated respectively 1 and 39 amplified test methods that detect the behavioral change for \textsc{commons-io\#f00d97a} (4$^{th}$ row).
+In the other hands, only \DCII has been able to obtain amplified test methods for \textsc{commons-io\#81210eb} (8$^{th}$ row).
+
+Overall, \DCIA generates amplified tests that detect 9 out of 60 behavioral changes.
+Meanwhile, \DCII generates amplified tests that detect \TODO{25} out of 60 behavioral changes.
 
 Regarding the number of generated tests.
-\DCII generates a large number of test cases, compared to \DCIA only (15 versus 6708, see column ``total'' at the bottom of the table). 
+\DCII generates a large number of test methods, compared to \DCIA only (15 versus 6708, see column ``total'' at the bottom of the table). 
 Both \DCIA and \DCII can generate amplified tests, however since \DCIA does not produce a large amount of test methods the developers do not have to triage a large set of test cases.
 Also, since \DCIA only adds assertions, the amplified tests are easier to understand than the ones generated by \DCII.
 
@@ -437,8 +437,8 @@ They represent modifications, sometimes deep in the code, that are challenges wi
 Consequently, the fact \DCI generates test cases that detect behavioral changes, is considered an achievement.
 The commits for which \DCI fails to detect the change can be considered as a target for future research on this topic.
 
-Now, I manually analyze a successful case where DCI detects the behavioral change.
-I select commit \textsc{3fadfdd}\footnote{\url{https://github.com/apache/commons-lang/commit/3fadfdd}} from commons-lang, which is succinct enough to be discussed in the paper.
+A successful detection by an amplified test method is analyzed.
+Commit \textsc{3fadfdd}\footnote{\url{https://github.com/apache/commons-lang/commit/3fadfdd}} from commons-lang has been selected because it is succinct enough to be discussed.
 The diff is shown in \autoref{fig:diff_commons_lang_success}.
 
 \begin{figure}[h]
@@ -461,7 +461,7 @@ The test is selected for amplification because it triggers the execution of the 
 \label{fig:amplified_commons_lang_success}
 \end{figure}
 
-the resulting amplified test method is shown in \autoref{fig:amplified_commons_lang_success}.
+The resulting amplified test method is shown in \autoref{fig:amplified_commons_lang_success}.
 From this test method, \DCI generates an amplified test method shown in \autoref{fig:amplified_commons_lang_success}. 
 In this generated test, \sbampl applies 2 input transformations: 1 duplication of method call and 1 character replacement in an existing String literal.
 The latter transformation is the key transformation: \DCI replaced an 's' inside "person" by '/' resulting in "per/on" where "/" is a special character that must be escaped (Line 2). 
@@ -470,13 +470,15 @@ The amplified test the behavioral change:
 in the pre-commit version, the expected value is: \texttt{"\{ ... per/on":\{"name":"Jane Doe" ...\}"} while in the post-commit version it is \texttt{"\{ ... per\textbackslash/on":\{"name":"Jane Doe" ...\}"} (Line 3).
  
 \begin{mdframed}
-Answer to \textbf{RQ1}: Overall, \DCI is capable of detecting the behavioral changes in a total of 25/60 commits. Individually, \DCII finds changes in 25/60, while \DCIA in 9/60 commits.
-Since \DCII also uses \aampl to generate assertions, all \DCIA's commits are contained in \DCII's. However, the search-based algorithm, through exploration, finds many more behavioral changes, making it more effective albeit at the cost of execution time.
+Answer to \textbf{RQ1}: Overall, \DCI detects the behavioral changes in a total of 25/60 commits. 
+Individually, \DCII finds changes in 25/60, while \DCIA in 9/60 commits.
+Since \DCII also uses \aampl to generate assertions, all \DCIA's commits are contained in \DCII's. 
+However, the search-based algorithm, through exploration, finds many more behavioral changes, making it more effective albeit at the cost of execution time.
 \end{mdframed}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% RESULTS RQ2 : ITERATION
+% RESULTS RQ2 : ITERATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -490,18 +492,14 @@ the second column is the commit identifier;
 then, the third, fourth, fifth, sixth, seventh and eighth provide the amplification results and execution time for each number of iteration 1, 2, and 3.
 A \cmark indicates with the number of amplified tests that detect a behavioral change and a \textit{-} denotes that \DCI did not succeed in generating a test that detects a change.
 
-% number of detection
 Overall, \DCII generates amplified tests that detect \todo{21}, \todo{23}, and \todo{24} out of 60 behavioral changes for respectively $iteration=1$, $iteration=2$ and $iteration=3$.
 The more iteration \DCII does, the more it explores, the more it generates amplified tests that detect the behavioral changes but the more it takes time also.
-% difference in number of behavioral changes we detect
-When \DCII is used with $iteration=3$, it generates amplified test methods that detect \todo{3} more behavioral changes than when it is used with $iteration=1$ and 1 then when it is used with $iteration=2$. It represents an increase of \todo{14\%} and \todo{4\%} for respectively $iteration=1$ and $iteration=2$.
+When \DCII is used with $iteration=3$, it generates amplified test methods that detect \todo{3} more behavioral changes than when it is used with $iteration=1$ and 1 more than when it is used with $iteration=2$. It represents an increase of \todo{14\%} and \todo{4\%} for respectively $iteration=1$ and $iteration=2$.
 
-% number of test generated
 In average, \DCII generates 18, 53, and 116 amplified tests for respectively $iteration=1$, $iteration=2$ and $iteration=3$. 
 This number increases by 544\% from $iteration=1$ to $iteration=3$.
 This increase is explained by the fact that \DCII explores more with more iteration and thus is able to generate more amplified test methods that detect the behavioral changes.
 
-% time
 In average \DCII takes 23, 64, and 105 minutes to perform the amplification for respectively $iteration=1$, $iteration=2$ and $iteration=3$.
 This number increases by 356\% from $iteration=1$ to $iteration=3$.
 
@@ -521,8 +519,8 @@ This number increases by 356\% from $iteration=1$ to $iteration=3$.
 \paragraph{Impact of the randomness}
 
 The number of amplified test methods obtained by the different seeds are reported in \autoref{tab:overall_result_seeds}.
-The result of the Kruskal-Wallis test is:  p-value=0.96.
-$p-value>\alpha$ which means that the null hypothesis holds: 
+The result of the Kruskal-Wallis test is:  $p-value=0.96$.
+$p-value>\alpha$ which means that the null hypothesis holds:
 The population median of all of the groups are equal.
 On other words, the choice of the seeds has not a significant impact of the overall result of \DCI.
 
@@ -552,29 +550,30 @@ The number of iteration done by \DCII impacts the number of behavioral changes d
 \subsubsection{\rqselection}
 \label{subsubsec:dci:evaluation:rq3}
 
-To answer \textbf{RQ3}, there is no quantitative approach to take, because there is no ground truth data or metrics to optimize. 
-Per the protocol described in \autoref{subsec:protocol}, I answer this question based on manual analysis:
-I randomly selected 1 commit per project, and analyze the relevance of the selected tests for amplification.
+To answer \textbf{RQ3}, there is no quantitative approach to take, because there is no ground-truth data or metrics to optimize. 
+Per the protocol described in \autoref{subsec:protocol}, the answer to this question is based on manual analysis:
+1 commit per project is randomly selected.
+Then the relevance of the selected tests for amplification is analyzed.
 
-In order to give an intuition of what are the characteristics of the test selection for amplification to be relevant, let us look at an example.
+Following an example, in order to give an intuition of what are the characteristics of the test selection for amplification to be relevant.
 The selection is considered relevant If \texttt{TestX} is selected for amplification, following a change to method \texttt{X}.
-The key is that DCI will generate an amplified test \texttt{TestX'} that is a variant of \texttt{TestX}, and, consequently, the developer will directly get the intention of the new test \texttt{TestX'} and what behavioral change it detects.
+The key is that \DCI will generate an amplified test \texttt{TestX'} that is a variant of \texttt{TestX}, and, consequently, the developer will directly get the intention of the new test \texttt{TestX'} and what behavioral change it detects.
 
 \textsc{Commons-io\#c6b8a38}\footnote{\url{https://github.com/apache/commons-io/commit/c6b8a38}}: the test selection returns 3 test methods: \texttt{testContentEquals}, \texttt{testCopyURLToFileWithTimeout} and \texttt{testCopyURLToFile} from the same test class: \texttt{FileUtilsTestCase}.
-The considered commit modifies the method \texttt{copyToFile} from \texttt{FileUtils}. 
-Two test methods out 3 (\texttt{testCopyURLToFileWithTimeout} and \texttt{testCopyURLToFile}) there is a link between the changed file and the intention of tests to be amplified. 
+The considered commit modifies the method \texttt{copyToFile} from \texttt{FileUtils}.
+There is a link between the changed file and the intention of 2 out 3 tests to be amplified.
 The selection is thus considered relevant.
 
 \textsc{Commons-lang\#f56931c}\footnote{\url{https://github.com/apache/commons-lang/commit/f56931c}}: the test selection returns 39 test methods from 5 test classes: \texttt{FastDateFormat\_ParserTest}, \texttt{FastDateParserTest}, \texttt{DateUtilsTest}, \texttt{FastDateParser\_TimeZoneStrategyTest} and \texttt{FastDateParser\_MoreOrLessTest}.
 This commit modifies the behavior of two methods: \texttt{simpleQuote} and \texttt{setCalendar} of class \texttt{FastDateParser}.
 When manually analyzed, it reveals two intentions:
-1) test behaviors related to parsing, 
+1) test behaviors related to parsing;
 1) test behaviors related to dates.
 While this is meaningful, a set of 39 methods is clearly not a focused selection, not as focused as for the previous example.
-It is considered as an half-success.
+The selection can be considered relevant, but not focused.
 
 \textsc{Gson\#9e6f2ba}\footnote{\url{https://github.com/google/gson/commit/9e6f2ba}}: the test selection returns 9 test methods from 5 different test classes.
-Three out of those five classes \texttt{JsonElementReaderTest}, \texttt{JsonReaderPathTest} and \texttt{JsonParserTest} relate to the class modified in the commit(\texttt{JsonTreeReader}).
+3 out of those 5 classes \texttt{JsonElementReaderTest}, \texttt{JsonReaderPathTest} and \texttt{JsonParserTest} relate to the class modified in the commit(\texttt{JsonTreeReader}).
 The selection is thus considered relevant but unfocused.
 
 \textsc{Jsoup\#e9feec9}\footnote{\url{https://github.com/jhy/jsoup/commit/e9feec9}}, the test selection returns the 4 test methods defined in the \texttt{XmlTreeBuilderTest} class \texttt{caseSensitiveDeclaration}, \texttt{handlesXmlDeclarationAsDeclaration}, \texttt{testDetectCharsetEncodingDeclaration} and \texttt{testParseDeclarationAttributes}.
@@ -586,20 +585,17 @@ If \DCI proposes a new test there to capture the behavioral change, the develope
 \textsc{Mustache.java\#88718bc}\footnote{\url{https://github.com/spullara/mustache.java/commit/88718bc}}, the test selection returns the \texttt{testInvalidDelimiters} test method defined in the \texttt{com.github.mustachejava.InterpreterTest} test class.
 The commit improves an error message when an invalid delimiter is used.
 Here, the test selection is relevant since it selected \texttt{testInvalidDelimiters} which is the dedicated test to the usage of the test invalid delimiters.
-This ground-truth test method is also in the test class \texttt{com.github.mustachejava.InterpreterTest}, this is considered as a success.
+This ground-truth test method is also in the test class \texttt{com.github.mustachejava.InterpreterTest}.
 
 \textsc{Xwiki-commons\#848c984}\footnote{\url{https://github.com/xwiki/xwiki-commons/commit/848c984}} the test selection returns a single test method \texttt{createReference} from test class \texttt{XWikiDocumentTest}.
 The main modification of this commit is on class \texttt{XWikiDocument}.
-Since \texttt{XWikiDocumentTest} is the test class dedicated to \texttt{XWikiDocument}, this is considered as a success.
+Since \texttt{XWikiDocumentTest} is the test class dedicated to \texttt{XWikiDocument}, the selection is considered relevant.
 
 \begin{mdframed}
 Answer to \textbf{RQ3}: 
 In 4 out of 6 of the manually analyzed cases, the tests selected to be amplified relate, semantically, to the modified application code. 
 In the 2 remaining cases, it selected over and above the tests to be amplified.
 That is, it selects tests whose intention is semantically pertinent to the change, but it also includes tests that are not.
-%the test intention is captured but not focused.
-%, the test class name, method name and initialization code 
-%This indicates that in the selected tests by DCI give the right context for the developer to understand what behavioral change is specified.
 However, even in this case, \DCI's test selection provides developers with important and targeted context to better understand the behavioral change at hand.
 \end{mdframed}
 
@@ -612,7 +608,7 @@ However, even in this case, \DCI's test selection provides developers with impor
 \subsubsection{\rqhuman}
 \label{subsubsec:dci:evaluation:rq4}
 
-When \DCI generates an amplified test method that detects the behavioral change, It can be compared to the ground truth version (the test added in the commit) to see whether it captures the same behavioral change.
+When \DCI generates an amplified test method that detects the behavioral change, it can be compared to the ground truth version (the test added in the commit) to see whether it captures the same behavioral change.
 For each project, I select 1 successful application of \DCI, and compare the \DCI test against the human test.
 If they capture the same behavioral change, it means they have the same intention and the amplification is considered as a success.
 
@@ -624,7 +620,7 @@ This test is amplified from the existing \texttt{readMulti} test, which indicate
 The first line of the test is the construction of a \texttt{BoundedReader} object which is also the class modified by the commit.
 \DCII modified the second parameter of the constructor call (transformed $3$ into a $0$) and generated two assertions (only 1 is shown).
 The first assertion, associated to the new test input, captures the behavioral difference.
-Overall, this can be considered as a successful amplication.
+Overall, this can be considered as a successful amplification.
 
 \begin{figure}[h]
 \centering
@@ -633,11 +629,11 @@ Overall, this can be considered as a successful amplication.
 \label{fig:ampl_commons-io}
 \end{figure}
 
-Now, let us look at the human test contained in the commit, shown in \autoref{fig:diff_commons-io}.
+Now, look at the human test contained in the commit, shown in \autoref{fig:diff_commons-io}.
 It captures the behavioral change with the timeout (the test timeouts on the pre-commit version and goes fast enough on the post-commit version). 
 Furthermore, it only indirectly calls the changed method through a call to \texttt{readLine}.
 
-In this case, the DCI test can be considered better than the developer test because
+In this case, the \DCI test can be considered better than the developer test because
 1) it relies on assertions and not on timeouts, and
 2) it directly calls the changed method (\texttt{read}) instead of indirectly. 
 
@@ -647,7 +643,6 @@ In this case, the DCI test can be considered better than the developer test beca
 \caption{Developer test for commit \textsc{81210eb} of commons-io.}
 \label{fig:diff_commons-io}
 \end{figure}
-
 
 %%% COMMONS LANG
 \textsc{commons-lang\#e7d16c2}\footnote{\url{https://github.com/apache/commons-lang/commit/e7d16c2}}: this commit escapes special characters before adding them to a \texttt{StringBuffer}.
@@ -666,7 +661,7 @@ In the post-commit version, the amplified test fails since the code now escapes 
 
 Let's have a look to the human test method shown in \autoref{fig:diff_commons-lang}.
 Here, the developer specified the new escaping mechanism with 5 different inputs.
-%
+
 The main difference between the human test and the amplified test is that the human test is more readable and uses 5 different inputs.
 However, the amplified test generated by \DCI is valid since it detects the behavioral change correctly.
 
@@ -679,9 +674,8 @@ However, the amplified test generated by \DCI is valid since it detects the beha
 
 %% GSON
 \textsc{gson\#44cad04}\footnote{\url{https://github.com/google/gson/commit/44cad04}}: This commit allows Gson to deserialize a number represented as a string.
-\autoref{fig:ampl_gson} shows the relevant part of the test generated by DCI$_{SBAMPL}$, based on \texttt{testNumberDeserialization} of \texttt{PrimitiveTest} as a seed.
-First, we see that the test selected as a seed is indeed related to the change in the deserialization feature.
-The \DCI test detects the behavioral change at lines 3 and 4.
+\autoref{fig:ampl_gson} shows the relevant part of the test generated by \DCII, based on \texttt{testNumberDeserialization} of \texttt{PrimitiveTest} as a seed.
+The \DCI test detects the behavioral changes at lines 3 and 4.
 On the pre-commit version, line 3 throws a \texttt{JsonSyntaxException}.
 On the post-commit version, line 4 throws a \texttt{NumberFormatException}.
 In other words, the behavioral change is detected by a different exception (different type and not thrown at the same line).
@@ -712,7 +706,7 @@ On the contrary, the developer test is shorter and directly targets the changed 
 There are two improvements: skip the first new lines in pre tags and support deflate encoding, and three bug fixes: throw exception when parsing some urls, add spacing when output text, and no collapsing of attribute with empty values.
 \autoref{fig:ampl_jsoup} shows an amplified test obtained using \DCII.
 This amplified test has 15 assertions and a duplication of method call.
-Thanks to this duplication and assertion generated on the \texttt{toString()} method, this test is able to capture the behavioral change introduced by the commit.
+Thanks to this duplication and these generated assertions on the \texttt{toString()} method, this test is able to capture the behavioral change introduced by the commit.
 
 \begin{figure}[h]
 \centering
@@ -721,7 +715,7 @@ Thanks to this duplication and assertion generated on the \texttt{toString()} me
 \label{fig:ampl_jsoup}
 \end{figure}
 
-As before, I compare it to the developer's test. 
+As before, the amplified test method is compared to the developer's test. 
 The developer uses the \texttt{Element} and \texttt{outerHtml()} methods rather than \texttt{Attribute} and \texttt{toString()}.
 However, the method \texttt{outerHtml()} in \texttt{Element} will call the \texttt{toString()} method of \texttt{Attribute}.
 For this behavioral change, it concerns the \texttt{Attribute} and not the \texttt{Element}.
@@ -737,7 +731,7 @@ But, \DCII generates amplified tests that detect 2 of 5 behavioral changes: addi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MUSTACHE JAVA
-\textsc{Mustache.java\#774ae7a}\footnote{\url{https://github.com/spullara/mustache.java/commit/774ae7a}}: This commit fixes an issue with the usage of a dot in a  relative path on Window in the method \texttt{getReader} of class \texttt{ClasspathResolver}.
+\textsc{Mustache.java\#774ae7a}\footnote{\url{https://github.com/spullara/mustache.java/commit/774ae7a}}: This commit fixes an issue with the usage of a dot in a relative path on Window in the method \texttt{getReader} of class \texttt{ClasspathResolver}.
 The test method \texttt{getReaderNullRootDoesNotFindFileWithAbsolutePath} has been used as seed by \DCI.
 It modifies the existing string literal with another string used somewhere else in the test class and generates 3 new assertions.
 The behavioral change is detected thanks to the modified strings: it produces the right test case containing a space.
@@ -771,7 +765,8 @@ In this case, the amplified test is complementary to the human test since it ver
 \DCI used \texttt{testMergeCharList} as a seed for the amplification process, and generates 549 new assertions.
 Among them, 1 assertion captures the behavioral change between the two versions of the program: 
 ``assertEquals(0, result.getLog().getLogs(LogLevel.ERROR).size());''.
-The behavioral change that is detected is the presence of a new logging statement in the diff. After verification, there is indeed such a behavioral change in the diff, with the addition of a call to ``logConflict'' in the newly handled case.
+The behavioral change that is detected is the presence of a new logging statement in the diff. 
+After verification, there is indeed such a behavioral change in the diff, with the addition of a call to ``logConflict'' in the newly handled case.
 
 \begin{figure}[h]
 \centering
@@ -783,8 +778,8 @@ The behavioral change that is detected is the presence of a new logging statemen
 The developer's test is shown in \autoref{fig:diff_xwiki}.
 This test method directly calls method \texttt{merge}, which is the method that has been changed. 
 What is striking in this test is the level of clarity: 
-the variable names, the explanatory comments and even the vertical space formatting are impossible to achieve with \DCIA and makes the human test clearly of better quality but also longer to write. % above when she has the time to write a good test. 
-%
+the variable names, the explanatory comments and even the vertical space formatting are impossible to achieve with \DCIA and makes the human test clearly of better quality but also longer to write.
+
 Yet, \DCIA's amplified tests capture a behavioral change that was not specified in the human test.
 In this case, amplified tests can be complementary.
 
@@ -797,11 +792,17 @@ In this case, amplified tests can be complementary.
 
 
 \begin{mdframed}
+	% commons-io is better
+	% commons-lang is correct (but not as good as the human's)
+	% gson is kind of valid but indirect
+	% jsoup is partially better, it test better some new behaviors but not all of them // complementary
+	% mustche is complementary
+	% xwikiis complementary
 Answer to \textbf{RQ4}: 
-In 3 of 6 cases, the DCI test is complementary to the human test.
-In 1 case, the DCI test can be considered better than the human test.
-In 2 cases, the human test is better than the DCI test.
-Even though human tests can be better, DCI can be complementary and catch missed cases, or can provide added-value when developers do not have the time to add a test.
+In 3 of 6 cases, the \DCI test is complementary to the human test.
+In 1 case, the \DCI test can be considered better than the human test.
+In 2 cases, the human test is better than the \DCI test.
+Even though human tests can be better, \DCI can be complementary and catch missed cases, or can provide added-value when developers do not have the time to add a test.
 \end{mdframed}
 
 %\pagebreak
@@ -814,13 +815,13 @@ Even though human tests can be better, DCI can be complementary and catch missed
 \label{sec:dci:limitations}
 
 \textbf{Time consumption}
-From the experiments, it is deducible that the time consumption to complete the amplification is the main limitation of DCI.
+From the experiments, it is deducible that the time consumption to complete the amplification is the main limitation of \DCI.
 \textsc{jsoup\#2c4e79b}, almost 5 hours have been spent with no result.
-For the sake of our experimentation, we choose to use a pre-defined number of iteration to bound the exploration.
-In practice, I would recommend to set a time budget (\eg at most one hour per pull-request).
+For the sake of the experimentation, a pre-defined number of iteration has been choose to bound the exploration.
+In practice, setting a time budget would be recommended (\eg at most one hour per pull-request).
 
 \textbf{Importance of test seeds}
-By construction, DCI's effectiveness is correlated to the test methods used as seed.
+By construction, \DCI's effectiveness is correlated to the test methods used as seed.
 For example, see the row of \texttt{commons-lang\#c8e61af} in \autoref{tab:overall_result_iteration}
 where one can observe that whatever the number of iteration, \DCI takes the same time to complete the amplification.
 The reason is that the seed tests are only composed of assertions statements.
@@ -830,7 +831,7 @@ Such tests are bad seeds for \DCI and they prevent any good input amplification.
 The risk of false positives is a potential limitation of the approach.
 A false positive would be an amplified test method that passes or fails on both versions, which means that the amplified test method does not detect the behavioral difference between both versions.
 I manually analyzed 6 commits and none of them are false positives.
-While this is not a proof that \DCI would never produce such confusing test methods, It encourage to be confident in the soundness of our implementation.
+While this is not a proof that \DCI would never produce such confusing test methods, It encourages to be confident in the soundness of the implementation.
 
 % -----------------------
 %  THREATS
@@ -839,16 +840,18 @@ While this is not a proof that \DCI would never produce such confusing test meth
 \label{sec:dci:threats}
 
 % bug in the implementation
-An internal threat is the potential bugs in the implementation of DCI. However, it is heavily tested, with JUnit test cases to mitigate this threat.
+An internal threat is the potential bugs in the implementation of \DCI.
+However, it is heavily tested, with \junit test suite to mitigate this threat.
 
 % benchmark
-In the benchmark, there are 60 commits. The result may be not be generalizable to all programs. 
-But real and diverse applications from GitHub have been carefully selected, all having a strong test suite. 
-The benchmark reflects real programs, and the results can be trust.
+In the benchmark, there are 60 commits. 
+The result may be not be generalizable to all programs. 
+But real and diverse applications from \gh have been carefully selected, all having a strong test suite. 
+The benchmark reflects real programs, and provides an high confidence in the result.
 
 % weak statiscal test
 For the evaluation of the randomness, a Kruskal-Willis test has been used, which is known to be weaker than ANOVA test.
-To perform an ANOVA test, the data must fulfull the following criteria:
+To perform an ANOVA test, the data must fulfil the following criteria:
 1) The samples are independent;
 2) Each sample is from a normally distributed population;
 3) The population standard deviations of the groups are all equal. This property is known as homoscedasticity.
@@ -868,17 +871,7 @@ This is why a Kruskal-Willis test has been chosen.
 
 In addition to this, only 11 seeds has been used to perform it, which a small samples.
 
+However, the seeds used in \dspot's algorithm seems to not have an impact on the overall results.
+
 \section{Conclusion}
 \label{sec:dci:conclusion}
-
-%Conclusion
-In this paper, we have studied the problem of behavioral change detection for continuous integration. 
-We have proposed a novel technique called DCI, which uses assertion generation and search-based transformation of test code to generate tests that automatically detect behavioral changes in commits.
-We have evaluated our technique on a curated set of 50 commits coming from real-world, large open-source Java projects.
-
-%future works
-We plan to work on an automated continuous integration bot for behavioral change detection that will:
-1) check if a behavioral change is already specified in a commit (\ie a test case that correctly detects the behavioral change is provided);
-2) if not, execute behavioral change detection and test generation;
-3) propose the synthesized test method to the developers to complement the commit.
-Such a bot can work in concert with other continuous integration bots, such as bots for automated program repair \cite{repairnator}.
