@@ -64,8 +64,11 @@ Mutation score aims at emulating faults that a developer could integrate in his 
 If the test suite has a high \ms, the probability that it detects such fault increase.
 
 \dspot uses \pitest \footnote{latest version released at the time of the experimentation: 1.2.0.\url{https://github.com/hcoles/pitest/releases/tag/1.2.0}} because: 
+
 1) it targets Java programs;
+
 2) it is mature and well-regarded;
+
 3) it has an active community.
 
 The most important feature of \pitest is that if the application code remains unchanged, the generated mutants are always the same.
@@ -130,10 +133,14 @@ The evaluation aims at answering the following research questions:
 \label{subsec:test-improvement:experiment-protocol:dataset}
 
 \dspot has been evaluated by amplifying test classes of large-scale, notable, open-source projects. 
-The dataset includes projects that fulfil the following criteria:  
+The dataset includes projects that fulfil the following criteria:
+
 1) the project must be written in Java; 
+
 2) the project must have a test suite based on \junit;
+
 3) the project must be compiled and tested with Maven;
+
 4) the project must have an active community as defined by the presence of pull requests on \gh, see \autoref{subsec:test-improvement:experiment-results:rq1}. 
 
 \input{chapitres/test-improvement/table_dataset}
