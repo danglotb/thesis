@@ -9,7 +9,6 @@
   publisher={Sage publications}
 }
 
-
 @article{howden1978theoretical,
   title={Theoretical and empirical studies of program testing},
   author={Howden, William E},
@@ -437,14 +436,6 @@ month={Nov},}
    pages={783--812},
 }
 
-@article{danglot2017emerging,
-  title={The Emerging Field of Test Amplification: A Survey},
-  author={Danglot, Benjamin and Vera-Perez, Oscar and Yu, Zhongxing and Monperrus, Martin and Baudry, Benoit},
-  journal={arXiv preprint arXiv:1705.10692},
-  year={2017}
-}
-
-
 @article{mcminn2004survey,
   title={Search-based software test data generation: a survey},
   author={McMinn, Phil},
@@ -678,8 +669,8 @@ month={May},}
  acmid = {2635929},
  publisher = {ACM},
  address = {New York, NY, USA},
- keywords = {Test effectiveness, code coverage, mutation analysis, real faults},ForestGreen
-} 
+ keywords = {Test effectiveness, code coverage, mutation analysis, real faults},
+}
 
 @inproceedings{pull:request:evaluation,
  author = {Allamanis, Miltiadis and Barr, Earl T. and Bird, Christian and Sutton, Charles},
@@ -940,20 +931,6 @@ month={May},}
 	pages = {235}
 }
 
-@InProceedings{TaoXie2006,
-	author="Xie, Tao",
-	editor="Thomas, Dave",
-	title="Augmenting Automatically Generated Unit-Test Suites with Regression Oracle Checking",
-	booktitle="ECOOP 2006 -- Object-Oriented Programming",
-	year="2006",
-	publisher="Springer Berlin Heidelberg",
-	address="Berlin, Heidelberg",
-	pages="380--403",
-	abstract="A test case consists of two parts: a test input to exercise the program under test and a test oracle to check the correctness of the test execution. A test oracle is often in the form of executable assertions such as in the JUnit testing framework. Manually generated test cases are valuable in exposing program faults in the current program version or regression faults in future program versions. However, manually generated test cases are often insufficient for assuring high software quality. We can then use an existing test-generation tool to generate new test inputs to augment the existing test suite. However, without specifications these automatically generated test inputs often do not have test oracles for exposing faults. In this paper, we have developed an automatic approach and its supporting tool, called Orstra, for augmenting an automatically generated unit-test suite with regression oracle checking. The augmented test suite has an improved capability of guarding against regression faults. In our new approach, Orstra first executes the test suite and collects the class under test's object states exercised by the test suite. On collected object states, Orstra creates assertions for asserting behavior of the object states. On executed observer methods (public methods with non-void returns), Orstra also creates assertions for asserting their return values. Then later when the class is changed, the augmented test suite is executed to check whether assertion violations are reported. We have evaluated Orstra on augmenting automatically generated tests for eleven subjects taken from a variety of sources. The experimental results show that an automatically generated test suite's fault-detection capability can be effectively improved after being augmented by Orstra.",
-	isbn="978-3-540-35727-8"
-}
-
-
 @inproceedings{rosen2015commit,
 	title={Commit guru: analytics and risk prediction of software commits},
 	author={Rosen, Christoffer and Grawi, Ben and Shihab, Emad},
@@ -1016,23 +993,6 @@ month={May},}
 	keywords = {Java PathFinder, Regression Testcase Generation, Software Engineering, Symbolic Execution, Symbolic PathFinder},
 }
 
-@Article{dspot-emse,
-	author="Danglot, Benjamin
-	and Vera-P{\'e}rez, Oscar Luis
-	and Baudry, Benoit
-	and Monperrus, Martin",
-	title="Automatic test improvement with DSpot: a study with ten mature open-source projects",
-	journal="Empirical Software Engineering",
-	year="2019",
-	month="Apr",
-	day="24",
-	abstract="In the literature, there is a rather clear segregation between manually written tests by developers and automatically generated ones. In this paper, we explore a third solution: to automatically improve existing test cases written by developers. We present the concept, design and implementation of a system called DSpot, that takes developer-written test cases as input (JUnit tests in Java) and synthesizes improved versions of them as output. Those test improvements are given back to developers as patches or pull requests, that can be directly integrated in the main branch of the test code base. We have evaluated DSpot in a deep, systematic manner over 40 real-world unit test classes from 10 notable and open-source software projects. We have amplified all test methods from those 40 unit test classes. In 26/40 cases, DSpot is able to automatically improve the test under study, by triggering new behaviors and adding new valuable assertions. Next, for ten projects under consideration, we have proposed a test improvement automatically synthesized by DSpot to the lead developers. In total, 13/19 proposed test improvements were accepted by the developers and merged into the main code base. This shows that DSpot is capable of automatically improving unit-tests in real-world, large scale Java software.",
-	issn="1573-7616",
-	doi="10.1007/s10664-019-09692-y",
-	url="https://doi.org/10.1007/s10664-019-09692-y"
-}
-
-
 @inproceedings{zhang2012,
 	title={Amplifying tests to validate exception handling code},
 	author={Zhang, Pingyu and Elbaum, Sebastian},
@@ -1072,26 +1032,24 @@ month={May},}
 	publisher={IEEE}
 }
 
-
-
-@inproceedings{tonella,
-	author = {Tonella, Paolo},
-	title = {Evolutionary Testing of Classes},
-	booktitle = {Proceedings of the 2004 ACM SIGSOFT International Symposium on Software Testing and Analysis},
-	series = {ISSTA '04},
-	year = {2004},
-	isbn = {1-58113-820-2},
-	location = {Boston, Massachusetts, USA},
-	pages = {119--128},
-	numpages = {10},
-	url = {http://doi.acm.org/10.1145/1007512.1007528},
-	doi = {10.1145/1007512.1007528},
-	acmid = {1007528},
-	publisher = {ACM},
-	address = {New York, NY, USA},
-	keywords = {automated test case generation, genetic algorithms, object-oriented testing},
-} 
-
+@Article{Danglot2018,
+	author="Danglot, Benjamin
+	and Preux, Philippe
+	and Baudry, Benoit
+	and Monperrus, Martin",
+	title="Correctness attraction: a study of stability of software behavior under runtime perturbation",
+	journal="Empirical Software Engineering",
+	year="2018",
+	month="Aug",
+	day="01",
+	volume="23",
+	number="4",
+	pages="2086--2119",
+	abstract="Can the execution of software be perturbed without breaking the correctness of the output? In this paper, we devise a protocol to answer this question from a novel perspective. In an experimental study, we observe that many perturbations do not break the correctness in ten subject programs. We call this phenomenon ``correctness attraction''. The uniqueness of this protocol is that it considers a systematic exploration of the perturbation space as well as perfect oracles to determine the correctness of the output. To this extent, our findings on the stability of software under execution perturbations have a level of validity that has never been reported before in the scarce related work. A qualitative manual analysis enables us to set up the first taxonomy ever of the reasons behind correctness attraction.",
+	issn="1573-7616",
+	doi="10.1007/s10664-017-9571-8",
+	url="https://doi.org/10.1007/s10664-017-9571-8"
+}
 
 @inproceedings{Hilton:2016:UsageCI,
 	author = {Hilton, Michael and Tunnell, Timothy and Huang, Kai and Marinov, Darko and Dig, Danny},
@@ -1493,4 +1451,22 @@ month={May},}
 	pages={23},
 	year={2015},
 	publisher={ACM}
+}
+
+@article{DBLP:journals/corr/abs-1902-08482,
+	author    = {Benjamin Danglot and
+	Martin Monperrus and
+	Walter Rudametkin and
+	Benoit Baudry},
+	title     = {An Approach and Benchmark to Detect Behavioral Changes of Commits
+	in Continuous Integration},
+	journal   = {CoRR},
+	volume    = {abs/1902.08482},
+	year      = {2019},
+	url       = {http://arxiv.org/abs/1902.08482},
+	archivePrefix = {arXiv},
+	eprint    = {1902.08482},
+	timestamp = {Tue, 21 May 2019 18:03:39 +0200},
+	biburl    = {https://dblp.org/rec/bib/journals/corr/abs-1902-08482},
+	bibsource = {dblp computer science bibliography, https://dblp.org}
 }
