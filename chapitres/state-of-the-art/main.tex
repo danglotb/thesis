@@ -1,4 +1,139 @@
 \chapter{State of the Art}
 \label{chap:sota}
 
-\cite{survey:amplification}
+\begin{chaptersummary}
+	In this chapter, I exposed a systematic review of the literature on the field of test suite amplification.
+	I surveyed works that exploit this knowledge to enhance manually written tests with respect to an engineering goal (\eg improve coverage or refine fault localization).
+	This chapter provides the following contributions:
+	\begin{itemize}
+		\item The first ever snowballing literature review on test amplification
+		\item The classification of the related work into four main categories to help newcomers in the field  (students, industry practitioners)  understand this body of work.
+		\item A discussion about the outstanding research challenges of test amplification.
+	\end{itemize}
+	Note that this chapter is a to be published article\cite{survey:amplification}.
+	The remainder of this chapter is as follows:
+	This chapter is structured according to the 4 main categories, each of them being presented in a dedicated section.
+	Section \ref{sec:amp_add} presents techniques that synthesize new tests from manually-written tests.
+	Section \ref{sec:amp_change} focuses on the works that synthesize new tests dedicated to a specific change in the application code (in particular a specific commit).
+	Section \ref{sec:amp_exec} discusses the less-researched, yet powerful idea of modifying the execution of manually-written tests. 
+	Section \ref{sec:amp_mod} is about the modification of existing tests to improve a specific property.
+\end{chaptersummary}
+
+\minitoc
+
+\graphicspath{{.}{chapitres/state-of-the-art/}}
+
+\section{Introduction}
+\label{sec:sota:intro}
+
+Software testing is the art of evaluating an attribute or capability of a program to determine that it meets its required results \cite{hetzel1988}. 
+
+With the advent of agile development methodologies, which advocate testing early and often, a growing number of software projects develop and maintain a test suite~\cite{Madeyski2010}. 
+Those test suites are often large and have been written thanks to a lot of human intelligence and domain knowledge~\cite{azaidmanEMSE2011,DBLP:conf/icst/ZaidmanRDD08}. 
+Developers spend a lot of time in writing the tests~\cite{BellerTSE,beller2015when,beller2015howmuch}, so that those tests exercise interesting cases (including corner cases), and so that an oracle verifies as much as possible the program behavior~\cite{hilton2018coverageevolution}.
+
+The wide presence of valuable manually written tests has triggered a new thread of research that consists of leveraging the value of existing manually-written tests to achieve a specific engineering goal.
+This has been coined ``test amplification''. 
+The term \emph{amplification} is introduced as an umbrella for the various activities that analyze and operate on existing test suites and that are referred to as augmentation, optimization, enrichment, or refactoring in the literature. 
+
+This chapter surveys the research literature so that existing research efforts are characterized, can be compared and new research opportunities can be identified.
+Furthermore, the conjecture is that with good foundations and maturation, test amplification has the potential to bring software testing to the next level in terms of efficiency and efficacy among practitioners by introducing new automatic processes that improve the manually written tests.
+
+The reviewing methodology is based on backward- and forward- snowballing on the citation graph \cite{jalali2012systematic}.
+To the best of my knowledge, this review is the first that draws a comprehensive picture of the different engineering techniques and goals proposed in the literature for test amplification.
+
+\section{Method}
+\label{sec:sota:method}
+This section presents the methodology of the systematic literature review.
+
+\subsection{Definition}
+\label{subsec:sota:method:defition}
+Test amplification is defined as follow:
+
+\begin{mdframed}
+	\textbf{Definition}: Test amplification consists of exploiting the knowledge of a large number of test methods, in which developers embed meaningful input data and expected properties in the form of oracles, in order to enhance these manually written tests with respect to an engineering goal (\eg improve coverage of changes or increase the accuracy of fault localization).
+\end{mdframed}
+
+\emph{Example:} 
+A form of test amplification is the addition of test methods automatically generated from the existing manual test methods to increase the coverage of a test suite over the main source code.
+
+\emph{Relation to related work:} 
+Test amplification is complementary, yet, significantly different from most works on test generation.
+The key difference is what is given as input to the system.
+Most test generation tools take as input:
+the program under test or a formal specification of the testing property.
+\textbf{In contrast, test amplification is defined as taking as primary input test cases written by developers}. 
+
+
+\subsection{Methodology}
+\label{subsec:sota:method:methodology}
+
+Literature studies typically rigorously follow a methodology to ensure both completeness and replication. 
+Cooper's book is taken as reference for a general methodological discussion on literature studies~\cite{cooper1998synthesizing}. 
+Specifically for the field of software engineering, well-known methodologies are systematic literature reviews (SLR)~\cite{kitchenham2004procedures}, systematic mapping studies (SMS)~\cite{petersen2008systematic} and snowballing studies~\cite{wohlin2014guidelines}.
+For the specific area of \emph{test amplification}, there is no consensus on the terminology used in literature. 
+This is an obstacle to using the SLR and SMS methodologies, which both heavily rely on searching~\cite{Brereton2007}. 
+As snowballing studies are less subject to suffering from the use of diverse terminologies, this study is performed per Wohlin's guidelines \cite{wohlin2014guidelines,jalali2012systematic}.
+
+First, I run the search engine of DBLP for all papers containing ``test'' and ``amplification'' in their title (using stemming, which means that ``amplifying'' is matched as well).
+This has resulted in 70 papers at the date of the search (March 27, 2018)\footnote{the data is available at \url{https://github.com/STAMP-project/docs-forum/blob/master/scientific-data/}}.
+Each of papers has been reviewed one by one to see whether they fit in our scope according to the definition of \autoref{sec:core-definition}. 
+This has resulted in 4 articles~\cite{HamletV93,zhang2012,leung12,Joshi07}, which are the seed papers of this literature study. 
+The reason behind this very low proportion (4/70) is that most articles in this DBLP search are in the hardware research community, and hence do not fall in the scope of our paper.
+
+Following a breve description of these 4 seed papers:
+\begin{itemize}
+	\item \cite{HamletV93} Hamlet and Voas introduce study how different testing planning strategies can amplify testability properties of a software system.
+	\item \cite{zhang2012} Zhang and Elbaum explore a new technique to amplify a test suite for finding bugs in exception handling code. Amplification consists in triggering unexpected exceptions in sequences of API calls.
+	\item \cite{leung12} Leung et al propose to modify the test execution by using information gathered from a first test execution. The information is used to derive a formal model used to detect data races in later executions.
+	\item \cite{Joshi07} Joshi et al  try to amplify the effectiveness of testing by executing both concretely and symbolically the tests.
+\end{itemize}
+More details are given in the following sections.
+
+From the seed papers, a backward snowballing search \rev{step} \cite{jalali2012systematic} has been performed, \ie, I have looked at all their references, going backward in the citation graph. 
+2 of the authors have reviewed the papers, independently. 
+%Then, these 2 authors cross-checked the outcome of their literature review, and kept each paper for which they both \rev{agreed that it} fits the definition of test amplification (cf. \autoref{sec:core-definition}).
+Then, a forward literature search \rev{step} has been performed, using the Google scholar search engine and ``cited by'' filter, from the set of papers, in order to find the most recent contributions in this area.
+A backward snowballing search step and a forward snowballing search step constitute what is called an ``iteration''.
+With each iteration, a set of papers is selected for the study, obtained through the snowballing action.
+These iterations continue until this set of selected paper is empty, \ie, when no paper can be kept, the snowballing process is stopped in both ways: backward and forward.
+
+%% Categorization methodology
+Once the selection papers is done, 4 key approaches to amplification has been distinguish, which used to classify the literature : 
+Amplification by Adding New Tests as Variants of Existing Ones (\autoref{sec:amp_add});
+Amplification by Modifying Test Execution (\autoref{sec:amp_exec});
+Amplification by Synthesizing New Tests with Respect to \rev{Changes (\autoref{sec:amp_change})}; 
+Amplification by Modifying Existing Test Code (\autoref{sec:amp_mod}).
+The missing terminological consensus mentioned previously prevented the design of a classification according to Petersen's guidelines
+\cite{petersen2008systematic}.
+The four categories has been incrementally refined by analyzing the techniques and goals in each paper.
+% we can add it
+The methodology is as follows: a work is assigned to a category if the key technique of the paper corresponds to it.
+% we can't add it
+If no category captures the gist of the paper, a new category is created.
+% we can refine categories
+Two categories that are found to be closely related are merged to create a new one.
+The incremental refinement of these findings led to the definition of 4 categories to organize this literature study.
+
+\subsection{Novelty}
+
+There are a number of notable surveys in software testing \cite{edvardsson1999survey,mcminn2004search,anand2013orchestrated}. 
+However none of them is dedicated to test amplification.
+For instance, Edvardsson's et al's \cite{edvardsson1999survey} and McMinn et al's \cite{mcminn2004search} articles are surveys on test generation.
+Yoo and Harman have structured the work on test minimization, selection and prioritization \cite{yoo2012survey} .
+In the prolific literature on symbolic execution for testing, the reader can refer to the survey of 
+Păsăreanu and Visser \cite{puasuareanu2009survey}.
+
+In general, test optimization, test selection, test prioritization, test minimization, test reduction is out of the scope of test amplification.
+
+Similarly, the work on test refactoring is related, but not in scope. 
+In particular, the work from Van Deursen \etal\cite{vandeursen2001refactoring,DBLP:series/springer/MoonenDZB08} and Mesaros\cite{Meszaros2006} focuses on improving the structural and diagnosability qualities of software tests, and is a mainly manual activity. 
+In contrast, test amplification is meant to be fully automated, as other technical amplification such as sound amplification. 
+Its goal is also different, in that its aim is to test more effectively with regard to a a given target criterion.
+
+Harrold et \etal\cite{harrold2008retesting} discusses the problem of ``retesting software'', where there is a section related to amplification.
+However, it is only a light account on the topic which is now outdated.
+
+Yusifoğlu et al. \cite{GAROUSIYUSIFOGLU2015123} discuss the new trends in software test-code engineering, and discuss the implications for researchers and practitioners in this area. 
+To do this, they use a systematic mapping to identify areas that require more attention.
+Their work covers a larger scope than our work, since they study all software test-code engineering research, methods and empirical study, while we focus specifically on test amplification, with more depth.
