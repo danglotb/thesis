@@ -141,7 +141,7 @@ Their work covers a larger scope than our work, since they study all software te
 \label{sec:sota:category-1}
 
 The most intuitive form of test amplification is to consider an existing test suite, then generate variants of the existing test cases and add those new variants into the original test suite. 
-This kind of test amplification is denoted as $AMP_{add}$. 
+This kind of test amplification is denoted as $AMP_{add}$.
 
 \medskip
 \textbf{Definition: A test amplification technique $AMP_{add}$ consists of creating new tests from existing ones to achieve a given engineering goal.
@@ -340,3 +340,254 @@ the concerned works are: \cite{Baudry05a, Baudry05d, Yoshida2016}.
 Second, the synthesized tests have been applied to a specific set of programs and the generalization of the related approaches could be limited. 
 The concerned works are: \cite{tillmann2006unit, marri2010retrofitting, yoo2012, 6958388, Patrick201736, Harder03, Pacheco2005, Baudry:2006:ITS:1134285.1134299, robetaler2012isolating, Xuan:2015:CRV:2786805.2803206}.
 Third, some techniques have known performance issues and do not scale well: \cite{milani2014, fraser2011generating}.
+
+\section{Amplification by Synthesizing New Tests with Respect to Changes}
+\label{sec:sota:category-2}
+
+Software applications are typically not tested at a single point in time; they are rather tested incrementally, along with the natural evolution of the code base: 
+new tests are typically added together with a change or a commit~\cite{azaidmanEMSE2011,DBLP:conf/icst/ZaidmanRDD08}, to verify, for instance, that a bug has been fixed or that a new feature is correctly implemented. 
+In the context of test amplification, it directly translates to the idea of synthesizing new tests as a reaction to a change. 
+This can be seen as a specialized form $AMP_{add}$, which considers a specific change, in addition to the existing test suite, to guide the amplification.
+This kind of test amplification is denoted as $AMP_{change}$. 
+
+\medskip
+\textbf{Definition: Test amplification technique $AMP_{change}$ consists of adding new tests to the current test suite, by creating new tests that cover and/or observe the effects of a change in the application code.}
+
+I first present a series of works by Xu \etal, who develop and compare two alternatives of test suite augmentation, one based on genetic algorithms and the other on concolic execution. 
+A second subsection presents the work of a group of authors that center the attention on finding testing conditions to exercise the portions of code that exhibit changes. 
+A third subsection exposes works that explore the adaptation and evolution of test cases to cope with code changes. 
+The last subsection shows other promising works in this area.
+
+\subsection{Example}
+\label{subsec:sota:category-2:example}
+
+\autoref{lst:example:ampchange:original} shows a toy class and two test cases designed to verify its code.
+At some point in development, the code of the method is modified as shown in \autoref{lst:example:ampchange:modified}. 
+The change consists of the addition of a new block in line \ref{line:example:ampchange:modified}. 
+
+\begin{lstlisting}[caption={Initial version of a class and two test cases},label=lst:example:ampchange:original,float,language=java,numbers=left]
+class Computer{
+	public int computeValue(int input) {
+		if(input < 3) {
+			return input/2;
+		}
+		return 0;
+	}
+}
+
+class ComputerTest {
+	int threshold = 4;
+
+	@Test
+	public testSmallInput() {
+		Computer comp = new Computer();
+		assertTrue(comp.computeValue(2) < threshold);
+	}
+
+	@Test
+	public testDefault() {
+		Computer comp = new Computer();
+		assertEquals(comp.computeValue(10), 0);
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Modified version of the initial class},label=lst:example:ampchange:modified,float,language=java,numbers=left]
+class Computer{
+	public int computeValue(int input) {
+		if(input < 3) {
+			return input/2;
+		}
+		if (input <= 5) { (*@ \label{line:example:ampchange:modified} @*)
+			return 2*input;
+		}
+		return 0;
+	}
+}
+\end{lstlisting}
+
+The existing test cases do not execute the new code.
+There is no test input in the $[3,5]$ interval. 
+An $AMP_{change}$ technique would increment the test suite with a new test case, like the one shown in \autoref{lst:example:ampchange:amplified}, that covers the new code. 
+The technique should be able to generate an input that meets the requirement to reach the new or changed code and the right oracle given the new conditions. 
+
+\begin{lstlisting}[caption={A test case that covers the new portion of  code.},label=lst:example:ampchange:amplified,float,language=java,numbers=left]
+@Test
+public testInput() {
+	Computer comp = new Computer();
+	assertTrue(comp.computeValue(4) > threshold);
+}
+\end{lstlisting}
+
+
+\subsection{Search-based vs. Concolic Approaches}
+\label{subsec:sota:category-2:search-based-vs-concolic}
+
+In their work, Xu \etal\cite{xu2009directed} focus on the scenario where a program has evolved into a new version through code changes in development. 
+They consider techniques as 
+(i) the identification of coverage requirements for this new version, given an existing test suite;
+and (ii) the creation of new test cases that exercise these requirements. 
+Their approach first identifies the parts of the evolved program that are not covered by the existing test suite. 
+In the same process they gather path conditions for every test case. 
+Then, they exploit these path conditions with a concolic testing method to find new test cases for uncovered branches, analyzing one branch at a time.
+
+Symbolic execution is a program analysis technique to reason about the execution of every path and to build a symbolic expression for each variable. 
+Concolic testing also carries a symbolic state of the program, but overcomes some limitations of a fully symbolic execution by also considering certain concrete values. 
+Both techniques are known to be computationally expensive for large programs.
+
+Xu \etal avoid a full concolic execution by only targeting paths related to uncovered branches. 
+This improves the performance of the augmentation process.
+They applied their technique to 22 versions of a small arithmetic program from the SIR \cite{SIR} repository and achieved branch coverage rates between 95\% and 100\%. 
+They also show that a full concolic testing is not able to obtain such high coverage rates and needs a significantly higher number of constraint solver calls.
+
+In subsequent work, Xu \etal\cite{xu2010factors} address the same problem with a genetic algorithm. 
+Each time the algorithm runs, it targets a branch of the new program that is not yet covered.
+The fitness function measures how far a test case falls from the target branch during its execution. 
+The authors investigate if all test cases should be used as population, or only a subset related to the target branch or, if newly generated cases should be combined with existing ones in the population. 
+Several variants are compared according to their efficiency and effectiveness, that is, whether the generated test cases achieve the goal of exercising the uncovered branches.
+The experimentation targets 3 versions of \emph{Nanoxml}, an XML parser implemented in Java with more than 7 KLoC and included in the SIR \cite{SIR} repository.
+The authors conclude that considering all tests achieves the best coverage, but also requires more computational effort. 
+They imply that the combination of new and existing test cases is an important factor to consider in practical applications. 
+
+Xu \etal then dedicate a paper to the comparison of concolic execution and genetic algorithms for test suite amplification \cite{xu2010directed}. 
+The comparison is carried out over four small (between 138 and 516 LoC) C programs from the SIR \cite{SIR} repository.
+They conclude that both techniques benefit from reusing existing test cases at a cost in efficiency. 
+The authors also state that the concolic approach can generate test cases  effectively in the absence of complex symbolic expressions. 
+Nevertheless, the genetic algorithm is more effective in the general case, but could be more costly in test case generation. 
+Also, the genetic approach is more flexible in terms of scenarios where it can be used, but the quality of the obtained results is heavily influenced by the definition of the fitness function, mutation test and crossover strategy. 
+
+The same authors propose a hybrid approach \cite{xu2011hybrid}. 
+This new approach incrementally runs both the concolic and genetic methods. 
+Each round applies first the concolic testing and the output is passed to the genetic algorithm as initial population. 
+Their original intention was to get a more cost-effective approach. 
+The evaluation is done over three of the C programs from their previous study.
+The authors conclude that this new proposal outperforms the other two in terms of branch coverage, but in the end is not more efficient. 
+They also speculate about possible strategies for combining both individual approaches to overcome their respective weaknesses and exploit their best features. 
+A revised and extended version of this work is given in \cite{xu2015directed}.
+
+\subsection{Finding Test Conditions in the Presence of Changes}
+\label{subsec:sota:category-2:finding-test-conditions}
+
+Another group of authors have worked under the premise that achieving only coverage may not be sufficient to adequately exercise changes in code. 
+Sometimes these changes manifest themselves only when particular conditions are met by the input. 
+The following papers address the problem of finding concrete input conditions that not only can execute the changed code, but also propagate the effects of this change to an observable point that could be the output of the involved test cases. 
+However, their work does not create concrete new test cases. 
+Their goal is to provide guidance, in the form of conditions that can be leveraged to create new tests with any generation method.
+
+It is important to notice that they do not achieve test generation. 
+Their goal is to provide guidance to generate new test cases independently of the selected generation method.
+
+Apiwattanapong \etal\cite{apiwattanapong2006matrix} target the problem of finding test conditions that could propagate the effects of a change in a program to a certain execution point. 
+Their method takes as input two versions of the same program. 
+First, an alignment of the statements in both versions is performed. 
+Then, starting from the originally changed statement and its counterpart in the new version, all statements whose execution is affected by the change are gathered up to a certain distance. 
+The distance is computed over the control and data dependency graph.  
+A partial symbolic execution is performed over the affected instructions to retrieve the states of both program versions, which are in turn used to compute testing requirements that can propagate the effects of the original change to the given distance. 
+As said before, the method does not deal with test case creation, it only finds new testing conditions that could be used in a separate generation process and is not able to handle changes to several statements unless the changed statements are unrelated. 
+The approach is evaluated on Java translations of two small C programs (102 Loc and 268 LoC) originally included in the Siemens program dataset \cite{hutchins1994experiments}. 
+The authors conclude that, although limited to one change at a time, the technique can be leveraged to generate new test cases during regular development.
+
+Santelices \etal\cite{santelices2008test} continue and extend the previous work by addressing changes to multiple statements and considering the effects they could have on each other. 
+In order to achieve this they do not compute state requirements for changes affected by others. 
+This time, the evaluation is done in one of the study subjects form their previous study and two versions of \emph{Nanoxml} from SIR.
+
+In another paper \cite{santelices2011applying} the same authors address the problems in terms of efficiency of applying symbolic execution. 
+They state that limiting the analysis of affected statements up to a certain distance from changes reduces the computational cost, but scalability issues still exist. 
+They also explain that their previous approach often produces test conditions which are unfeasible or difficult to satisfy within a reasonable resource budget. 
+To overcome this, they perform a dynamic inspection of the program during test case execution over statically computed slices around changes. 
+The technique is evaluated over five small Java programs, comprising \emph{Nanoxml} with 3 KLoC and translations of C programs from SIR having between 283 LoC and 478 LoC.
+This approach also considers multiple program changes. 
+Removing the need of symbolic execution leads to a less expensive method. 
+The authors claim that propagation-based testing strategies are superior to coverage-based in the presence of evolving software.
+
+\subsection{Other Approaches}
+\label{subsec:sota:category-2:others-approach}
+
+Other authors have also explored test suite augmentation for evolving programs with propagation-based approaches. 
+Qui \etal\cite{qi2010test} propose a method to add new test cases to an existing test suite ensuring that the effects of changes in the new program version are observed in the test output. 
+The technique consists of a two step symbolic execution. 
+First, they explore the paths towards a change in the program guided by a notion of distance over the control dependency graph. 
+This exploration produces an input able to reach the change. 
+In a second moment they analyze the conditions under which this input may affect the output and make changes to the input accordingly. 
+The technique is evaluated using 41 versions of the \emph{tcas} program from the SIR repository (179 LoC) with only one change between versions. 
+The approach was able to generate tests reaching the changes and affected the program output for 39 of the cases. 
+Another evaluation was also included for two consecutive versions of the \emph{libPNG} library (28 KLoC) with a total of 10 independent changes between them. 
+The proposed technique was able to generate tests that reached the changes in all cases and the output was affected in nine of the changes. 
+The authors conclude that the technique is effective in the generation of test inputs to reach a change in the code and expose the change in the program output.
+
+Wang \etal\cite{xwang2014directed} exploit existing test cases to generate new ones that execute the change in the program. 
+These new test cases should produce a new program state, in terms of variable values, that can be propagated to the test output. 
+An existing test case is analyzed to check if it can reach the change in an evolved program. 
+The test is also checked to see if it produces a different program state at some point and if the test output is affected by the change. 
+If some of these premises do not hold then the path condition of the test is used to generate a new path condition to achieve the three goals. 
+Further path exploration is guided and narrowed using a notion of the probability for the path condition to reach the change. 
+This probability is computed using the distance between statements over the control dependency graph. 
+Practical results of test cases generation in three small Java programs (from 231 LoC to 375 LoC) are exhibited. 
+The method is compared to \emph{eXpress} and \emph{JPF-SE} two state of the art tools and is shown to reduce the number of symbolic executions by 45.6\% and 60.1\% respectively. 
+As drawback, the technique is not able to deal with changes on more than one statement. 
+
+Mirzaaghaei \etal\cite{Mirzaaghaei2012,mirzaaghaei2014automatic} introduce an approach that leverages information from existing test cases and automatically adapts test suites to code changes.
+Their technique can repair, or evolve test cases in front of signature changes (\ie changing the declaration of method parameters or return values), the addition of new classes to the hierarchy, addition of new interface implementations, new method overloads and new method overrides. 
+Their effective implementation \emph{TestCareAssitance} (TCA) first diffs the original program with its modified version to detect changes and searches in the test code similar patterns that could be used to complete the missing information or change the existing code. 
+They evaluate TCA for signature changes in 9 Java projects of the Apache foundation and repair in average 45\% of modifications that lead to compilation errors. 
+The authors further use five additional open source projects to evaluate their approach when adding new classes to the hierarchy. 
+TCA is able to generate test cases for 60\% of the newly added classes.
+This proposal could also fall in the category of test repairing techniques. 
+Section \autoref{sec:amp_mod} will explore alternatives in a similar direction that produce test changes instead of creating completely new test cases.
+
+In a different direction, Böhme \etal\cite{bohme2013regression} explain that changes in a program should not be treated in isolation. 
+Their proposal focuses on potential interaction errors between software changes. 
+They propose to build a graph containing the relationship between changed statements in two different versions of a program and potential interaction locations according to data and control dependency. 
+This graph is used to guide a symbolic execution method and find path conditions for exercising changes and their potential interactions and use a Satisfiability Modulo Solver to generate a concrete test input. 
+They provide practical results on six versions the \emph{GNU Coreutils} toolset that introduce 11 known errors. They were able to find 5 unknown errors in addition to previously reported issues.
+
+Marinescu and Cadar \cite{marinescu2013katch} present a system, called \emph{Katch}, that aims at covering the code included in a patch. 
+Instead of dealing with one change to one statement, as most of the previous works, this approach first determines the differences of a program and its previous version after a commit, in the form of a code patch. 
+Lines included in the patch are filtered by removing those that contain non-executable code (\ie comments, declarations). 
+If several lines belong to the same basic program block, only one of them is kept as they will all be executed together. 
+From the filtered set of lines, those not covered by the existing test suite are considered as targets. 
+The approach then selects the closest input to each target from existing tests using the static minimum distance over the control flow graph. 
+Edges on this graph that render the target unreachable are removed by inspecting the data flow and gathering preconditions to the execution of basic blocks. 
+To generate new test inputs, they combine symbolic execution with heuristics that select branches by their distance to the target, regenerate a path by going back to the point where the condition became unfeasible or changing the definition of variables involved in the condition. 
+The proposal is evaluated using the \emph{GNU findutils}, \emph{diffutils} and \emph{binutils} which are distributed with most Unix-based distributions. \\
+They examine patches from a period of 3 years. 
+In average, they automatically increase coverage from 35\% to 52\% with respect to the manually written test suite.
+
+A posterior work of the same group~\cite{palikareva2016shadow} also targets patches of code, focusing on finding test inputs that execute different behavior between two program versions. 
+They consider two versions of the same program, or the old version with the patch of changed code, and a test suite. 
+The code should be annotated in places where changes occur in order to unify both versions of the program for the next steps. 
+Then they select from the test suite those test cases that cover the changed code. 
+If there is no such test case, it can be generated using \emph{Katch}.  
+The unified program is used in a two stage dynamic symbolic execution guided by the selected test cases: look for branch points where two semantically different conditions are evaluated in both program versions; bounded symbolic execution for each point previously detected. 
+At those points all possible alternatives in which program versions execute the same or different branch blocks are considered and used to make the constraint solver generate new test inputs for divergent scenarios. 
+The program versions are then normally executed with the generated inputs and the result is validated to check the presence of a bug or an intended difference. 
+In their experiments this validation is mostly automatic but in general should be performed by developers.
+The evaluation of the proposed method is based on the \emph{CoREBench}~\cite{bohme2014corebench} data set that contains documented bugs and patches of the \emph{GNU Coreutils} program suite. 
+The authors discuss successful and unsuccessful results but in general the tool is able to produce test inputs that reveal changes in program behaviour.
+
+\subsection{Summary}
+\label{subsec:sota:category-2:summary}
+
+\emph{Main achievements:}
+$AMP_{change}$ techniques often rely on symbolic and concolic execution. 
+Both have been successfully combined with other techniques in order to generate test cases that reach changed or evolved parts of a program \cite{xu2011hybrid,xu2015directed,marinescu2013katch}.
+Those hybrid approaches produce new test inputs that increase the coverage of the new program version. Data and control dependency has been used in several approaches to guide symbolic execution and reduce its computational cost \cite{bohme2013regression,marinescu2013katch,xwang2014directed}. 
+The notion of distance from statements to observed changes has been also used for this matter \cite{marinescu2013katch,apiwattanapong2006matrix}.
+
+
+\emph{Main challenges:}
+Despite the progress made in the area, a number of challenges remain open. 
+The main challenge relates to the size of the changes considered for test amplification: many of the works in this area consider a single change in a single statement \cite{apiwattanapong2006matrix,qi2010test,xwang2014directed}. 
+While this is relevant and important to establish the foundations for $AMP_{change}$, this cannot fit current development practices where a change, usually a commit, modifies the code at multiple places at once. 
+A few papers have started investigating multi-statement changes for test suite amplification \cite{santelices2008test,marinescu2013katch,palikareva2016shadow}. 
+Now, $AMP_{change}$ techniques should fit into the revision process and be able to consider a commit as the unit of change. 
+
+Another challenge relates to scalability. 
+The use of symbolic and concolic execution has proven to be effective in test input generation targeting program changes. 
+Yet,  these two techniques are computationally expensive \cite{xu2009directed,xu2011hybrid,xu2015directed,apiwattanapong2006matrix,santelices2008test,palikareva2016shadow}. 
+Future works shall consider more efficient ways for exploring input requirements that  exercise program changes or new uncovered parts. 
+Santelices and Harrold~\cite{santelices2011applying} propose to get rid of symbolic execution by observing the program behavior during test execution. 
+However, they do not generate test cases.
+
+Practical experimentation and evaluation remains confined to a very small number of programs, in most cases less than five study subjects, and even small programs in terms of effective lines of code. 
+A large scale study on the subject is still missing.
