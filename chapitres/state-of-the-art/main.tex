@@ -591,3 +591,82 @@ However, they do not generate test cases.
 
 Practical experimentation and evaluation remains confined to a very small number of programs, in most cases less than five study subjects, and even small programs in terms of effective lines of code. 
 A large scale study on the subject is still missing.
+
+\section{Amplification by Modifying Test Execution}
+\label{sec:sota:category-3}
+
+In order to explore new program states and behavior, it is possible to interfere with the execution at runtime so as to modify the execution of the program under test. 
+
+\medskip
+\textbf{Definition: Test amplification technique $AMP_{exec}$ consists of modifying the test execution process or the test harness in order to maximize the knowledge gained from the testing process.}
+
+One of the drawbacks of automated tests is the hidden dependencies that may exist between different unit test cases. 
+In fact, the order in which the test cases are executed may affect the state of the program under test. 
+A good and strong test suite should have no implicit dependencies between test cases.
+
+The majority of test frameworks are deterministic, \ie between two runs the order of execution of test is the same~\cite{DBLP:conf/icsm/PalombaZ17,PalombaEMSE2019}.
+
+An $AMP_{exec}$ technique would randomize the order in which the tests are executed to reveal hidden dependencies between unit tests and potential bugs derived from this situation.
+
+\subsection{Amplification by Modifying Test Execution}
+\label{subsec:sota:category-3:modifying-test-execution}
+
+Zhang and Elbaum \cite{zhang2012,ZhangE14} describe a technique to validate exception handling in programs making use of APIs to access external resources such as databases, GPS or bluetooth.
+The method mocks the accessed resources and amplifies the test suite by triggering unexpected exceptions in sequences of API calls.
+Issues are detected during testing by observing abnormal terminations of the program or abnormal execution times. 
+They evaluated their approach on 5 Android artifacts. 
+Their sizes vary from 6k to 18k line of codes, with 39 to 117 unit tests in the test suite. 
+The size of the benchmark seems quite reasonable. 
+The approach is shown to be cost-effective and able to detect real-life problems in 5 Android applications.
+
+Cornu \etal\cite{cornu2015exception} work in the same line of exception handling evaluation. 
+They propose a method to complement a test suite in order to check the behaviour of a program in the presence of unanticipated scenarios. 
+The original code of the program is modified with the insertion of \texttt{throw} instructions inside \texttt{try} blocks. 
+The test suite is considered as an executable specification of the program and therefore used as an oracle in order to compare the program execution before and after the modification.
+Under certain conditions, issues can be automatically repaired by catch-stretching.
+The authors used 9 Java open-source projects to create a benchmark and evaluate their approach. 
+This benchmark is big enough to conclude the generalization of the results. 
+The selected artifacts are well-known, modern and large: Apache artifacts, joda-time and so on.
+Their empirical evaluation shows that the short-circuit testing approach of exception contracts increases the knowledge of software.
+
+Leung \etal\cite{leung12} are interested in finding data races and non-determinism in GPU code written in the CUDA programming language.
+In their context, test amplification consists of generalizing the information learned from a single dynamic run. 
+The main contribution is to formalize the relationship between the trace of the dynamic run and statically collected information flow. 
+The authors leverage this formal model to define the conditions under which they can generalize the absence of race conditions for a set of input values, starting from a run of the program with a single input.
+They evaluated their approach using 28 benchmarks in the NVIDIA CUDA SDK Version 3.0. 
+They removed trivial ones and some of them that they cannot handle. 
+The set of benchmarks is big enough and contains a diversity of applications to be convinced that the approach can be generalized.
+
+
+Fang \etal\cite{fang2015perfblower} develop a performance testing system named \emph{Perfblower}, which is able to detect and diagnose memory issues by observing the execution of a set of test methods. 
+The system includes a domain-specific language designed to describe memory usage symptoms. 
+Based on the provided descriptions, the tool evaluates the presence of memory problems. 
+The approach is evaluated on 13 Java real-life projects. 
+The tool is able to find real memory issues and reduce the number of false positives reported by similar tools.
+They used the small workload of the DaCapo~\cite{DaCapo} benchmark. 
+They argue that developers will not use large workloads and it is much more difficult to reveal performance bugs under small workloads. 
+These two claims are legit, however the authors do not provide any evidence of the scalability of the approach.
+
+Zhang \etal\cite{Zhang2016Isomorphic} devise a methodology to improve the capacity of the test suite to detect regression faults. 
+Their approach is able to exercise uncovered branches without generating new test cases. 
+They first look for identical code fragments between a program and its previous version. 
+Then, new variants of both versions are generated by negating branch conditions that force the test suite to execute originally uncovered parts. 
+The behavior of version variants are compared through test outputs. 
+An observed difference in the output could reveal an undetected fault. 
+An implementation of the approach is compared with \emph{EvoSuite} \cite{fraser2011evosuite} on 10 real-life Java projects. 
+In the experiments, known faults are seeded by mutating the original program code. 
+The results show that \emph{EvoSuite} obtains better branch coverage, while the proposed method is able to detect more faults. 
+The implementation is available in the form of a tool named \emph{Ison}.
+
+\subsection{Summary}
+\label{subsec:sota:category-3:summary}
+
+\emph{Main achievements:} $AMP_{exec}$ proposals provide cost-effective approaches to observe and modify a program execution to detect possible faults.
+This is done by instrumenting the original program code to place observations at certain points or mocking resources to monitor API calls and explore unexpected scenarios.
+It adds no prohibitive overheads to regular test execution and provides means to gather useful runtime information. 
+Techniques in this section were used to analyze real-life projects of different sizes and they are shown to match other tools that pursue the same goal and obtain better results in some cases. 
+
+\emph{Main challenges:} 
+As shown by the relatively small number of papers discussed in this section, techniques for test execution modification have not been widely explored. 
+The main challenge is to get this concept known so as to enlarge the research community working on this topic.
+The concerned works are: \cite{zhang2012,ZhangE14,cornu2015exception,leung12,fang2015perfblower,Zhang2016Isomorphic}.
