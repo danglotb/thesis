@@ -112,31 +112,6 @@ If no category captures the gist of the paper, a new category is created.
 Two categories that are found to be closely related are merged to create a new one.
 The incremental refinement of these findings led to the definition of 4 categories to organize this literature study.
 
-\subsection{Novelty}
-
-\todo{this section will be removed}
-
-There are a number of notable surveys in software testing \cite{edvardsson1999survey,mcminn2004search,anand2013orchestrated}. 
-However none of them is dedicated to test amplification.
-For instance, Edvardsson's et al's \cite{edvardsson1999survey} and McMinn et al's \cite{mcminn2004search} articles are surveys on test generation.
-Yoo and Harman have structured the work on test minimization, selection and prioritization \cite{yoo2012survey} .
-In the prolific literature on symbolic execution for testing, the reader can refer to the survey of 
-Păsăreanu and Visser \cite{puasuareanu2009survey}.
-
-In general, test optimization, test selection, test prioritization, test minimization, test reduction is out of the scope of test amplification.
-
-Similarly, the work on test refactoring is related, but not in scope. 
-In particular, the work from Van Deursen \etal\cite{vandeursen2001refactoring,DBLP:series/springer/MoonenDZB08} and Mesaros\cite{Meszaros2006} focuses on improving the structural and diagnosability qualities of software tests, and is a mainly manual activity. 
-In contrast, test amplification is meant to be fully automated, as other technical amplification such as sound amplification. 
-Its goal is also different, in that its aim is to test more effectively with regard to a a given target criterion.
-
-Harrold et \etal\cite{harrold2008retesting} discusses the problem of ``retesting software'', where there is a section related to amplification.
-However, it is only a light account on the topic which is now outdated.
-
-Yusifoğlu et al. \cite{GAROUSIYUSIFOGLU2015123} discuss the new trends in software test-code engineering, and discuss the implications for researchers and practitioners in this area. 
-To do this, they use a systematic mapping to identify areas that require more attention.
-Their work covers a larger scope than our work, since they study all software test-code engineering research, methods and empirical study, while we focus specifically on test amplification, with more depth.
-
 \section{Amplification by Adding New Tests as Variants of Existing Ones}
 \label{sec:sota:category-1}
 
@@ -670,3 +645,160 @@ Techniques in this section were used to analyze real-life projects of different 
 As shown by the relatively small number of papers discussed in this section, techniques for test execution modification have not been widely explored. 
 The main challenge is to get this concept known so as to enlarge the research community working on this topic.
 The concerned works are: \cite{zhang2012,ZhangE14,cornu2015exception,leung12,fang2015perfblower,Zhang2016Isomorphic}.
+
+%% (Benjamin) responsible
+\section{Amplification by Modifying Existing Test Code}
+\label{sec:sota:category-4}
+
+In testing, it is up to the developer to design integration (large) or unit (small) tests.
+The main testing infrastructure such as JUnit in Java does not impose anything on the tests, such as the number of statements in a test, the cohesion of test assertions or the meaningfulness of test methods grouped in a test class. 
+In literature, there are works on modifying existing tests with respect to a certain engineering goal.
+
+\medskip
+\textbf{Definition: Test amplification technique $AMP_{mod}$ refers to modifying the body of existing test methods. 
+	The goal here is to make the scope of each test methods more precise or to improve the ability of test cases at assessing correctness (with better oracles). 
+	Differently from $AMP_{add}$, it is not about adding new test methods or new tests classes.}
+
+\subsection{Example}
+\label{subsec:sota:category-4:example}
+
+\begin{lstlisting}[caption={Example of a toy class},label=lst:example:amplification:original,float,language=java,numbers=left]
+public class Stack {
+	private Comparable[] elems;
+	public Stack() { ... }
+	public void push(Comparable i) { ... }
+	public void pop() { ... }
+	public boolean isFull() { ... }
+	public boolean isEmpty() { ... }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Initial test suite for the toy class},label=lst:example:test:initial,float,language=java,numbers=left]
+public class StackTest {
+	@Test
+	public void test1() {  
+		Stack s1 = new Stack();
+		s1.push('a');
+		s1.pop();
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Augmented test suite for the toy class},label=lst:example:test:aug,float,language=java,numbers=left]
+public  class  StackTest {
+	@Test
+	public  void  testAug1 () {
+		Stack s1 = new  Stack();
+		assertTrue(s1.isEmpty());
+		assertFalse(s1.isFull());
+		s1.push('a');
+		assertFalse(s1.isEmpty());
+		assertFalse(s1.isFull());
+		s1.pop();
+	}
+}
+\end{lstlisting}
+
+An example is given to illustrate the work of this category. 
+Consider a simple Java class named \emph{Stack} in \autoref{lst:example:amplification:original}. 
+The example is a simplified Java implementation of a stack that stores unique elements. 
+In the implementation, the array \emph{elems} contains the elements of the stack, and the \emph{push} and \emph{pop} functions represent the two standard push and pop stack operations. 
+The functions \emph{isFull} and \emph{isEmpty} check whether the stack is full and empty respectively.
+
+Given the Java class, existing automatic test-generation tools can generate a test suite for it.
+For instance, \autoref{lst:example:test:initial} exemplifies a possible test generated by automatic test-generation tools. 
+Note however there are no assertions generated in the test suite. 
+To detect problems during test execution, it typically relies on observing whether uncaught exceptions are thrown or whether the execution violates some predefined contracts. 
+
+A test amplification technique $AMP_{mod}$ may be able to generate the amplified test suite as shown in \autoref{lst:example:test:aug}.
+Compared with the original test suite, the augmented test suite has comprehensive assertions. 
+These assertions reflect the behavior of the current program version under test and can be used to detect regression faults introduced in future program versions.
+
+\subsection{Input Space Exploration}
+\label{subsec:sota:category-4:input-exploration}
+
+Dallmeier \etal\cite{Dallmeier2010} automatically amplify test suites by adding and removing method calls in JUnit test cases. 
+Their objective is to produce test methods that cover a wider set of executions than the original test suite in order to improve the quality of models reverse engineered from the code. 
+They evaluate \emph{TAUTOKO} on 7 Java classes and show that it is able to produce richer typestates (a typestate is a finite state automaton which encodes legal usages of a class under test).
+
+Hamlet and Voas \cite{HamletV93} introduce the notion of ``reliability amplification'' to establish a better statistical confidence that a given software is correct. 
+Program reliability is measured as the mean time to failure of the system under test.
+The core contribution relates reliability to testability assessment, that is, a measure of the probability that a fault in the program will propagate to an observable state. 
+The authors discuss how different systematic test planning strategies, \eg partition-based test selection \cite{ostrand1988category}, can complement profile-based test cases, in order to obtain a better measurement of testability and therefore better bounds to estimate the reliability of the program being tested.
+
+\subsection{Oracle Improvement}
+\label{subsec:sota:category-4:oracle-improvement}
+
+Xie \cite{Xie2006} amplifies object-oriented unit tests with a technique that consists of adding assertions on the state of the receiver object, the returned value by the tested method (if it is a non-void return value method) and the state of parameters (if they are not primitive values). 
+Those values depend on the behavior of the given method, which in turn depends on the state of the receiver and of arguments at the beginning of the invocation. 
+The approach, named \emph{Orstra}, consists of instrumenting the code and running the test suite to collect state of objects. 
+Then, assertions are generated, which call observer methods (methods with a non-void return type, \eg $toString()$). 
+To evaluate \emph{Orstra}, the author uses 11 Java classes from a variety of sources. 
+Theses classes are different in the number of methods and lines of code, and the author also uses two different third-party test generation tools to generate the initial test suite to be amplified. 
+The results show that \emph{Orstra} can effectively improve the fault-detection capability of the original automatically generated test suite.
+
+Carzaniga \etal\cite{Carzaniga:2014:COI:2568225.2568287} reason about generic oracles and propose a generic procedure to assert the behavior of a system under test. 
+To do so, they exploit the redundancy of software. 
+Redundancy of software happens when the system can perform the same action through different executions, either with different code or with the same code but with different input parameters or in different contexts. They devise the notion of ``cross-checking oracles'', which compare the outcome of the execution of an original method to the outcome of an equivalent method. Such oracle uses a generic equivalence check on the returned values and the state of the target object. If there is an inconsistency, the oracle reports it, otherwise, the checking continue. These oracles are added to an existing test suite with aspect-oriented programming. For the evaluation, they use 18 classes from three non-trivial open-source Java libraries, including Guava, Joda-Time, and GraphStream. The subject classes are selected based on whether a set of equivalences have already been established or could be identified. For each subject class, two kinds of test suites have been used, including hand-written test suites and automatically generated test suites by Randoop. The experimental results show that the approach can slightly increase (+6\% overall) the mutation score of a manual test suite.
+
+Joshi \etal\cite{Joshi07} try to amplify the effectiveness of testing by executing both concretely and symbolically the tests. 
+Along this double execution, for every conditional statement executed by the concrete execution, the symbolic execution generates symbolic constraints over the input variables. 
+At the execution of an assertion, the symbolic execution engine invokes a theorem prover to check that the assertion is verified, according to the constraints encountered. 
+If the assertion is not guaranteed, a violation of the behavior is reported. 
+To evaluate their approach, the authors use 5 small and medium sized programs from SIR, including gzip, bc, hoc, space, and printtokens. 
+The results show that they are able to detect buffer overflows but it needs optimization because of the huge overhead that the instrumentation add.
+
+Mouelhi \etal\cite{Mouelhi:2009} enhance tests oracles for access control logic, also called Policy Decision Point (PDP).
+This is done in 3 steps: 
+select test cases that execute PDPs, map each of the test cases to specific PDPs and  oracle enhancement. 
+They add to the existing oracle checks that the access is granted or denied with respect to the rule and checks that the PDP is correctly called. 
+To do so, they force the Policy Enforcement Point, \ie the point where the policy decision is setting in the system functionality, to raise an exception when the access is denied and they compare the produced logs with expected log. 
+To evaluate, they conduct case studies on three Java applications developed by students during group projects. 
+For these three subjects, the number of classes ranges form 62 to 122, the number of methods ranges from 335 to 797, and the number of lines of code ranges from 3204 to 10703. 
+The experimental results show that compared to manual testing, automated oracle generation saves a lot of time (from 32 hours to 5 minutes).
+
+Daniel \etal\cite{reassert2009} devise \emph{ReAssert} to  automatically repair test cases, \ie to modify test cases that fail due to a change.
+\emph{ReAssert} follows five steps: 
+record the values of failing assertions, 
+re-executes the test and catch the failure exception, \ie the exception thrown by the failing assertion. 
+From the exception, it extracts the stack trace to find the code to repair. 
+Then, it selects the repair strategy depending on the structure of the code and on the recorded value. 
+Finally, ReAssert re-compiles the code changes and repeats all steps until no more assertions fail. 
+The tool was evaluated on six real and well known open source Java projects, namely \emph{PMD}, \emph{JFreeChart}, \emph{Lucene}, \emph{Checkstyle}, \emph{JDepend} and \emph{XStream}. 
+The authors created a collection of manually written and generated tests methods by targeting previous versions of these programs. 
+\emph{ReAssert} was able to produce fixes from 25\% to 100\% of failing tests for all study subjects. 
+An usability study was also carried out with two teams of 18 researchers working on three research prototypes. 
+The participants were asked to accomplish a number of tasks to write failing tests for new requirements and code changes and were also asked to manually fix the failures. 
+\emph{ReAssert} could repair 98\% of failures created by the participants’ code changes. 
+In 90 \% of cases the repairs suggested by the tool  matched the patches created by the participants. 
+The authors explain that the success rate of the tool depends more on the structure of the code of the test than the test failure itself.
+
+
+\subsection{Purification}
+\label{subsec:sota:category-4:purification}
+
+Xuan \etal\cite{xuan:hal-01309004} propose a technique to split existing tests into smaller parts in order to ``purify'' test methods. 
+Here, purification can be seen as a form of test refactoring. 
+A pure test executes one, and only one, branch of an if/then/else statement. 
+On the contrary, an impure test executes both branches \emph{then} and \emph{else} of the same if/then/else statement in code. 
+The authors evaluate their technique on 5 widely used open-source projects from code organizations such as Apache. 
+The experimental results show that the technique increases the purity of test cases by up to 66\% for if statements and 11\% for try statement. 
+In addition, the result also shows that the technique improves the effectiveness of program repair of Nopol~\cite{xuanTSE2016Nopol}.
+
+Xuan \etal\cite{xuan2014test} aim at improving the fault localization capabilities by \emph{purifying} test cases. 
+By purifying, they mean to modify existing failing test methods into single assertion test cases and remove all statements that are not related to the assertion. 
+They evaluated the test purification on 6 open-source java project, over 1800 bugs generated by typical mutation tool PIT and compare their results with 6 mature fault localization techniques. 
+They show that they improve the fault localization effectiveness on 18 to 43\% of all the faults, as measured per improved wasted effort. 
+
+\subsection{Summary}
+\label{subsec:sota:category-4:summary}
+
+\emph{Main achievements:}
+What is remarkable in $AMP_{mod}$ is the diversity of engineering goals considered. 
+Input space exploration provides better state coverage \cite{Dallmeier2010} and reliability assessment \cite{HamletV93}, 
+oracle improvement allows to increase the efficiency and effectiveness of tests \cite{Xie2006, Carzaniga:2014:COI:2568225.2568287, Joshi07, Mouelhi:2009, reassert2009}, test purification of test cases facilitate program repair \cite{xuan:hal-01309004} and fault localization \cite{xuan2014test}.
+
+\emph{Main challenges:}
+Although impressive results have been obtained, no experiments have been carried out to study the acceptability and maintainability of amplified tests \cite{Dallmeier2010, Xie2006, HamletV93,  Carzaniga:2014:COI:2568225.2568287, Joshi07, Mouelhi:2009, reassert2009, xuan:hal-01309004, xuan2014test}. 
+In this context, acceptability means that human developers are ready to commit the amplified tests to the version control system (\eg in the Git repository). 
+The maintainability challenge is whether the machine-generated tests can be later understood and modified by developers.
