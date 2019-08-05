@@ -107,15 +107,14 @@ Amplification by Modifying Existing Test Code (\autoref{sec:amp_mod}).
 The missing terminological consensus mentioned previously prevented the design of a classification according to Petersen's guidelines
 \cite{petersen2008systematic}.
 The four categories has been incrementally refined by analyzing the techniques and goals in each paper.
-% we can add it
 The methodology is as follows: a work is assigned to a category if the key technique of the paper corresponds to it.
-% we can't add it
 If no category captures the gist of the paper, a new category is created.
-% we can refine categories
 Two categories that are found to be closely related are merged to create a new one.
 The incremental refinement of these findings led to the definition of 4 categories to organize this literature study.
 
 \subsection{Novelty}
+
+\todo{this section will be removed}
 
 There are a number of notable surveys in software testing \cite{edvardsson1999survey,mcminn2004search,anand2013orchestrated}. 
 However none of them is dedicated to test amplification.
@@ -137,3 +136,207 @@ However, it is only a light account on the topic which is now outdated.
 Yusifoğlu et al. \cite{GAROUSIYUSIFOGLU2015123} discuss the new trends in software test-code engineering, and discuss the implications for researchers and practitioners in this area. 
 To do this, they use a systematic mapping to identify areas that require more attention.
 Their work covers a larger scope than our work, since they study all software test-code engineering research, methods and empirical study, while we focus specifically on test amplification, with more depth.
+
+\section{Amplification by Adding New Tests as Variants of Existing Ones}
+\label{sec:sota:category-1}
+
+The most intuitive form of test amplification is to consider an existing test suite, then generate variants of the existing test cases and add those new variants into the original test suite. 
+This kind of test amplification is denoted as $AMP_{add}$. 
+
+\medskip
+\textbf{Definition: A test amplification technique $AMP_{add}$ consists of creating new tests from existing ones to achieve a given engineering goal.
+	The most commonly used engineering goal is to improve coverage according to a coverage criterion.}
+
+The works listed in this section fall into this category and have been divided according to their main engineering goal.
+
+\subsection{Example}
+\label{subsec:sota:category-1:example}
+
+In this section I present an example of $AMP_{add}$ to illustrate this category of work.
+Let us consider the single Java method, presented in \autoref{lst:example}.
+
+\begin{lstlisting}[caption={Example of a toy method},label=lst:example,float,language=java,numbers=left]
+class Computer {
+	public void compute(int integer) {
+		if (integer > 2) {
+			return integer + 2;
+		} else {
+			return integer + 1;
+		}
+	}
+}
+\end{lstlisting}
+
+This method contains an if statement. 
+The conditional expression tests the value passed through the parameter. 
+If the value is greater than 2, then the method returns the value plus 2, otherwise it returns the value plus 1.
+Applying $AMP_{add}$ requires to have existing tests. 
+Consider the test method in \autoref{lst:example_test_method}.
+This test method ensures the behavior of the program when the parameter is lower than 2, \ie when the else branch of the if statement is executed.
+
+\begin{lstlisting}[caption={Example of toy test method},label=lst:example_test_method,float,language=java,numbers=left] 
+@Test
+public void test_compute() {
+	Computer computer = new Computer();
+	int actualValue = computer.compute(1);
+	assertEquals(2, actualValue);
+}
+\end{lstlisting}
+
+According to this test, one can say that this program is ``poorly'' tested, since only one of the two branches is covered.
+One potential goal of an $AMP_{add}$ technique is to increase this branch coverage. 
+
+\begin{lstlisting}[caption={Example of amplified toy test method},label=lst:example_test_method_amplified,float,language=java,numbers=left] 
+@Test
+public void amplified_test_compute() {
+	Computer computer = new Computer();
+	int actualValue = computer.compute(3);
+	assertEquals(5, actualValue);
+}
+\end{lstlisting}
+
+Now, an $AMP_{add}$ technique may be able to generate the amplified test method shown in \autoref{lst:example_test_method_amplified}.
+The test \autoref{lst:example_test_method_amplified} is easily derivable from the existing test \autoref{lst:example_test_method} because only one literal and the assertion differ.
+This new test method executes the \textit{then} branch of the if statement (see \autoref{lst:example} line 2 and 3) that was not executed before. 
+That is to say, applying $AMP_{add}$ improves the test suite, by increasing the branch coverage of the program.
+
+\subsection{Coverage or Mutation Score Improvement}
+\label{subsec:sota:category-1:coverage-vs-mutation}
+
+Baudry \ie \cite{Baudry05a} \cite{Baudry05d} improve the mutation score of an existing test suite by generating variants of existing tests through the application of specific transformations of the test cases. 
+They iteratively run these transformations, and propose an adaptation of genetic algorithms (GA), called a bacteriological algorithm (BA), to guide the search for test cases that kill more mutants.  
+The results demonstrate the ability of search-based amplification to significantly increase the mutation score of a test suite.
+They evaluated their approach on 2 case studies that are .NET classes.
+The evaluation shows promising results, however the result have little external validity since only 2 classes are considered.
+
+Tillmann and Schulte \cite{tillmann2006unit} describe a technique that can generalize existing unit tests into parameterized unit tests. 
+The basic idea behind this technique is to refactor the unit test by replacing the concrete values that appear in the body of the test with parameters, which is achieved through symbolic execution. 
+Their technique's evaluation has been conducted on 5 .NET classes.
+
+The problem of generalizing unit tests into parameterized unit tests is also studied by Thummalapenta et \etal\cite{marri2010retrofitting}. 
+Their empirical study shows that unit test generalization can be achieved with feasible effort, and can bring the benefits of additional code coverage.
+They evaluated their approach on 3 applications from 1 600 to 6 200 lines of code. 
+The result shows an increase of the branch coverage and a slight increase of the bug detection capability of the test suite.
+
+To improve the cost efficiency of the test generation process, Yoo and Harman \cite{yoo2012} propose a technique for augmenting the input space coverage of the existing tests with new tests. 
+The technique is based on four transformations on numerical values in test cases, \ie shifting ($\lambda x.x+1$ and  $\lambda x.x-1$ ) and data scaling (multiply or divide the value by 2).
+In addition, they employ a hill-climbing algorithm based on the number of fitness function evaluations, where a fitness is the computation of the euclidean distance between two input points in a numerical space. 
+The empirical evaluation shows that the technique can achieve better coverage than some test generation methods which generate tests from scratch.
+The approach has been evaluated  on the triangle problem.
+They also evaluated their approach on two specific methods from two large and complex libraries.
+
+To maximize code coverage, Bloem \etal \cite{6958388} propose an approach that alters existing tests to get new tests that enter new terrain, \ie uncovered features of the program.
+The approach first analyzes the coverage of existing tests, and then selects all test cases that pass a yet uncovered branch in the target function.
+Finally, the approach investigates the path conditions of the selected test cases one by one to get a new test that covers a previously uncovered branch. 
+To vary path conditions of existing tests, the approach uses symbolic execution and model checking techniques. 
+A case study has shown that the approach can achieve 100\% branch coverage fully automatically.
+They first evaluate their prototype implementation on two open source examples and then present a case study on a real industrial program of a Java Card applet firewall.
+For the real program, they applied their tool on 211 test cases, and produce 37 test cases to increase the code coverage.
+The diversity of the benchmark allows to make a first generalization.
+
+Rojas et al.~\cite{rojas2016seeding} have investigated several seeding strategies for the test generation tool Evosuite. 
+Traditionally, Evosuite generates unit test cases from scratch.
+In this context, seeding consists in feeding Evosuite with initial material from which the automatic generation process can start. 
+The authors evaluate different sources for the seed: constants in the program, dynamic values, concrete types and existing test cases. 
+In the latter case, seeding analogizes to amplification. 
+The experiments with 28 projects from the Apache Commons repository show a 2\% improvement of code coverage, on average, compared to a generation from scratch.
+The evaluation based on Apache artifacts is stronger than most related work, because Apache artifacts are known to be complex and well tested.
+
+Patrick and Jia \cite{Patrick201736} propose \emph{Kernel Density Adaptive Random Testing} (KD-ART) to improve the effectiveness of random testing.
+This technique takes advantage of run-time test execution information to generate new test inputs. 
+It first applies \emph{Adaptive Random Testing} (ART) to generate diverse values uniformly distributed over the input space. 
+Then, they use \emph{Kernel Density Estimation} for estimating the distribution of values found to be useful; in this case, that increases the mutation score of the test suite. 
+KD-ART can intensify the existing values by generating inputs close to the ones observed to be more useful or diversify the current inputs by using the ART approach. 
+The authors explore the trade-offs between diversification and intensification in a benchmark of eight C programs. 
+They achieve an 8.5\% higher mutation score than ART for programs that have simple numeric input parameters, but their approach does not show a significant increase for programs with composite inputs. 
+The technique is able to detect mutants 15.4 times faster than ART in average.
+
+Instead of operating at the granularity of complete test cases, Yoshida et \etal\cite{Yoshida2016} propose a novel technique for automated and fine-grained incremental generation of unit tests through minimal augmentation  of an existing test suite. 
+Their tool, \emph{FSX}, treats each part of existing cases, including the test driver, test input data, and oracles, as “test intelligence", and attempts to create tests for uncovered test targets by copying and minimally modifying existing tests wherever possible. 
+To achieve this, the technique uses iterative, incremental refinement of test-drivers and symbolic execution.
+They evaluated \emph{FSX} using four benchmarks, from 5K to 40K lines of code. 
+This evaluation is adequate and reveals that FSX' result can be generalized.
+
+\subsection{Fault Detection Capability Improvement}
+\label{subsec:sota:category-1:fault-detection}
+
+Starting with the source code of test cases, Harder et \etal\cite{Harder03} propose an approach that dynamically generates new test cases with good fault detection ability.
+A generated test case is kept only if it adds new information to the specification.
+They define ``new information'' as adding new data for mining invariants with Daikon, hence producing new or modified invariants. 
+What is unique in the paper is the augmentation criterion: helping an invariant inference technique.
+They evaluated Daikon on a benchmark of 8 C programs. 
+These programs vary from 200 to 10K line of code. 
+It is left to future work to evaluate the approach on a real and large software application.
+
+Pezze et \etal\cite{pezze2013} observe that method calls are used as the atoms to construct test cases for both unit and integration testing, and that most of the code in integration test cases
+appears in the same or similar form in unit test cases. 
+Based on this observation, they propose an approach which uses the information provided in unit test cases about object creation and initialization to build composite cases that focus on testing the interactions between objects. 
+The evaluation results show that the approach can reveal new interaction faults even in well tested applications. 
+
+Writing web tests manually is time consuming, but it gives the developers the advantage of gaining domain knowledge. 
+In contrast, most web test generation techniques are automated and systematic, but lack the domain knowledge required to be as effective. 
+In light of this, Milani \etal\cite{milani2014} propose an approach which combines the advantages of the two. 
+The approach first extracts knowledge such as event sequences and assertions from the human-written tests, and then combines the knowledge with the power of automated crawling. 
+It has been shown that the approach can effectively improve the fault detection rate of the original test suite.
+They conducted an empirical evaluation on 4 open-source and large JavaScript systems. 
+
+\subsection{Oracle Improvement}
+\label{subsec:sota:category-1:oracle-improvement}
+
+Pacheco and Ernst implement a tool called Eclat \cite{Pacheco2005}, which aims to help the tester with the difficult task of creating effective new test inputs with constructed oracles. 
+Eclat first uses the execution of some available correct runs to infer an operational model of the software's operation. 
+By making use of the established operational model, Eclat then employs a classification-guided technique to generate new test inputs. 
+Next, Eclat reduces the number of generated inputs by selecting only those that are most likely to reveal faults. 
+Finally, Eclat adds an oracle for each remaining test input from the operational model automatically. 
+They evaluated their approach on 6 small programs. 
+They compared Eclat's result to the result of JCrasher, a state of the art tool that has the same goal than Eclat. 
+In their experimentation, they report that Eclat perform better than JCrasher: Eclat reveals 1.1 faults on average against 0.02 for JCrasher.
+
+Given that some test generation techniques just generate sequences of method calls but do not contain oracles for these method calls, Fraser and Zeller \cite{fraser2011generating} propose an approach to generate parametrized unit tests containing symbolic pre- and post-conditions. 
+Taking concrete inputs and results as inputs, the technique uses test generation and mutation to systematically generalize pre- and post-conditions. 
+Evaluation results on five open source libraries show that the approach can successfully generalize a concrete test to a parameterized unit test, which is more general and expressive, needs fewer computation steps, and achieves a higher code coverage than the original concrete test.
+They used 5 open-source and large programs to evaluate the approach.
+According to their observation, this technique is more expensive than simply generating unit test cases.
+
+\subsection{Debugging Effectiveness Improvement}
+\label{subsec:sota:category-1:debugging-improvement}
+
+Baudry \etal \cite{Baudry:2006:ITS:1134285.1134299} propose the test-for-diagnosis criterion (TfD) to evaluate the fault localization power of a test suite, and identify an attribute called Dynamic Basic Block (DBB) to characterize this criterion.
+A Dynamic Basic Block (DBB) contains the set of statements that are executed by the same test cases, which implies all statements in the same DBB are indistinguishable.
+Using an existing test suite as a starting point, they apply a search-based algorithm to optimize the test suite with new tests so that the test-for-diagnosis criterion can be satisfied. 
+They evaluated their approach on two programs: a toy program and a server that simulates business meetings over the network. 
+These two programs are less than 2K line of code long, which can be considered as small.
+
+R{\"o}$\beta$ler \etal\cite{robetaler2012isolating} propose BugEx, which leverages test case generation to systematically isolate failure causes. 
+The approach takes a single failing test as input and starts generating additional passing or failing tests that are similar to the failing test. 
+Then, the approach runs these tests and captures the differences between these runs in terms of the observed facts that are likely related with the pass/fail outcome. 
+Finally, these differences are statistically ranked and a ranked list of facts is produced.
+In addition, more test cases are further generated to confirm or refute the relevance of a fact. 
+It has been shown that for six out of seven real-life bugs, the approach can accurately pinpoint important failure explaining facts.
+To evaluate BugEx, they use 7 real-life case studies from 68 to 62K lines of code. The small number of considered bugs, 7, calls for more research to improve external validity.
+
+Yu \etal\cite{Yu2013} aim at enhancing fault localization under the scenario where no appropriate test suite is available to localize the encountered fault. 
+They propose a mutation-oriented test case augmentation technique that is capable of generating test suites with better fault localization capabilities. 
+The technique uses some mutation operators to iteratively mutate some existing failing tests to derive new test cases potentially useful to localize the specific encountered fault. 
+Similarly, to increase the chance of executing the specific path during crash reproduction, Xuan \etal\cite{Xuan:2015:CRV:2786805.2803206} propose an approach based on test case mutation. 
+The approach first selects relevant test cases based on the stack trace in the crash, followed by eliminating assertions in the selected test cases, and finally uses a set of predefined mutation operators to produce new test cases that can help to reproduce the crash. 
+They evaluated MuCrash on 12 bugs for Apache Commons Collections, which is  26 KLoC of source code and 29 KLoC of test code length. 
+The used program is quite large and open-source which increases the confidence. but using a single subject is a threat to generalization.
+
+\subsection{Summary}
+\label{subsec:sota:category-1:subsection}
+
+\emph{Main achievements:}
+The works discussed in this section show that adding new test cases based on existing ones can make the test generation process more targeted and cost-effective. 
+On the one hand, the test generation process can be geared towards achieving a specific engineering goal better based on how existing tests perform with respect to the goal. 
+For instance, new tests can be intentionally generated to cover those program elements that are not covered by existing tests. 
+Indeed, it has been shown that tests generated in this way are effective in achieving multiple engineering goals, such as improving code coverage, fault detection ability, and debugging effectiveness. 
+On the other hand, new test cases can be generated more cost-effectively by making use of the structure or components of the existing test cases. 
+
+\emph{Main Challenges:}
+While existing tests provide a good starting point, there are some difficulties in how to make better use of the information they contain.
+First, the number of new tests synthesized from existing ones can sometimes be large and hence an effective strategy should be used to select tests that help to achieve the specific engineering goal;
+the concerned works are: \cite{Baudry05a, Baudry05d, Yoshida2016}.
+Second, the synthesized tests have been applied to a specific set of programs and the generalization of the related approaches could be limited. 
+The concerned works are: \cite{tillmann2006unit, marri2010retrofitting, yoo2012, 6958388, Patrick201736, Harder03, Pacheco2005, Baudry:2006:ITS:1134285.1134299, robetaler2012isolating, Xuan:2015:CRV:2786805.2803206}.
+Third, some techniques have known performance issues and do not scale well: \cite{milani2014, fraser2011generating}.
