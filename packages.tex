@@ -28,7 +28,7 @@
 
 \usepackage{color}
 \usepackage{verbatim}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
 \definecolor{GreyRowTable}{HTML}{EEEEEE}
 \usepackage{mdframed} 
 \usepackage[intoc]{nomencl}
@@ -266,6 +266,11 @@ urlcolor=linkcol %couleur des liens pour les url
 \definecolor{ForestGreen}{RGB}{34,139,34}
 \usepackage[]{pdfcomment}
 \usepackage{lscape}
+
+\newcommand{\X}{$\bullet$}
+\newcommand{\stack}[2]{\vtop{\hbox{\strut #1}\hbox{\strut #2}}}
+\newcommand{\stackt}[3]{{\vtop{\hbox{\strut #1}\hbox{\strut #2}\hbox{\strut #3}}}}
+\newcommand{\vertical}[1]{\rotatebox[origin=l]{90}{#1}}
 
 %\usepackage{hyperref}
 \usepackage[inline]{enumitem}

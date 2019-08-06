@@ -12,11 +12,15 @@
 	\end{itemize}
 	Note that this chapter is a to be published article\cite{survey:amplification}.
 	The remainder of this chapter is as follows:
+	First, \autoref{sec:sota:intro} introduces the state of the art;
+	Then, \autoref{sec:sota:method}  exposes the methodology used to build this state of the art;
 	This chapter is structured according to the 4 main categories, each of them being presented in a dedicated section.
-	Section \ref{sec:amp_add} presents techniques that synthesize new tests from manually-written tests.
-	Section \ref{sec:amp_change} focuses on the works that synthesize new tests dedicated to a specific change in the application code (in particular a specific commit).
-	Section \ref{sec:amp_exec} discusses the less-researched, yet powerful idea of modifying the execution of manually-written tests. 
-	Section \ref{sec:amp_mod} is about the modification of existing tests to improve a specific property.
+	\autoref{sec:sota:category-1} presents techniques that synthesize new tests from manually-written tests.
+	\autoref{sec:sota:category-2} focuses on the works that synthesize new tests dedicated to a specific change in the application code (in particular a specific commit).
+	\autoref{sec:sota:category-3} discusses the less-researched, yet powerful idea of modifying the execution of manually-written tests. 
+	\autoref{sec:sota:category-4} is about the modification of existing tests to improve a specific property.
+	\autoref{sec:sota:analysis} sums up the analysis.
+	Eventually, \autoref{sec:sota:conclusion} concludes this chapter.
 \end{chaptersummary}
 
 \minitoc
@@ -39,15 +43,11 @@ The term \emph{amplification} is introduced as an umbrella for the various activ
 This chapter surveys the research literature so that existing research efforts are characterized, can be compared and new research opportunities can be identified.
 Furthermore, the conjecture is that with good foundations and maturation, test amplification has the potential to bring software testing to the next level in terms of efficiency and efficacy among practitioners by introducing new automatic processes that improve the manually written tests.
 
-The reviewing methodology is based on backward- and forward- snowballing on the citation graph \cite{jalali2012systematic}.
-To the best of my knowledge, this review is the first that draws a comprehensive picture of the different engineering techniques and goals proposed in the literature for test amplification.
-
 \section{Method}
 \label{sec:sota:method}
-This section presents the methodology of the systematic literature review.
 
 \subsection{Definition}
-\label{subsec:sota:method:defition}
+\label{subsec:sota:method:definition}
 Test amplification is defined as follow:
 
 \begin{mdframed}
@@ -77,9 +77,9 @@ As snowballing studies are less subject to suffering from the use of diverse ter
 
 First, I run the search engine of DBLP for all papers containing ``test'' and ``amplification'' in their title (using stemming, which means that ``amplifying'' is matched as well).
 This has resulted in 70 papers at the date of the search (March 27, 2018)\footnote{the data is available at \url{https://github.com/STAMP-project/docs-forum/blob/master/scientific-data/}}.
-Each of papers has been reviewed one by one to see whether they fit in our scope according to the definition of \autoref{sec:core-definition}. 
+Each of papers has been reviewed one by one to see whether they fit in the scope according to the definition of \autoref{subsec:sota:method:definition}. 
 This has resulted in 4 articles~\cite{HamletV93,zhang2012,leung12,Joshi07}, which are the seed papers of this literature study. 
-The reason behind this very low proportion (4/70) is that most articles in this DBLP search are in the hardware research community, and hence do not fall in the scope of our paper.
+The reason behind this very low proportion (4/70) is that most articles in this DBLP search are in the hardware research community, and hence do not fall in the scope.
 
 Following a breve description of these 4 seed papers:
 \begin{itemize}
@@ -90,20 +90,19 @@ Following a breve description of these 4 seed papers:
 \end{itemize}
 More details are given in the following sections.
 
-From the seed papers, a backward snowballing search \rev{step} \cite{jalali2012systematic} has been performed, \ie, I have looked at all their references, going backward in the citation graph. 
+From the seed papers, a backward snowballing search step \cite{jalali2012systematic} has been performed, \ie, I have looked at all their references, going backward in the citation graph. 
 2 of the authors have reviewed the papers, independently. 
-%Then, these 2 authors cross-checked the outcome of their literature review, and kept each paper for which they both \rev{agreed that it} fits the definition of test amplification (cf. \autoref{sec:core-definition}).
-Then, a forward literature search \rev{step} has been performed, using the Google scholar search engine and ``cited by'' filter, from the set of papers, in order to find the most recent contributions in this area.
+Then, a forward literature search step has been performed, using the Google scholar search engine and ``cited by'' filter, from the set of papers, in order to find the most recent contributions in this area.
 A backward snowballing search step and a forward snowballing search step constitute what is called an ``iteration''.
 With each iteration, a set of papers is selected for the study, obtained through the snowballing action.
 These iterations continue until this set of selected paper is empty, \ie, when no paper can be kept, the snowballing process is stopped in both ways: backward and forward.
 
 %% Categorization methodology
-Once the selection papers is done, 4 key approaches to amplification has been distinguish, which used to classify the literature : 
-Amplification by Adding New Tests as Variants of Existing Ones (\autoref{sec:amp_add});
-Amplification by Modifying Test Execution (\autoref{sec:amp_exec});
-Amplification by Synthesizing New Tests with Respect to \rev{Changes (\autoref{sec:amp_change})}; 
-Amplification by Modifying Existing Test Code (\autoref{sec:amp_mod}).
+Once the papers selection is done, 4 key approaches to amplification has been distinguish, which used to classify the literature: 
+Amplification by Adding New Tests as Variants of Existing Ones (\autoref{sec:sota:category-1});
+Amplification by Modifying Test Execution (\autoref{sec:sota:category-2});
+Amplification by Synthesizing New Tests with Respect to Changes (\autoref{sec:sota:category-3}); 
+Amplification by Modifying Existing Test Code (\autoref{sec:sota:category-4}).
 The missing terminological consensus mentioned previously prevented the design of a classification according to Petersen's guidelines
 \cite{petersen2008systematic}.
 The four categories has been incrementally refined by analyzing the techniques and goals in each paper.
@@ -123,57 +122,6 @@ This kind of test amplification is denoted as $AMP_{add}$.
 	The most commonly used engineering goal is to improve coverage according to a coverage criterion.}
 
 The works listed in this section fall into this category and have been divided according to their main engineering goal.
-
-\subsection{Example}
-\label{subsec:sota:category-1:example}
-
-In this section I present an example of $AMP_{add}$ to illustrate this category of work.
-Let us consider the single Java method, presented in \autoref{lst:example}.
-
-\begin{lstlisting}[caption={Example of a toy method},label=lst:example,float,language=java,numbers=left]
-class Computer {
-	public void compute(int integer) {
-		if (integer > 2) {
-			return integer + 2;
-		} else {
-			return integer + 1;
-		}
-	}
-}
-\end{lstlisting}
-
-This method contains an if statement. 
-The conditional expression tests the value passed through the parameter. 
-If the value is greater than 2, then the method returns the value plus 2, otherwise it returns the value plus 1.
-Applying $AMP_{add}$ requires to have existing tests. 
-Consider the test method in \autoref{lst:example_test_method}.
-This test method ensures the behavior of the program when the parameter is lower than 2, \ie when the else branch of the if statement is executed.
-
-\begin{lstlisting}[caption={Example of toy test method},label=lst:example_test_method,float,language=java,numbers=left] 
-@Test
-public void test_compute() {
-	Computer computer = new Computer();
-	int actualValue = computer.compute(1);
-	assertEquals(2, actualValue);
-}
-\end{lstlisting}
-
-According to this test, one can say that this program is ``poorly'' tested, since only one of the two branches is covered.
-One potential goal of an $AMP_{add}$ technique is to increase this branch coverage. 
-
-\begin{lstlisting}[caption={Example of amplified toy test method},label=lst:example_test_method_amplified,float,language=java,numbers=left] 
-@Test
-public void amplified_test_compute() {
-	Computer computer = new Computer();
-	int actualValue = computer.compute(3);
-	assertEquals(5, actualValue);
-}
-\end{lstlisting}
-
-Now, an $AMP_{add}$ technique may be able to generate the amplified test method shown in \autoref{lst:example_test_method_amplified}.
-The test \autoref{lst:example_test_method_amplified} is easily derivable from the existing test \autoref{lst:example_test_method} because only one literal and the assertion differ.
-This new test method executes the \textit{then} branch of the if statement (see \autoref{lst:example} line 2 and 3) that was not executed before. 
-That is to say, applying $AMP_{add}$ improves the test suite, by increasing the branch coverage of the program.
 
 \subsection{Coverage or Mutation Score Improvement}
 \label{subsec:sota:category-1:coverage-vs-mutation}
@@ -332,68 +280,6 @@ I first present a series of works by Xu \etal, who develop and compare two alter
 A second subsection presents the work of a group of authors that center the attention on finding testing conditions to exercise the portions of code that exhibit changes. 
 A third subsection exposes works that explore the adaptation and evolution of test cases to cope with code changes. 
 The last subsection shows other promising works in this area.
-
-\subsection{Example}
-\label{subsec:sota:category-2:example}
-
-\autoref{lst:example:ampchange:original} shows a toy class and two test cases designed to verify its code.
-At some point in development, the code of the method is modified as shown in \autoref{lst:example:ampchange:modified}. 
-The change consists of the addition of a new block in line \ref{line:example:ampchange:modified}. 
-
-\begin{lstlisting}[caption={Initial version of a class and two test cases},label=lst:example:ampchange:original,float,language=java,numbers=left]
-class Computer{
-	public int computeValue(int input) {
-		if(input < 3) {
-			return input/2;
-		}
-		return 0;
-	}
-}
-
-class ComputerTest {
-	int threshold = 4;
-
-	@Test
-	public testSmallInput() {
-		Computer comp = new Computer();
-		assertTrue(comp.computeValue(2) < threshold);
-	}
-
-	@Test
-	public testDefault() {
-		Computer comp = new Computer();
-		assertEquals(comp.computeValue(10), 0);
-	}
-}
-\end{lstlisting}
-
-\begin{lstlisting}[caption={Modified version of the initial class},label=lst:example:ampchange:modified,float,language=java,numbers=left]
-class Computer{
-	public int computeValue(int input) {
-		if(input < 3) {
-			return input/2;
-		}
-		if (input <= 5) { (*@ \label{line:example:ampchange:modified} @*)
-			return 2*input;
-		}
-		return 0;
-	}
-}
-\end{lstlisting}
-
-The existing test cases do not execute the new code.
-There is no test input in the $[3,5]$ interval. 
-An $AMP_{change}$ technique would increment the test suite with a new test case, like the one shown in \autoref{lst:example:ampchange:amplified}, that covers the new code. 
-The technique should be able to generate an input that meets the requirement to reach the new or changed code and the right oracle given the new conditions. 
-
-\begin{lstlisting}[caption={A test case that covers the new portion of  code.},label=lst:example:ampchange:amplified,float,language=java,numbers=left]
-@Test
-public testInput() {
-	Computer comp = new Computer();
-	assertTrue(comp.computeValue(4) > threshold);
-}
-\end{lstlisting}
-
 
 \subsection{Search-based vs. Concolic Approaches}
 \label{subsec:sota:category-2:search-based-vs-concolic}
@@ -659,61 +545,6 @@ In literature, there are works on modifying existing tests with respect to a cer
 	The goal here is to make the scope of each test methods more precise or to improve the ability of test cases at assessing correctness (with better oracles). 
 	Differently from $AMP_{add}$, it is not about adding new test methods or new tests classes.}
 
-\subsection{Example}
-\label{subsec:sota:category-4:example}
-
-\begin{lstlisting}[caption={Example of a toy class},label=lst:example:amplification:original,float,language=java,numbers=left]
-public class Stack {
-	private Comparable[] elems;
-	public Stack() { ... }
-	public void push(Comparable i) { ... }
-	public void pop() { ... }
-	public boolean isFull() { ... }
-	public boolean isEmpty() { ... }
-}
-\end{lstlisting}
-
-\begin{lstlisting}[caption={Initial test suite for the toy class},label=lst:example:test:initial,float,language=java,numbers=left]
-public class StackTest {
-	@Test
-	public void test1() {  
-		Stack s1 = new Stack();
-		s1.push('a');
-		s1.pop();
-	}
-}
-\end{lstlisting}
-
-\begin{lstlisting}[caption={Augmented test suite for the toy class},label=lst:example:test:aug,float,language=java,numbers=left]
-public  class  StackTest {
-	@Test
-	public  void  testAug1 () {
-		Stack s1 = new  Stack();
-		assertTrue(s1.isEmpty());
-		assertFalse(s1.isFull());
-		s1.push('a');
-		assertFalse(s1.isEmpty());
-		assertFalse(s1.isFull());
-		s1.pop();
-	}
-}
-\end{lstlisting}
-
-An example is given to illustrate the work of this category. 
-Consider a simple Java class named \emph{Stack} in \autoref{lst:example:amplification:original}. 
-The example is a simplified Java implementation of a stack that stores unique elements. 
-In the implementation, the array \emph{elems} contains the elements of the stack, and the \emph{push} and \emph{pop} functions represent the two standard push and pop stack operations. 
-The functions \emph{isFull} and \emph{isEmpty} check whether the stack is full and empty respectively.
-
-Given the Java class, existing automatic test-generation tools can generate a test suite for it.
-For instance, \autoref{lst:example:test:initial} exemplifies a possible test generated by automatic test-generation tools. 
-Note however there are no assertions generated in the test suite. 
-To detect problems during test execution, it typically relies on observing whether uncaught exceptions are thrown or whether the execution violates some predefined contracts. 
-
-A test amplification technique $AMP_{mod}$ may be able to generate the amplified test suite as shown in \autoref{lst:example:test:aug}.
-Compared with the original test suite, the augmented test suite has comprehensive assertions. 
-These assertions reflect the behavior of the current program version under test and can be used to detect regression faults introduced in future program versions.
-
 \subsection{Input Space Exploration}
 \label{subsec:sota:category-4:input-exploration}
 
@@ -802,3 +633,91 @@ oracle improvement allows to increase the efficiency and effectiveness of tests 
 Although impressive results have been obtained, no experiments have been carried out to study the acceptability and maintainability of amplified tests \cite{Dallmeier2010, Xie2006, HamletV93,  Carzaniga:2014:COI:2568225.2568287, Joshi07, Mouelhi:2009, reassert2009, xuan:hal-01309004, xuan2014test}. 
 In this context, acceptability means that human developers are ready to commit the amplified tests to the version control system (\eg in the Git repository). 
 The maintainability challenge is whether the machine-generated tests can be later understood and modified by developers.
+
+\section{Analysis}
+\label{sec:sota:analysis}
+
+\subsection{Aggregated View}
+\label{subsec:sota:analysis:aggregated-view}
+
+\input{chapitres/state-of-the-art/analysis-table.tex}
+
+Table \ref{tab:summary} shows all the articles considered in this snowballing survey per the inclusion criteria.
+The first column of the table shows the citation information, as given in the ``References'' section. 
+The second column shows the term that the authors use to designate the form of amplification that they investigate. 
+Columns 3 to 18 are divided in three groups.
+The first group corresponds to the section in which the paper has been included. 
+The second group corresponds to the different identified engineering goals . 
+The third group captures the different techniques used for amplification in each work. 
+The final columns in the table contain the target programming language, the year and venue in which the paper has been published, the last name of the first author and the iteration of the snowballing process in which the paper was included in the study.
+
+Each row in the table corresponds to a specific contribution.
+The rows are sorted first by the section in which the papers are included in the study, then by year and then by the last name of the first author. 
+In total, the table contains 49 rows.
+
+One can see that ``augmentation'' (15 contributions), ``generation'' (9 contributions) and ``amplification'' (7 contributions) are the  terms that appear most frequently to describe the approaches reported here. 
+Other similar terms such as ``enrichment'', ``adaptation'' and  ``regeneration'' are used less frequently. 
+Most proposals (19 contributions) focus on adding new test cases to the existing test suite. 
+Test amplification in the context of a change or the modification of existing test cases have received comparable attention (16 and 14 contributions respectively). 
+Some techniques that modify existing test cases also target the addition of new test cases (3 contributions) and amplify the test suite with respect to a change (3 contributions). 
+Amplification by runtime modification is the least explored area.
+
+Most works aim at improving the code coverage of the test suite (25 contributions). 
+After that, the main goals are the detection of new faults and the improvement of observability  (13 and 12 contributions respectively). 
+Fault localization, repair improvement and crash reproduction receive less attention (4, 4 and 1 contributions respectively).
+
+47 papers included in the table have been published between 2003 and 2017. 
+One paper was published back in 1993. 
+Between years 2009 and 2016 the number of papers has been stable (mostly four or five per year). 
+In 2014 two extensions to previous works have been published in addition to five original works, making it the year with most publications on the subject.
+
+Figure \ref{fig:citation_graph} visualizes the snowballing process. 
+Every node of the graph corresponds to a reviewed paper. 
+Seed papers are represented as filled rectangles to distinguish them from the rest. 
+All nodes incorporated in the same iteration are clustered together. 
+The edges shown in the graph correspond to the references followed to include the paper. 
+Backward references are marked in green and labelled ``B''. 
+For these edges, the origin node cites the target node. 
+Forward references are marked in blue and labelled ``F''. 
+For these edges, the origin node is cited by the target node.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{graph.png}
+	\caption{Visualization of the snowballing process. Each node corresponds to a paper included in the study. Seed papers are differentiated form the rest. Papers added in the same iteration are clustered together. \textcolor{blue}{F} blue edges represent forward references. \textcolor{green}{B} represent backward references.}
+	\label{fig:citation_graph}
+\end{figure}
+
+
+\subsection{Technical Aspects}
+\label{subsec:sota:analysis:technical-aspects}
+
+Most works include some form of test or application code analysis (26 and 21 contributions respectively). 
+Notably, the majority of works that add new test methods also include a test code analysis phase. 
+All papers that amplify the test suite with respect to a change also include an application analysis stage. 
+Search-based heuristics and symbolic execution are used to a large extent (12 contributions each), while concolic execution and execution modification are the least used techniques (5 contributions each).
+
+Java programs are the most targeted systems (30 contributions), followed by C programs (12 contributions). 
+JavaScript applications have received very little attention in the area (only one row).
+
+\subsection{Tools for Test Amplification}
+\label{subsec:sota:analysis:tools}
+
+Most test case amplification papers discussed in this paper are experimental in nature, and are based on a prototype tool. 
+For the field to mature, it is good if researchers can reproduce past results, and compare their new techniques against existing ones.
+To this extent, it feels that open-science in the form of publicly-available and usable research prototypes is of utmost importance. 
+
+With this in mind, the mentioned tools have been surveyed, if any. 
+The protocol was as follows. 
+First, looks for a URL in the paper, pointing to a web page containing the code of the tool or experimental data.  
+For each URL, opens it in a browser between March 1st and March 31st 2018, to check that the page still exists and indeed contains experimental material.
+
+\input{chapitres/state-of-the-art/tools_table.tex}
+
+\autoref{tab:table:tools:urls} contains all valid URLs found. 
+Overall, 17 valid open-science URLs have been identified. 
+It may be considered as a low ratio, and thus calls for more open-science and reproducible research in the field of test amplification.
+
+
+\section{Conclusion}
+\label{sec:sota:conclusion}

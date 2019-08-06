@@ -1,0 +1,83 @@
+% This snippet resets the row counter in tabularx so it can work correctly with rowcolors.
+\newcounter{tblerows}
+\expandafter\let\csname c@tblerows\endcsname\rownum
+
+\begin{table*}[ht]
+    \caption{List of surveyed papers in which we have found a URL related to a tool}
+    \label{tab:table:tools:urls}
+    \centering
+    \small
+    \rowcolors{2}{gray!25}{white}
+    \begin{tabularx}{\textwidth}{lXX}
+    %\begin{tabular}{lll}
+    \toprule
+    Reference & URL & Observations \\
+    \midrule
+    %\rowcolor[HTML]{EFEFEF}
+
+    \cite{SIR}                                & \url{http://sir.unl.edu}                                          & This is a software repository. It is not a tool for amplification but it is a resource that could be used for amplification.\\
+    \cite{Baudry:2006:ITS:1134285.1134299}    & \url{http://www.irisa.fr/triskell/results/Diagnosis/index.htm}    & The URL points only to results. \\
+    \cite{bohme2014corebench}                 & \url{http://www.comp.nus.edu.sg/~release/corebench/}              & The website also contains empirical results.\\
+    \cite{Carzaniga:2014:COI:2568225.2568287} & \url{http://www.inf.usi.ch/phd/goffi/crosscheckingoracles/}       & \\
+    \cite{Dallmeier2010}                      & \url{https://www.st.cs.uni-saarland.de/models/tautoko/index.html} & \\
+    \cite{reassert2009}                       & \url{http://mir.cs.illinois.edu/reassert/}                        & \\
+    \cite{fang2015perfblower}                 & \url{https://bitbucket.org/fanglu/perfblower-public}              & There is no explicit url in the paper but a sentence saying that the tool is available in Bitbucket. With this information it was easy to find the URL. \\
+    \cite{fraser2011evosuite}                 & \url{http://www.evosuite.org/}                                    & Additional materials included. \\
+    \cite{marri2010retrofitting}              & \url{https://sites.google.com/site/asergrp/projects/putstudy}     & The website also contains empirical results.\\
+    \cite{milani2014}                         & \url{https://github.com/saltlab/Testilizer}                       & \\
+    \cite{Pacheco2005}                        & \url{http://groups.csail.mit.edu/pag/eclat/}                      & The website provides basic usage example.\\
+    \cite{palikareva2016shadow}               & \url{https://srg.doc.ic.ac.uk/projects/shadow/}                   & The website also contains empirical results.\\
+    \cite{pezze2013}                          & \url{http://puremvc.org/}                                         & The paper has been turned into a company. The provided url is the url of this company.\\
+    \cite{robetaler2012isolating}             & \url{https://www.st.cs.uni-saarland.de/bugex/}                    & The url lives, but there is no way to download and try the tools. \\ %They are preparing an online version and a large evaluation.
+    %\cite{smith2009should,smith2009guiding}   & \url{http://muclipse.sourceforge.net/}                            & The tool takes the form of a plugin for the IDE Eclipse.\\
+    \cite{xuan:hal-01309004}                  & \url{https://github.com/Spirals-Team/banana-refactoring}          & \\
+    \cite{xuanTSE2016Nopol}                   & \url{https://github.com/SpoonLabs/nopol}                          & Still active. \\
+    \cite{Zhang2016Isomorphic}                & \url{https://github.com/sei-pku/Ison}                             & \\
+    %\cite{apiwattanapong2006matrix} & no url &  & It contains urls to supporting tools, but links are broken.\\
+    %\cite{Baudry05a} & no url & & \\
+    %\cite{Baudry05d} & no url & & \\
+    % \cite{baudry2006improving} & & & \\ % This reference seems to be a duplicate of the one below.
+    %\cite{6958388} & no url & & \\
+    %\cite{bohme2013regression} & no url & & \\
+    %\cite{cornu2015exception} & no url & & \\
+    %\cite{edvardsson1999survey} & no url & & \\
+    %\cite{fraser2011generating} & no url & & There is actually a URL but it points to their group's activities. There is no link to the particular tool they are presenting in the paper. \\
+    %\cite{HamletV93} & no url & & \\
+    %\cite{Harder03} & no url & & \\
+    %\cite{harrold2008retestingy} & no url & & \\
+    %\cite{jalali2012systematic} & no url & & This paper is about methodology aspects not about our main subject. \\
+    %\cite{Joshi07}& no url & &\\
+    %\cite{leung12}& no url & &\\
+    %\cite{marinescu2013katch}& no url & &\\ 
+    %\cite{mcminn2004search}& no url (survey) & &\\
+    %\cite{Mirzaaghaei2012}& no url& &\\
+    %\cite{mirzaaghaei2014automatic}& no url & &\\
+    %\cite{Mouelhi:2009}& no url & &\\
+    %\cite{ostrand1988category}& no url & &\\
+    %\cite{puasuareanu2009survey}& no url (survey) & & \\	
+    %\cite{Patrick201736}& no url & & \\
+    %\cite{qi2010test}&no url& &\\
+    %\cite{santelices2008test}& no url & & \\
+    %\cite{santelices2011applying}& no url & & \\
+    %\cite{tillmann2006unit} & no url & & \\
+    %\cite{vandeursen2001refactoring} & no url & & \\
+    %\cite{wang2014directed} & no url & & \\
+    %\cite{Xie2006} & no url & & \\
+    %\cite{xu2010factors} & no url & &\\
+    %\cite{xu2015directed} & no url & &\\
+    %\cite{xu2011hybrid} & no url & &\\
+    %\cite{xu2010directed} & no url & &\\
+    %\cite{xu2009directed} & no url & &\\
+    %\cite{xuan2014test} & no url & & \\
+    %\cite{Xuan:2015:CRV:2786805.2803206} & no url & & \\
+    %\cite{yoo2012survey} & no url & & \\
+    %\cite{yoo2012} & no url & & \\
+    %\cite{Yoshida2016} & no url & & \\
+    %\cite{Yu2013} & no url  & &\\
+    %\cite{zhang2012} & no url & & \\
+    %\cite{ZhangE14} & no url & & \\
+    %\cite{anand2013orchestrated} & no url &  & It is a survey, however it contains some URLs to test generation tools.  \\
+    \bottomrule
+%\end{tabular}
+\end{tabularx}
+\end{table*}

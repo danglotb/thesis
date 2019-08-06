@@ -1,0 +1,88 @@
+
+    \begin{table*}
+        \caption{List of papers included in this snowballing survey. The columns correspond to the article categorization, the engineering goals, techniques employed, the programming language of the systems under test and the publication details. The last column shows the iteration the paper was included in our study.}
+        
+        \label{tab:summary}
+        \begin{adjustbox}{max width=\textwidth,center=\textwidth}
+        \rowcolors{2}{gray!25}{white}
+         \begin{tabular}{l|l|llll|llllll|llllll|l|llll|l}
+            \toprule
+            \vertical{Reference}
+            & Term used 
+            & \vertical{Add new tests} 
+            & \vertical{With respect to change/diff}
+            & \vertical{Runtime modification}
+            & \vertical{Modifies existing tests}
+            & \vertical{Improve coverage}
+            & \vertical{Reproduce crashes}
+            & \vertical{Detect new faults}
+            & \vertical{Localize faults}
+            & \vertical{Improve repair}
+            & \vertical{Improve observability}
+            & \vertical{Test code analysis}
+            & \vertical{Application code analysis}
+            & \vertical{Execution modification}
+            & \vertical{Concolic execution}
+            & \vertical{Symbolic execution}
+            & \vertical{Search based heuristics}
+            & \vertical{Target language}
+            & Venue
+            & \vertical{Publication year} 
+            & \vertical{Last name of first author} 
+            & \vertical{Iteration} \\
+            \midrule
+            \cite{Harder03}                                 & augmentation                      & \X &    &    &    &    &    & \X &    &    &    & \X &    &    &    &    &    & C           & ICSE                                                     & 2003 & Harder         & 2 \\
+            \cite{Baudry:2002:ATC:786769.787015}            & optimization                      & \X &    &    &    & \X &    &    &    &    &    & \X &    &    &    &    & \X & .NET        & ASE                                                      & 2002 & Baudry         & 2 \\
+            \cite{Baudry05a}                                & optimization                      & \X &    &    &    & \X &    &    &    &    &    & \X &    &    &    &    & \X & Eiffel, C\# & STVR                                                     & 2005 & Baudry         & 3 \\
+            \cite{Baudry05d}                                & optimization                      & \X &    &    &    & \X &    &    &    &    &    & \X &    &    &    &    & \X & C\#         & IEEE Software                                            & 2005 & Baudry         & 3 \\
+            \cite{Pacheco2005}                              & generation                        & \X &    &    &    &    &    & \X &    &    &    & \X &    &    &    &    &    & Java        & ECOOP                                                    & 2005 & Pacheco        & 1 \\
+            \cite{Baudry:2006:ITS:1134285.1134299}          & optimization                      & \X &    &    &    &    &    &    & \X &    &    & \X &    &    &    &    &    & Java        & ICSE                                                     & 2006 & Baudry         & 4 \\
+            \cite{tillmann2006unit}                         & generation                        & \X &    &    & \X & \X &    &    &    &    &    & \X &    &    &    & \X &    & Spec\#      & IEEE Software                                            & 2006 & Tillmann       & 5 \\
+          % \cite{smith2009guiding}                         & augmentation                      & \X &    &    &    & \X &    &    &    &    &    & \X &    &    &    &    &    & Java        & EmSE                                                     & 2009 & Smith          & \\
+          % \cite{smith2009should}                          & augmentation                      & \X &    &    &    & \X &    &    &    &    &    & \X &    &    &    &    &    & Java        & JSS                                                      & 2009 & Smith          & \\
+            \cite{marri2010retrofitting}                    & generalization                    & \X &    &    & \X & \X &    &    &    &    &    & \X &    &    &    & \X &    & C\#         & FASE                                                     & 2011 & Thummalapenta  & 5 \\
+            \cite{fraser2011generating}                     & generation                        & \X &    &    &    &    &    & \X &    &    &    & \X & \X &    &    &    &    & Java        & ISSTA                                                    & 2011 & Fraser         & 6 \\
+            \cite{robetaler2012isolating}                   & generation                        & \X &    &    &    &    &    &    & \X &    &    & \X &    &    &    &    &    & Java        & ISSTA                                                    & 2012 & Ropler         & 5 \\
+            \cite{yoo2012}                                  & regeneration                      & \X &    &    &    & \X &    &    &    &    &    & \X &    &    &    &    & \X & Java        & STVR                                                     & 2012 & Yoo            & 4 \\
+            \cite{pezze2013}                                & generation                        & \X &    &    &    &    &    & \X &    &    &    & \X &    &    &    &    &    & Java        & ICST                                                     & 2013 & Pezze          & 5 \\
+            \cite{Yu2013}                                   & augmentation                      & \X &    &    &    &    &    &    & \X &    &    & \X &    &    &    &    &    & Java        & IST                                                      & 2013 & Yu             & 5 \\
+            \cite{6958388}                                  & augmentation                      & \X &    &    &    & \X &    &    &    &    &    & \X &    &    &    & \X &    & C           & QSIC                                                     & 2014 & Bloem          & 3 \\
+            \cite{milani2014}                               & generation                        & \X &    &    &    &    &    & \X &    &    &    & \X &    &    &    &    &    & JavaScript  & ASE                                                      & 2014 & Fard           & 3 \\
+            \cite{Xuan:2015:CRV:2786805.2803206}            & mutation                          & \X &    &    &    &    & \X &    &    &    &    & \X &    &    &    &    &    & Java        & ESEC/FSE                                                 & 2015 & Xuan           & 3 \\
+            \cite{rojas2016seeding}                         & generation                        & \X &    &    &    & \X &    &    &    &    &    & \X &    &    &    &    & \X & Java        & STVR                                                     & 2016 & Rojas          & 5 \\
+            \cite{Yoshida2016}                              & augmentation                      & \X &    &    & \X & \X &    &    &    &    &    & \X &    &    &    & \X &    & C, C++      & ISSTA                                                    & 2016 & Yoshida        & 3 \\
+            \cite{Patrick201736}                            & generation                        & \X &    &    &    &    &    & \X &    &    &    &    &    &    &    &    & \X & C           & IST                                                      & 2017 & Patrick        & 4 \\
+            \cite{apiwattanapong2006matrix}                 & augmentation                      &    & \X &    &    & \X &    &    &    &    & \X &    & \X &    &    & \X &    & Java        & TAIC PART                                                & 2006 & Apiwattanapong & 3 \\
+            \cite{santelices2008test}                       & augmentation                      &    & \X &    &    & \X &    &    &    &    & \X &    & \X &    &    & \X &    & Java        & ASE                                                      & 2008 & Santelices     & 3 \\
+            \cite{reassert2009}                             & \stack{repairing}{refactoring}    &    & \X &    & \X &    &    &    &    &    & \X & \X &    &    &    &    &    & Java        & ASE                                                      & 2009 & Daniel         & 4 \\
+            \cite{xu2009directed}                           & augmentation                      &    & \X &    &    & \X &    &    &    &    &    &    &    &    & \X &    &    & Java        & APSEC                                                    & 2009 & Xu             & 3 \\
+            \cite{qi2010test}                               &                                   &    & \X &    &    & \X &    &    &    &    &    &    & \X &    &    & \X &    & C           & ASE                                                      & 2010 & Qi             & 4 \\
+            \cite{xu2010factors}                            & augmentation                      &    & \X &    &    & \X &    &    &    &    &    &    & \X &    &    &    & \X & Java        & GECCO                                                    & 2010 & Xu             & 3 \\
+            \cite{xu2010directed}                           & augmentation                      &    & \X &    &    & \X &    &    &    &    &    &    & \X &    & \X &    & \X & C           & FSE                                                      & 2010 & Xu             & 2 \\
+            \cite{santelices2011applying}                   & augmentation                      &    & \X &    &    & \X &    &    &    &    & \X &    & \X &    &    &    &    & Java        & ICST                                                     & 2011 & Santelices     & 3 \\
+            \cite{xu2011hybrid}                             & augmentation                      &    & \X &    &    & \X &    &    &    &    &    &    & \X &    & \X &    & \X & C           & ISSRE                                                    & 2011 & Xu             & 3 \\
+            \cite{Mirzaaghaei2012}                          & \stack{repairing}{adaptation}     &    & \X &    & \X & \X &    &    &    & \X &    & \X & \X &    &    &    &    & Java        & ICST                                                     & 2012 & Mirzaaghaei    & 3 \\
+            \cite{mirzaaghaei2014automatic}                 & \stack{repairing}{adaptation}     &    & \X &    & \X & \X &    &    &    & \X &    & \X & \X &    &    &    &    & Java        & SVTR                                                     & 2014 & Mirzaaghaei    & 3 \\
+            \cite{bohme2013regression}                      &                                   &    & \X &    &    & \X &    & \X &    &    &    &    & \X &    &    & \X & \X & C           & ESEC/FSE                                                 & 2013 & B\"ohme        & 3 \\
+            \cite{marinescu2013katch}                       &                                   &    & \X &    &    & \X &    &    &    &    &    &    & \X &    &    & \X & \X & C           & ESEC/FSE                                                 & 2013 & Marinescu      & 5 \\
+            \cite{xwang2014directed}                        & augmentation                      &    & \X &    &    & \X &    &    &    &    & \X &    & \X &    &    & \X &    & Java        & CSTVA                                                    & 2014 & Wang           & 3 \\
+            \cite{xu2015directed}                           & augmentation                      &    & \X &    &    & \X &    &    &    &    &    &    & \X &    & \X &    & \X & C           & STVR                                                     & 2015 & Xu             & 3 \\
+            \cite{palikareva2016shadow}                     &                                   &    & \X &    &    & \X &    &    &    &    & \X &    & \X &    &    & \X &    & C           & ICSE                                                     & 2016 & Palikareva     & 4 \\
+            \cite{zhang2012}                                & amplification                     &    &    & \X &    &    &    & \X &    &    &    &    & \X & \X &    &    &    & Java        & ICSE                                                     & 2012 & Zhang          & S \\
+            \cite{ZhangE14}                                 & amplification                     &    &    & \X &    &    &    & \X &    &    &    &    & \X & \X &    &    &    & Java        & TOSEM                                                    & 2014 & Zhang          & \\
+            \cite{leung12}                                  & amplification                     &    &    & \X &    &    &    & \X &    &    &    &    & \X &    &    &    &    & CUDA        & PLDI                                                     & 2012 & Leung          & S \\
+            \cite{cornu2015exception}                       & amplification                     &    &    & \X &    &    &    & \X &    & \X &    &    & \X & \X &    &    &    & Java        & IST                                                      & 2015 & Cornu          & 1 \\
+            \cite{fang2015perfblower}                       & amplification                     &    &    & \X &    &    &    & \X &    &    &    &    & \X &    &    &    &    & Java        & ECOOP                                                    & 2015 & Fang           & 1 \\
+            \cite{Zhang2016Isomorphic}                      & augmentation                      &    &    & \X &    & \X &    & \X &    &    & \X &    & \X &    &    & \X &    & Java        & FSE                                                      & 2016 & Zhang          & 3 \\
+            \cite{HamletV93}                                & amplification                     &    &    &    & \X &    &    &    &    &    & \X &    &    &    &    &    &    &             & ISSTA                                                    & 1993 & Hamlet         & S \\
+            \cite{Xie2006}                                  & augmentation                      &    &    &    & \X &    &    &    &    &    &    & \X &    & \X &    &    &    & Java        & ECOOP                                                    & 2006 & Xie            & 5 \\
+            \cite{Joshi07}                                  & amplification                     &    &    &    & \X &    &    &    &    &    & \X &    &    &    & \X &    &    & C           & ESEC/FSE                                                 & 2007 & Joshi          & S \\
+            \cite{Mouelhi:2009}                             &                                   &    &    &    & \X &    &    &    &    &    & \X & \X &    &    &    &    &    & Java        & ICST                                                     & 2009 & Mouelhi        & 4 \\
+            \cite{Dallmeier2010}                            & enrichment                        &    &    &    & \X &    &    &    &    &    & \X & \X &    &    &    &    &    & Java        & ISSTA                                                    & 2010 & Dallmeier      & 4 \\
+            \cite{Carzaniga:2014:COI:2568225.2568287}       & cross-checking                    &    &    &    & \X &    &    &    &    &    & \X &    &    & \X &    &    &    & Java        & ICSE                                                     & 2014 & Carzaniga      & 6 \\
+            \cite{xuan2014test}                             & purification                      &    &    &    & \X &    &    &    & \X &    &    & \X &    &    &    &    &    & Java        & FSE                                                      & 2014 & Xuan           & 5 \\
+            \cite{xuan:hal-01309004}                        & \stack{purification}{refactoring} &    &    &    & \X &    &    &    &    & \X &    & \X &    &    &    &    &    & Java        & IST                                                      & 2016 & Xuan           & 1\\
+            \midrule
+        \end{tabular}
+    \end{adjustbox}
+    \end{table*}
