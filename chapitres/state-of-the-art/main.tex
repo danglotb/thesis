@@ -3,7 +3,7 @@
 
 \begin{chaptersummary}
 	In this chapter, I expose a systematic review of the literature on the field of test suite amplification.
-	This chapter provides the following contributions:
+	This chapter makes the following contributions:
 	\begin{itemize}
 		\item The first ever snowballing literature review on test amplification
 		\item The classification of the related work into four main categories to help newcomers in the field  (students, industry practitioners)  understand this body of work.
@@ -36,7 +36,7 @@ Those test suites are often large and have been written thanks to a lot of human
 Developers spend a lot of time in writing the tests~\cite{BellerTSE,beller2015when,beller2015howmuch}, so that those tests exercise interesting cases (including corner cases), and so that an oracle verifies as much as possible the program behavior~\cite{hilton2018coverageevolution}.
 
 The wide presence of valuable manually written tests has triggered a new thread of research that consists of leveraging the value of existing manually-written tests to achieve a specific engineering goal.
-This has been coined ``test amplification''. 
+This has been coined ``test amplification''.
 The term \emph{amplification} is introduced as an umbrella for the various activities that analyze and operate on existing test suites and that are referred to as augmentation, optimization, enrichment, or refactoring in the literature. 
 
 This chapter surveys the research literature so that existing research efforts are characterized, can be compared and new research opportunities can be identified.
@@ -246,7 +246,7 @@ They evaluated MuCrash on 12 bugs for Apache Commons Collections, which is  26 K
 The used program is quite large and open-source which increases the confidence. but using a single subject is a threat to generalization.
 
 \subsection{Summary}
-\label{subsec:sota:category-1:subsection}
+\label{subsec:sota:category-1:summary}
 
 \emph{Main achievements:}
 The works discussed in this section show that adding new test cases based on existing ones can make the test generation process more targeted and cost-effective. 
@@ -444,7 +444,7 @@ Now, $AMP_{change}$ techniques should fit into the revision process and be able 
 
 Another challenge relates to scalability. 
 The use of symbolic and concolic execution has proven to be effective in test input generation targeting program changes. 
-Yet,  these two techniques are computationally expensive \cite{xu2009directed,xu2011hybrid,xu2015directed,apiwattanapong2006matrix,santelices2008test,palikareva2016shadow}. 
+Yet, these two techniques are computationally expensive \cite{xu2009directed,xu2011hybrid,xu2015directed,apiwattanapong2006matrix,santelices2008test,palikareva2016shadow}. 
 Future works shall consider more efficient ways for exploring input requirements that  exercise program changes or new uncovered parts. 
 Santelices and Harrold~\cite{santelices2011applying} propose to get rid of symbolic execution by observing the program behavior during test execution. 
 However, they do not generate test cases.
@@ -531,7 +531,6 @@ As shown by the relatively small number of papers discussed in this section, tec
 The main challenge is to get this concept known so as to enlarge the research community working on this topic.
 The concerned works are: \cite{zhang2012,ZhangE14,cornu2015exception,leung12,fang2015perfblower,Zhang2016Isomorphic}.
 
-%% (Benjamin) responsible
 \section{Amplification by Modifying Existing Test Code}
 \label{sec:sota:category-4}
 
@@ -719,3 +718,18 @@ It may be considered as a low ratio, and thus calls for more open-science and re
 
 \section{Conclusion}
 \label{sec:sota:conclusion}
+
+Test suite are now a mandatory component of serious software.
+Developers spend time and effort developing these test suites, incorporating precious and unique knowledge inside it.
+These test suites are available to innovate new approaches and in the last decades, the research has been prolific.
+
+In this state of the art, I showed that researchers have been inspired and produced a lot of work.
+However, as highlighted, there are still challenged to be tackled as test amplification according to a multiple changes, scaling or most importantly the lack of evidence that result can be generalized on a lot of programs.
+Also, I observed that among all of the reviewed works, only 17 provides a link to tool or/and experimental data.
+This is a big issue for reproducibility and prevent the research community to build upon existing works.
+
+In the next chapter, I present \dspot, a new test amplification tool.
+\dspot has the ambition to be strong enough to be applied on an arbitrary program, to bring together approaches that have never be gathered before.
+Also, in the context of STAMP, see \autoref{sec:intro:stamp}, I envision \dspot used in the continuous integration, applied according to real commits.
+\dspot is also open-source and its community is animated thanks to \gh.
+All the data produced for empirical evaluation are also open-source in order to promote open-science and let the research community relies on open-data to pursue the effort in this emerging field that is test amplification.
