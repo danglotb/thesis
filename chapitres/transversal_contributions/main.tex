@@ -4,7 +4,7 @@
 \begin{chaptersummary}
 	In this chapter, I expose 3 transversal contributions thanks to specific skills obtained during my thesis.
 	\begin{itemize}
-		\item The first transversal contribution studies the correctness of program under runtime perturbations.
+		\item \cite{Danglot2018} The first transversal contribution studies the correctness of program under runtime perturbations.
 		\item The second transversal contribution studies extreme mutants, \eg a subclass of mutants such as done in mutation analysis, in open-source project. 
 		\item The third transversal contribution studies the overfitting of patches in test-based automatic repair techniques and how to overcome using test generation.
 	\end{itemize}
@@ -15,12 +15,206 @@
 
 \graphicspath{{.}{chapitres/state-of-the-art/}}
 
-\section{Correctness-attraction}
+\section{Study of Program Correctness}
 \label{sec:transversal-contributions:correctness}
-\cite{Danglot2018}
 
 \subsection{Introduction}
 \label{subsec:transversal-contributions:correctness:introduction}
+
+Recalling that in \autoref{chap:introduction}, I mentioned a quote of Dijkstra:
+\begin{center}
+	\emph{``the smallest possible perturbations - \ie changes of a single bit - can have the most drastic consequences.''.}
+\end{center}
+
+This first study aims at verifying this statement is true or not.
+Dijkstra considers software as a system that is in an unstable equilibrium, or to put it more precisely, that the correctness of a program output is unstable with respect to perturbations.
+However, previous works, \eg\cite{Rinard:2005:EAE:1094855.1094866,Li2007Correctness}) suggest the opposite, \ie suggest that programs can accommodate perturbations.
+
+In the context of my thesis, the correctness of programs relies on test suite.
+However, the incompleteness of test suites make them poor oracles to verify the truthfulness of the Dijkstra's hypothesis.
+
+This is why I devise \perturb, an experimental protocol to study the stability of program correctness under execution perturbation.
+It consists in perturbing the execution of programs according to a perturbation model and observing whether this has an impact on the correctness of the output.
+The two observable different outcomes are: 
+the perturbation breaks the computation and results in an incorrect output (unstable under perturbation), 
+or the correctness of the output is stable despite the perturbation.
+This protocol has two key-attributes:
+
+1) It is based on perfect oracle, \ie it verifies the output of the perturbed program is completly correct, \ie bit-wise equals to the output of the unpertubed, or original, program;
+
+2) It explores exhaustively in time and space the perturbation envelop of software.
+
+The remaining of this section is organized as follow: 
+first, I present \perturb protocol in \autoref{subsec:transversal-contributions:correctness:protocol}.
+second, I present the experimentation that has been carried out in \autoref{subsec:transversal-contributions:correctness:experimentation};
+and eventually, \autoref{subsec:transversal-contributions:correctness:conclusion} conclude this section.
+
+\subsection{\perturb protocol}
+\label{subsec:transversal-contributions:correctness:protocol}
+
+To actually perform perturbations, \perturb adds \textbf{perturbation points} to the program under study where a \textbf{perturbation point} (denoted $pp$) is an expression of a given data type.
+For instance, if one perturbs integer values, the \textbf{perturbation points} will be all integer expressions (literals as well as compound expressions). 
+In \autoref{lst:example_pp_underbrace}\footnote{$|$ is the bitwise or operator. $>>$ is the binary right shift operator. The assignment $|=$ is the bitwise or operator between the left operand and the right operand, then the result is affected to the left operand.}, there are 3 potential integer perturbation points in a single statement, indicated with braces.
+\begin{lstlisting}[basicstyle=\small, caption=Three integer \textbf{perturbation points} in a single statement., label=lst:example_pp_underbrace]
+acc |= (*@$\underbrace{i}$@*) >> (*@$\underbrace{mask}$@*);
+								(*@$pp_1$@*)     (*@$pp_2$@*)
+acc |= (*@$\underbrace{i >> mask}$@*);
+										(*@$pp_3$@*)  
+\end{lstlisting}
+
+\perturb statically locates \textbf{perturbation points} and automatically adds perturbation code around them using a code transformation. 
+The transformation consists of wrapping all compatible expressions into a function call $p$ (for ``perturb'')\footnote{In the experimentation, it is implemented on Java programs using the Spoon transformation library \cite{pawlak:hal-01169705}.}.
+
+\begin{lstlisting}[basicstyle=\small, caption=The same statement with perturbation code injected., label=lst:example_pp]
+acc |= p(3, p(1,i) >> p(2,mask));
+\end{lstlisting}
+
+In \autoref{lst:example_pp}, each integer expression of \autoref{lst:example_pp_underbrace} is wrapped into a call to function $p$.
+Function $p$ takes two parameters: a unique index to identify the perturbation point and the expression being perturbed.
+If $p$ returns  the second parameter, the transformed program is semantically equivalent to the original program. 
+The identifier argument enables \perturb to perturb only one location at a time. 
+In this example, this identifier ranges from 1 to 3 corresponding to the index given in \autoref{lst:example_pp_underbrace} under perturbation point $pp$.
+
+\subsubsection{Core Algorithm}
+\label{subsubsec:transversal-contributions:correctness:protocol:algo}
+
+The goal of this algorithm is to systematically explore the perturbation space. 
+\hyperref{alg:systexplor} first records the number of executions of each perturbation point for each input in a matrix $R_{ref}$ (for reference run) without injecting any perturbation.
+$R_{ref}[pp,i]$ refers to the number of executions of perturbation point $pp$ for a given input $i$.
+Then, it re-executes the program for each input, with one perturbation for each point so that each point is perturbed at least and at most once per input.
+The oracle asserts the correctness of the perturbed execution (output $o$) for the given input ($i$).
+A perturbed execution can have three outcomes:
+a success, meaning that the correctness oracle validates the output;
+a failure meaning that the correctness oracle is violated (also called an oracle-broken execution);
+a runtime error (an exception in Java) meaning that the perturbation has produced a state for which the computation becomes impossible at some point (\eg a division-by-zero).
+
+This algorithm performs a systematic exploration of the perturbation space for a given program and a set of inputs according to a perturbation model.
+
+\begin{algorithm}[h]
+	\algorithmicrequire{ \\
+		$prog$: program,\\
+		$model$: perturbation model,\\
+		$I$: set of inputs for program $prog$,\\
+		$oracle$: a perfect oracle for program $prog$}\\
+	\algorithmicensure{ \\
+		$exc$: counters of execution per perturbation point,\\
+		$s$: counters of success per perturbation point,\\
+		$ob$: counters of oracle broken per perturbation point}
+	\begin{algorithmic}
+		\State{instrument($prog$)}
+		\For{each input i in I} 
+			\For{perturbation point $pp$ in $prog$}
+				\State $R_{ref}[,i] \leftarrow runWithoutPerturbation(prog, i)$
+				\For{$j = 0$, to $ R_{ref}[pp,i]$}
+					\State $o \leftarrow runWithPerturbationAt(prog,model,i,pp,j)$
+					\If{exception is thrown}
+						\State {$exc[pp] \leftarrow exc[pp] + 1$} 
+					\ElsIf{$oracle.assert(i,o)$} 
+						\State {$s[pp] \leftarrow s[pp] + 1$} 
+					\Else 
+						\State {$ob[pp] \leftarrow ob[pp] + 1$}
+					\EndIf
+				\EndFor
+			\EndFor
+		\EndFor
+	\end{algorithmic}
+	\caption{Core Algorithm of \perturb.}
+	\label{alg:systexplor}
+\end{algorithm}
+
+In \autoref{alg:systexplor}, $R_{ref}[,i]$ denotes column $i$ of matrix $R_{ref}$. 
+The statement \emph{runWithoutPerturbation(prog, i)} returns a column vector which is assigned to the $i\thb$ column of matrix $R_{ref}$; each element is one perturbation point: it contains the number of times each perturbation point is executed in the program \emph{prog} for each input \emph{i}. 
+On the other hand, the statement \emph{runWithPerturbationAt(prog, model, i, pp, j)} runs the program \emph{prog} while using the perturbation model \emph{model}, the perturbation point \emph{pp} at its $j\thb$ execution for the given input \emph{i}.
+
+\subsection{Experimentation}
+\label{subsec:transversal-contributions:correctness:experimentation}
+
+The experimentation with a dataset of 10 programs. 
+This dataset has been created following this methodology:
+first and foremost, the programs can be specified with a perfect oracle;
+second, they are written in Java;
+third, they come from diverse application domains in order to maximize external validity.
+The resulting programs are summarized in \autoref{tab:description-dataset}. 
+The first column displays the name of the program; 
+the second is the number of lines of code; 
+the third is a short description of the purpose of the program; 
+the last column describes the perfect oracle used to evaluate the correctness of the output.
+
+\subsubsection{The PONE Experiment}
+\label{subsubsec:transversal-contributions:correctness:experimentation:PONE}
+
+I now present the PONE experiment. 
+Its goal is to explore correctness attraction according to increments ($+ 1$) of integer values at runtime.
+
+Point that a single perturbation always breaks the output correctness are qualified as \textbf{fragile} because a single perturbation at runtime breaks the whole computation.
+Other points that can be systematically perturbed without any consequence on the correctness of the final output of the program are qualified as \textbf{antifragile} (in opposition to fragile).
+The remainder are in between; those with a correctness ratio larger or equal than 75\% are qualified as \textbf{robust}.
+
+In the PONE experiment, integer expressions are perturbed.
+The PONE perturbation model is a small perturbation on an integer expression: a single increment of an integer value only once during an execution. 
+An equivalently small perturbation model is MONE consisting of decrementing integers. 
+An experimentation as been also performed using MONE, however, the results are not reported in this thesis.
+For more information, see the dedicated article.\cite{Danglot2018}
+
+\begin{table}[h]
+	\caption{PONE Results. The correctness ratio may not correspond directly to the number of Antifragile and Robust expressions because it is computed over all executions. Some points are executed much more than others, as explained in \autoref{subsec:realization}.}
+	\label{tab:results-PONE}
+	\def\arraystretch{0.55}%  1 is the default, change whatever you need
+	\setlength\tabcolsep{0.45pt} % default value: 6pt
+	\centering\begin{tabular}{lllllll}
+		Subject & $N^{int}_{pp}$ & |Search space| & \# Fragile exp. & \#Robust exp.& \# Antifragile exp. & Correctness ratio\\
+		\hline
+		quicksort&41&151444&6&10&19&\textendash\textendash\textendash\textendash\textendash\textendash\textendash { }  77 \%\\
+		zip&19&38840&5&2&5&\textendash\textendash\textendash\textendash\textendash\textendash\textendash { }  76 \%\\
+		sudoku&89&98211&12&27&8&\textendash\textendash\textendash\textendash\textendash\textendash { }  68 \%\\
+		md5&164&237680&102&24&7&\textendash\textendash { }  29 \%\\
+		rsa&117&2576&55&8&32&\textendash\textendash\textendash\textendash\textendash { }  54 \%\\
+		rc4&115&165140&60&7&12&\textendash\textendash\textendash { }  38 \%\\
+		canny&450&616161&58&129&133&\textendash\textendash\textendash\textendash\textendash\textendash\textendash\textendash\textendash { }  94 \%\\
+		lcs&79&231786&10&47&13&\textendash\textendash\textendash\textendash\textendash\textendash\textendash\textendash { }  89 \%\\
+		laguerre&72&423454&15&24&15&\textendash\textendash\textendash\textendash\textendash\textendash\textendash\textendash\textendash { }  90 \%\\
+		linreg&75&543720&43&18&11&\textendash\textendash\textendash\textendash { }  47 \%\\
+		total & 1221&2509012&366&296&255&\textendash\textendash\textendash\textendash\textendash\textendash { }  66 \%
+	\end{tabular}
+\end{table}
+
+\autoref{tab:results-PONE} gives the results of the systematic exploration of the PONE perturbation space.
+For each subject, this table gives:
+the number of integer perturbation points $N^{int}_{pp}$;
+the number of perturbed executions (equal to the size of the PONE perturbation space);
+the number of \textbf{fragile} integer expressions;
+the number of \textbf{robust} integer expressions;
+the number of \textbf{antifragile} integer expressions;
+the \textbf{correctness ratio} (percentage of correct outputs) over all perturbed executions.
+
+\begin{mdframed}
+To sum up, the main conclusions of the PONE experiment are:
+\begin{itemize}
+	\item The considered programs are perturbable according to the PONE perturbation model.
+	\item There are very few fully fragile integer expressions in the considered programs.
+	\item There is a majority of highly perturbable integer expressions which results in a high level of correctness attraction.
+	\item Dijkstra's view that software is fragile is not always true, correctness is rather a stable equilibrium than an unstable one.
+\end{itemize}
+\end{mdframed}
+
+\subsection{Conclusion}
+\label{subsec:transversal-contributions:correctness:conclusion}
+
+I have devised a protocol called \perturb to study the stability of programs under perturbation.
+\perturb exhaustively explores the perturbation space of a given program for a set of inputs according to a perturbation model.
+An experimentation have been conducted on 10 subjects using the PONE perturbation models.
+In total, 2509012 perturbed executions have been performed and studied, which makes it one of the largest perturbation experiments ever made.
+From this experimentation, the presence of ``correctness attraction'' has been observed. Over all perturbed execution, 66\% of them do not break the correctness of the output. 
+
+Studying correctness attraction can have divers applicability.
+One of them is to identify points that can be randomized and protect the software from external and malicious attacks.
+Also, if one could engineer techniques to automatically improve correctness attraction, in order to obtain zones that accommodate more perturbations of the runtime state, and those zones could be deemed ``bug absorbing zones''.
+
+To conclude, I imagine two ways to combine both \dspot and \perturb:
+First, using \perturb as a test-criterion to amplify test suites, \ie \dspot would keep amplified test methods that detect more perturbations than the original test suite.
+Second, in \perturb, I used perfect oracles.
+The problem they have been manually devised, and this could be approximated using the test suite.
+To strengthen it, one could amplifies its test suite with \dspot to have a better approximation of the perfect oracle and thus study deeper the correctness of its program.
 
 \section{Extreme Mutation}
 \label{sec:transversal-contributions:descartes}
