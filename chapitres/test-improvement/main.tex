@@ -36,12 +36,9 @@
 \section{Introduction}
 \label{sec:test-improvement:introduction}
 
+This chapter relates the first study of the result of \dspot.
+The objectives of this evaluation is to assess the \dspot's effectiveness to improve the quality of a test suite and the acceptability of the resulting amplified test methods.
 
-
-\subsection{Test-criterion: \ms}
-\label{subsec:test-improvement:introduction:test-criterion}
-
-This chapter relates the first study of the \dspot's effectiveness.
 To do this evaluation, I choose \ms as test-criterion to be improved by \dspot.
 Mutation score measures the test suite's ability to detect artificial behavioral changes.
 Briefly, \ms is measured as follow:
@@ -89,8 +86,6 @@ return values mutator;
 void method calls mutator.
 For more information, see the dedicated section of \pitest's website: \url{http://pitest.org/quickstart/mutators/}.
 
-\subsection{Mutation score versus coverage}
-\label{subsec:test-improvement:introduction:mutation-score-vs-coverage}
 In this experimentation, \ms has been choose over coverage because \ms is consider stronger than coverage.
 The purpose of test suites is to check the program's behavior.
 In one hand, coverage is only based on the execution of the program and do not require any oracles.
@@ -104,7 +99,7 @@ In the other hand, \ms requires oracles and thus to have a high \ms, the test su
 \label{sec:test-improvement:experiment-protocol}
 
 Recalling that \dspot is a automatic test improvement process.
-Such processes have been evaluated with respect to evolutionary test inputs \cite{tonella} and new assertions \cite{TaoXie2006}.
+Such processes have been evaluated with respect to evolutionary test inputs \cite{tonella} and new assertions \cite{Xie2006}.
 However:
 
 1) the two topics have never been studied in conjunction

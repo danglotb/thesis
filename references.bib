@@ -628,19 +628,6 @@ month={Sept},
  keywords = {automated test case generation, genetic algorithms, object-oriented testing},
 } 
 
-@InProceedings{TaoXie2006,
-    author="Xie, Tao",
-    editor="Thomas, Dave",
-    title="Augmenting Automatically Generated Unit-Test Suites with Regression Oracle Checking",
-    booktitle="ECOOP 2006 -- Object-Oriented Programming",
-    year="2006",
-    publisher="Springer Berlin Heidelberg",
-    address="Berlin, Heidelberg",
-    pages="380--403",
-    abstract="A test case consists of two parts: a test input to exercise the program under test and a test oracle to check the correctness of the test execution. A test oracle is often in the form of executable assertions such as in the JUnit testing framework. Manually generated test cases are valuable in exposing program faults in the current program version or regression faults in future program versions. However, manually generated test cases are often insufficient for assuring high software quality. We can then use an existing test-generation tool to generate new test inputs to augment the existing test suite. However, without specifications these automatically generated test inputs often do not have test oracles for exposing faults. In this paper, we have developed an automatic approach and its supporting tool, called Orstra, for augmenting an automatically generated unit-test suite with regression oracle checking. The augmented test suite has an improved capability of guarding against regression faults. In our new approach, Orstra first executes the test suite and collects the class under test's object states exercised by the test suite. On collected object states, Orstra creates assertions for asserting behavior of the object states. On executed observer methods (public methods with non-void returns), Orstra also creates assertions for asserting their return values. Then later when the class is changed, the augmented test suite is executed to check whether assertion violations are reported. We have evaluated Orstra on augmenting automatically generated tests for eleven subjects taken from a variety of sources. The experimental results show that an automatically generated test suite's fault-detection capability can be effectively improved after being augmented by Orstra.",
-    isbn="978-3-540-35727-8"
-}
-
 @INPROCEEDINGS{IndustrialEvalAlmasi2017, 
 author={M. M. Almasi and H. Hemmati and G. Fraser and A. Arcuri and J. Benefelds}, 
 booktitle={2017 IEEE/ACM 39th International Conference on Software Engineering: Software Engineering in Practice Track (ICSE-SEIP)}, 

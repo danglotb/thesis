@@ -27,7 +27,7 @@
 \section{Introduction}
 \label{sec:dspot:introduction}
 
-Nowadays, developers are mandated to build strong test suite in parallel of their application.
+As mentioned in the previous chapter (see \autoref{chap:sota}, developers are mandated to build strong test suite in parallel of their application.
 This reinforces the confidence that they have in the correctness of their application.
 
 However, test suite are not the first objective and thus make it secondary.
@@ -35,7 +35,12 @@ Their development are focused on regular cases on the way that the program shoul
 In addition to this, developers may cut corners because of lack of time, expertise or discipline.
 
 In the literature, one can find a lot of work trying to solve this issue, such as test suite generation or test suite evolution.
+Test amplification is one of them.
+However, the surveyed works present problems, in particular generalization of result, test amplification according to a multiple changes, scaling-up and assessment of the result by external real developers.
 
+In this chapter, I expose the major output of this thesis: \dspot.
+The ambitious with \dspot is to provide an open-source tool that would amplify the test suite.
+Also, I developed \dspot in a way that it support real software, it can be used in the context of continuous integration.
 
 \section{Definitions}
 \label{sec:dspot:definitions}
@@ -147,7 +152,7 @@ By construction, all \dspot's amplification can be represented as a diff on an e
 The main workflow of \dspot is composed of 3 main phases:
 1) the modification of test code's inputs inspired by Tonella's technique~\cite{tonella}, called ``input space exploration''; 
 this phase consists in modifying test values (\eg literals), objects and methods calls, the underlying details will be explained in \autoref{subsec:dspot:algorithm:input-space-exploration};
-2) the addition of new assertions per Xie's technique~\cite{TaoXie2006}, this phase is called ``assertion improvement''
+2) the addition of new assertions per Xie's technique~\cite{Xie2006}, this phase is called ``assertion improvement''
 The behavior of the system under test is considered as the oracle of the assertion, see \autoref{subsec:dspot:algorithm:new-assertions}.
 In \dspot, the combination of both techniques, \ie the combination of input space exploration and assertion improvement is called ``test amplification'';
 3) the amplified test methods selection according to a given test-criterion, \eg branch coverage.
