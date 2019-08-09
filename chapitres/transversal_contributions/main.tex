@@ -216,14 +216,194 @@ Second, in \perturb, I used perfect oracles.
 The problem they have been manually devised, and this could be approximated using the test suite.
 To strengthen it, one could amplifies its test suite with \dspot to have a better approximation of the perfect oracle and thus study deeper the correctness of its program.
 
-\section{Extreme Mutation}
+\section{Study of Pseudo-tested Methods with Extreme Mutations}
 \label{sec:transversal-contributions:descartes}
 \cite{descartes}
 
 \subsection{Introduction}
 \label{subsec:transversal-contributions:descartes:introduction}
 
-\section{Test Amplification for Test Repair}
+Niedermayr and colleagues \cite{niedermayr_will_2016} recently introduced the concept of \emph{\pseudotested{} methods}. 
+These methods are covered by the test suite, but no test case fails even if all behaviors of the method are removed at once, \ie when the body is completely stripped off.
+This work is novel and intriguing:
+such \pseudotested{} methods are present in all projects, even those with test suites that have high coverage ratio.
+
+If those results hold, it calls for more research on this topic.
+This is the motivation of this paper: 
+first, we challenge the external validity of Niedermayr \etal's experiment with new study subjects, 
+second we perform an in-depth qualitative empirical study of \pseudotested{} methods. 
+In particular, we want to determine if \pseudotested{} methods are indicators of badly tested code. 
+While this seems to be intuitively true, we aim at quantifying this phenomenon.
+Second, we want to know whether \pseudotested{} methods are relevant indicators for developers who wish to improve their test suite. 
+In fact, these methods may encapsulate behaviors that are poorly specified by the test suite, but are not relevant functionalities for the project.
+
+\subsection{Definition and Implementation}
+\label{subsec:transversal-contributions:descartes:definitions}
+
+Let $P$ be a program and $m$ be a method; $S=\cup_{m \in P}{\mathit{effects}(m)}$ the set of effects of all methods in $P$; 
+$\mathit{effects}(m)$ a function $\mathit{effects}:P \rightarrow S$ that returns all the effects of a method $m$; $detect$, a predicate $TS \times S \rightarrow \{\top, \bot\}$ that determines if an effect is detected by $TS$.
+Here, we consider the following possible effects that a method can produce: 
+change the state of the object on which it is called, change the state of other objects (by calling other methods), return a value as a result of its computation.
+
+\begin{definition}
+	\label{def:pseudo}
+	A method is said to be \pseudotested{} with respect to a test suite, if the test suite covers the method and does not assess any of its effects.
+\end{definition}
+
+A ``pseudo-tested'' method, as defined previously, is an idealized concept.
+We now describe an algorithm that implements a practical way of collecting a set of \pseudotested{} methods in a program $P$, in the context of the test suite $TS$, based on the original proposal of \theoriginalauthors. 
+It relies on the idea of ``extreme code transformations'', which consists in completely stripping out the body of a method.
+
+Algorithm \autoref{alg:detection} starts by analyzing all methods of $P$ that are covered by the test suite and fulfill a predefined selection criterion (predicate $\mathrm{ofInterest}$ in line \ref{of-interest}).
+This critetion is based on the structure of the method and aims at reducing the number of false positives detected by the procedure. 
+It eliminates uninteresing methods such as trivial setter and getters or empty void methods.
+If the method returns a value, the body of the method is stripped out and we generate a few variants that simply return predefined values (line \ref{if-return}).\footnote{Compared to \theoriginalauthors, we add two new transformations, one to return $null$ and another to return an empty array. These additions allow to expand the scope of methods to be analyzed.}
+If the method is void, we strip the body without further action (line \ref{no-return}).
+Once we have a set of variants, we run the test suite on each of them, if no test case fails on any of the variants of a given method, we consider the method as \pseudotested{} (line \ref{is-pseudo}). 
+One can notice in line \ref{alg-porig} that all extreme transformations are applied to the original program and are analyzed separately.
+
+\begin{algorithm}[t]
+	\begin{algorithmic}[1]
+		\Require{Program $P$}
+		\Require{Test suite $TS$}
+		\Require{Test criterion $TC$}
+		\Ensure{$pseudo$: \{\pseudotested{} methods in $P$\}}
+		\For{$m \in P in \mathrm{covered}(m,\mathit{TS}) \land \mathrm{ofInterest}(m)$}\label{of-interest}
+			\State $variants$ : \{extreme variants of $m$\}
+			\If{$\mathrm{returnsValue}(m)$}\label{if-return}
+				\State{stripBody($m$)}
+				\State{checkReturnType($m$)}
+				\State{$variants \leftarrow \mathrm{fixReturnValues}(m)$}
+			\Else\label{no-return}
+				\State{$variants \leftarrow \mathrm{stripBody}(m)$}
+			\EndIf
+		\EndFor
+		\State{$failure \leftarrow false$}
+		\For{$v \in variants$}
+			\State{$P' \leftarrow \mathrm{replace}(m,v,P)$}\label{alg-porig}
+			\State{$failure \leftarrow failure \lor \mathrm{run}(\mathit{TS},P')$}
+			\If{$\lnot failure$}\label{is-pseudo}
+				\State{$pseudo \leftarrow pseudo \cup m$}
+			\EndIf
+		\EndFor
+		\Return $pseudo$
+	\end{algorithmic}
+	\caption{Procedure to detect \pseudotested{} methods}
+	\label{alg:detection}
+\end{algorithm}
+
+To conduct our study, we have implemented Algorithm \ref{alg:detection} in an open source tool called Descartes\footnote{\url{https://github.com/STAMP-project/pitest-descartes}}. 
+The tool can detect \pseudotested{} methods in Java programs tested with a JUnit test suite.
+Descartes is developed as an extension of \pit{} \cite{coles_pit_2016}, and ''extreme transformation`` can be seen as extreme mutations, in \pit parlance.
+It leverages the maturity of \pit{} and handles the discovery of points where extreme transformations can be applied and the creation of the new program variants \cite{veraperez2018descartes}.
+Being open-source, we hope that Descartes  will be used by future research on the topic of \pseudotested{} methods .
+
+\subsection{Evaluation}
+\label{subsec:transversal-contributions:descartes:evaluation}
+
+We selected 21 open source projects in a systematic manner to conduct our experiments. 
+We considered active projects written in \java{}, that use maven as main build system, \junit{} as the main testing framework and their code is available in a version control hosting service, mostly \gh.
+
+\subsubsection{Frequency of \pseudotested Methods}
+\label{subsubsec:transversal-contributions:descartes:evaluation:frequency}
+
+With this evaluation, we aim at characterizing the prevalence of \pseudotested{} methods. 
+It is a conceptual replication of the work by \theoriginalauthors, with a larger set of study objects and a different tool support for the detection of \pseudotested{} methods.
+
+We analyzed each study subject following the procedure described in Section \ref{subsec:transversal-contributions:descartes:definitions}. The results are summarized in Table \ref{tab:testedclass}. The second column shows the total number of methods excluding constructors. The third, lists the methods covered by the test suite. The following column shows the ratio of covered methods. The \textit{\#MUA} column shows the number of methods under analysis, per the criteria described in Section \ref{sec:metrics}. The last two columns give the number of \pseudotested{} methods (\#PSEUDO) and their ratio to the methods under analysis (PS\_RATE).
+
+\begin{table}
+	\caption{Number of methods in each project, number of methods under analysis and number of \pseudotested{} methods}
+	\label{tab:testedclass}
+	\def\arraystretch{1}%  1 is the default, change whatever you need
+	\setlength\tabcolsep{1.2pt} % default value: 6pt
+	\begin{tabular}{rrrrrrr}
+			\hline
+			Project & {\#Methods} & {\#Covered} & C\_RATE & {\#MUA} & {\#PSEUDO}  & PS\_RATE  \\
+			\hline
+			\texttt{authzforce}          &    697 &  325 & 47\% &  291 &   13 &  4\% \\  
+			\texttt{aws-sdk-java}        & 177449 & 2314 &  1\% & 1800 &  224 & 12\% \\
+			\texttt{commons-cli}         &    237 &  181 & 76\% &  141 &    2 &  1\% \\  
+			\texttt{commons-codec}       &    536 &  449 & 84\% &  426 &   12 &  3\% \\  
+			\texttt{commons-collections} &   2729 & 1270 & 47\% & 1232 &   40 &  3\% \\  
+			\texttt{commons-io}          &    875 &  664 & 76\% &  641 &   29 &  5\% \\  
+			\texttt{commons-lang}        &   2421 & 1939 & 80\% & 1889 &   47 &  2\% \\  
+			\texttt{flink-core}          &   4133 & 1886 & 46\% & 1814 &  100 &  6\% \\  
+			\texttt{gson}                &    624 &  499 & 80\% &  477 &   10 &  2\% \\    
+			\texttt{jaxen}               &    958 &  616 & 64\% &  569 &   11 &  2\% \\  
+			\texttt{jfreechart}          &   7289 & 3639 & 50\% & 3496 &  476 & 14\% \\  
+			\texttt{jgit}                &   6137 & 3702 & 60\% & 2539 &  296 & 12\% \\  
+			\texttt{joda-time}           &   3374 & 2783 & 82\% & 2526 &   82 &  3\% \\  
+			\texttt{jopt-simple}         &    298 &  265 & 89\% &  256 &    2 &  1\% \\  
+			\texttt{jsoup}               &   1110 &  844 & 76\% &  751 &   28 &  4\% \\  
+			\texttt{sat4j-core}          &   2218 &  613 & 28\% &  585 &  143 & 24\% \\  
+			\texttt{pdfbox}              &   8164 & 2418 & 30\% & 2241 &  473 & 21\% \\  
+			\texttt{scifio}              &   3269 &  895 & 27\% &  158 &   72 & 46\% \\  
+			\texttt{spoon}               &   4470 & 2976 & 67\% & 2938 &  213 &  7\% \\  
+			\texttt{urbanairship}        &   2933 & 2140 & 73\% & 1989 &   28 &  1\% \\  
+			\texttt{xwiki-rendering}     &   5002 & 2232 & 45\% & 2049 &  239 & 12\% \\
+			\hline
+			Total               & 234923 & 32650 & 14\% & 28808 & 2540 & 9\% \\
+			\hline
+	\end{tabular}
+\end{table}
+
+We have made the first independent replication of \theoriginalauthors's study. 
+Our replication confirms that all Java projects contain \pseudotested{} methods, even the very well tested ones. 
+This improves the external validity of this empirical fact. 
+The ratio of \pseudotested{} methods with respect to analyzed methods ranged from 1\% to 46\% in our dataset.
+
+\subsubsection{Developer's Assessment}
+\label{subsubsec:transversal-contributions:descartes:evaluation:developer}
+
+Also, we want to know which \pseudotested{} methods do developers consider worth an additional testing action.
+Following our exchange with the developers, we expand the qualitative analysis to a sample of 101 \pseudotested{} methods distributed across three of our study subjects. 
+We consulted developers to characterize the \pseudotested{} methods that are worth an additional testing action and the ones that are not worth it.
+
+We contact the development teams directly. 
+We select three projects for which  the developers have accepted to discuss with us: \texttt{authzforce}, \texttt{sat4j-core} and \texttt{spoon}. 
+We set up a video call with the head of each development team. 
+The goal of the call is to present and discuss a selection of \pseudotested{} methods in approximately 90 minutes. 
+With this discussion, we seek to know which \pseudotested{} methods developers consider relevant enough to trigger additional work on the test suite and approximate their ratio on each project.
+
+Table \ref{tab:todevelopers} shows the projects involved, footnotes with links to the online summary of the interviews, the number of \pseudotested{} methods included in the random sample, the number of methods worth an additional testing action and the percentage they represent with respect to the sample. We also show how much time we spent in the discussion.
+
+\begin{table}
+	\caption{The \pseudotested{} methods systematically analyzed by the lead developers, through a video call.}
+	\label{tab:todevelopers}
+	\centering
+	\begin{tabular}{lrrrrrr}
+		\toprule
+		Project             & Sample size & Worth & Percentage  & Time spent (HH:MM)  \\
+		\midrule
+		\texttt{authzforce}\footnote{\url{https://github.com/STAMP-project/descartes-experiments/blob/master/actionable-hints/authzforce-core/sample.md}} &  13 (100\%) &                    6 &        46\% & 29 min              \\  
+		\texttt{sat4j-core}\footnote{\url{https://github.com/STAMP-project/descartes-experiments/blob/master/actionable-hints/sat4j-core/sample.md}} &  35  (25\%) &                    8 &        23\% & 1 hr 38 min         \\
+		\texttt{spoon}\footnote{\url{https://github.com/STAMP-project/descartes-experiments/blob/master/actionable-hints/spoon/sample.md}}      &  53  (25\%) &                   16 &        23\% & 1 hr 14 min         \\
+		\midrule
+		Total               & 101         &                   30 &        30\% & 3 hr 21 min         \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+In a sample of 101 \pseudotested{} methods, systematically analyzed by the lead developers of 3 mature projects, 30 methods (30\%) were considered worth of additional testing actions. 
+The developer decisions are based on a deep understanding of the application domain and design of the application. 
+This means that it is not reasonable to prescribe the absolute absence (zero) of \pseudotested{} methods.
+
+\subsection{Conclusion}
+\label{subsec:transversal-contributions:descartes:conclusion}
+
+To conclude, our replication confirms that all Java projects contain \pseudotested{} methods, even the very well tested ones, ranging from 1\% to 46\% in our dataset.
+Developers of 3 projects consider that 30\% methods were considered worth of additional testing actions
+
+In the light of these conclusions, the immediate next step in our research agenda is to investigate an automatic test improvement technique targeted towards \pseudotested{} methods.
+This technique shall kill two birds with one stone: improve the adequacy of the test suite for \pseudotested{} methods; 
+let the developers focus their efforts on core features and relieve them from the test improvement task.
+This technique shall kill two birds with one stone: improve the adequacy of the test suite for \pseudotested{} methods; let the developers focus their efforts on core features and relieve them from the test improvement task.
+
+Descartes has been integrated as default test-criterion in \dspot.
+It means that, \dspot amplifies the test suite in order to detect more extreme mutant and thus reduce the number of \pseudotested methods.
+
+\section{Test For Repair}
 \label{sec:transversal-contributions:test-for-repair}
 \cite{Yu2019}
 
