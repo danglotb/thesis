@@ -5,15 +5,15 @@
 	In this chapter, I expose 3 transversal contributions thanks to specific skills obtained during my thesis.
 	\begin{itemize}
 		\item \cite{Danglot2018} The first transversal contribution studies the correctness of program under runtime perturbations.
-		\item The second transversal contribution studies extreme mutants, \eg a subclass of mutants such as done in mutation analysis, in open-source project. 
-		\item The third transversal contribution studies the overfitting of patches in test-based automatic repair techniques and how to overcome using test generation.
+		\item \cite{descartes} The second transversal contribution studies extreme mutants, \eg a subclass of mutants such as done in mutation analysis, in open-source project. 
+		\item \cite{Yu2019} The third transversal contribution studies the overfitting of patches in test-based automatic repair techniques and how to overcome using test generation.
 	\end{itemize}
 	These 3 transversal contributions are supported by published articles.
 \end{chaptersummary}
 
 \minitoc
 
-\graphicspath{{.}{chapitres/state-of-the-art/}}
+\graphicspath{{.}{chapitres/transversal_contributions/}}
 
 \section{Study of Program Correctness}
 \label{sec:transversal-contributions:correctness}
@@ -218,7 +218,7 @@ To strengthen it, one could amplifies its test suite with \dspot to have a bette
 
 \section{Study of Pseudo-tested Methods with Extreme Mutations}
 \label{sec:transversal-contributions:descartes}
-\cite{descartes}
+
 
 \subsection{Introduction}
 \label{subsec:transversal-contributions:descartes:introduction}
@@ -405,7 +405,174 @@ It means that, \dspot amplifies the test suite in order to detect more extreme m
 
 \section{Test For Repair}
 \label{sec:transversal-contributions:test-for-repair}
-\cite{Yu2019}
+
 
 \subsection{Introduction}
 \label{subsec:transversal-contributions:test-for-repair:introduction}
+
+The first role of test suites is to verify that the program behaves as expected.
+However, this was without reckoning with daring researchers, test suite have been used for others purpose such as Automated program repair.
+
+Automated program repair holds out the promise of saving debugging costs and patching buggy programs more quickly than humans. 
+Given this great potential, there has been a surge of research on automated program repair in recent years and several different techniques have been proposed (\cite{genprog,semfix,nopol,tsepei,long2017automatic}).
+
+Test suite based repair is a widely studied family of techniques among many different techniques proposed.
+Test suite based repair uses the test suite as oracle to verify whether a patch, obtained using the automated program repair technique, fix the bug or not.
+To do see, the test suite has at least one test method that fail and others that pass.
+The goal of test suite based repair is to make all the test methods pass, \ie fixes the bug by making the failing test method pass, and does not break others component by keeping other test methods passing (avoiding regression).
+
+However, test suites are in essence input-output specifications and are therefore typically inadequate for completely specifying the expected behavior.
+That is to say, that a patch that makes all test methods pass can be still incorrect according to the expected behavior of the program.
+The patches that are overly specific to the used test suite and fail to generalize to other tests are called \emph{overfitting} patches (\cite{smith2015cure}).
+
+In this study, an approach is proposed that try to alleviate overfitting problem for synthesis-based techniques called UnsatGuided.
+It makes use of automatic test case generation technique to obtain additional tests and try to solve the overfitting problem.
+
+The remainder of this section is organized as follows:
+
+\subsection{UnsatGuided: Alleviating the Overfitting Problem for Synthesis-based Repair Techniques}
+\label{subsec:transversal-contributions:test-for-repair:definitions}
+
+\subsubsection{Definitions}
+\label{subsubsec:transversal-contributions:test-for-repair:unsat-guided:definitions}
+
+Let us consider the input domain $I$ of a program $P$.
+In a typical repair scenario, the program is almost correct.
+There is a bug that only affects a portion of input domain, called the ``buggy input domain'' $I_{bug}$.
+We call the rest of the input domain, considered correct, $I_{correct}$. 
+By definition, a patch changes the behaviors of a portion of the input domain.
+This portion is called $I_{patch}$.
+
+%For input points within $I_{bug}$ whose behaviors have been changed by a patch, the patch can either correctly or incorrectly change the original buggy behaviors.
+%In the former case, input points within $I_{bug}$ are denoted $I_{patch=}$, \ie the newly behaviors of these input points are still incorrect.
+%In the latter case, input points within $I_{bug}$ are denoted $I_{patch{\cmark}}$, \ie the newly behaviors have been correctly changed by a patch. 
+%If the patch changes the behaviors of input points within $I_{correct}$, then the original correct behaviors of these input points will undesirably become incorrect and we use $I_{patch{\xmark}}$ to denote these input points within $I_{correct}$ broken by the patch.
+%One can note, the union of $I_{patch=}$, $I_{patch{\cmark}}$ and $I_{patch{\xmark}}$ makes up $I_{patch}$.
+
+\subsubsection{Algorithm}
+\label{subsubsec:transversal-contributions:test-for-repair:unsat-guided:algo}
+
+The overfitting problem for synthesis-based repair techniques arises because the repair constraint established using an incomplete test suite is not strong enough to fully express the intended semantics of a program.
+The idea is to strengthen the initial repair constraint by augmenting the initial test suite with additional automatically generated tests. 
+A stronger repair constraint would guide synthesis-based repair techniques towards better patches, \ie patches that are correct or at least suffer less from overfitting.
+
+UnsatGuided is proposed to overcome this problem, which gradually makes use of the new information provided by each automatically generated test to build a possibly stronger final repair constraint. 
+The key underlying idea is that if the additional repair constraint enforced by an automatically generated test has logical contradictions with the repair constraint established so far, then the generated test is likely to have its input points lying in $I_{bug}$ and is discarded. 
+
+\autoref{alg:2} describes the approach in detail. 
+The algorithm takes as input a buggy program \emph{P} to be repaired, a manually written test suite \emph{TS} which contains some passing tests and at least one failing test, a synthesis-based repair technique $T_{synthesis}$, a time budget \emph{TB} allocated for the execution of $T_{synthesis}$, and finally an automatic test case generation tool $T_{auto}$ which uses a certain kind of automatic test case generation technique $T_{reg}$. 
+The output of the algorithm is a patch \emph{pt} to the buggy program \emph{P}.
+
+\begin{algorithm}[t]
+	\begin{algorithmic}[1]
+		\Require{A buggy program $P$ and its manually written test suite $TS$}
+		\Require{A synthesis-based repair technique $T_{synthesis}$ and the time budget $TB$}
+		\Require{An automatic test case generation tool $T_{auto}$}
+		\Ensure{A patch $pt$ to the buggy program $P$}
+		\State{$pt_{initial} \leftarrow T_{synthesis}(P, TS, TB)$}
+		\If{$pt_{initial} = null$}
+			\State{$pt \leftarrow null$}
+		\Else
+			\State{$AGTS \leftarrow \emptyset$}
+			\State{$pt \leftarrow pt_{initial}$}
+			\State{$TS_{aug} \leftarrow TS$}
+			\State{$t_{initial} \leftarrow getPatchGenTime(T_{synthesis}(P, TS, TB))$}
+			\State{$\{file_{i}\}(i=1,2,...,n) \leftarrow getInvolvedFiles(pt_{initial})$ }
+			\For{$i=1$ to $n$}
+				\State{$AGTS \leftarrow AGTS \cup T_{auto}(P, file_{i})$}
+			\EndFor
+			\For{$j=1$ to $|AGTS|$}
+				\State{$t_j \leftarrow AGTS(j)$}
+				\State{$TS_{aug} \leftarrow TS_{aug} \cup \{t_j\}$}
+				\State{$pt_{intern} \leftarrow T_{synthesis}(P, TS_{aug}, t_{initial} \times 2)$}
+				\If{$pt_{intern} \neq null$}
+					\State{$pt \leftarrow pt_{intern}$}
+				\Else
+					\State{$TS_{aug} \leftarrow TS_{aug} - \{t_j\} $}
+				\EndIf
+			\EndFor
+		\EndIf
+		\Return{$pt$}
+	\end{algorithmic}
+	\caption{: Algorithm for the Proposed Approach UnsatGuided}
+	\label{alg:2}
+\end{algorithm}
+
+The algorithm directly returns an empty patch if $T_{synthesis}$ generates no patches within the time budget (lines 2-3).
+In case $T_{synthesis}$ generates an initial patch $pt_{initial}$, the algorithm first conducts a set of initialization steps as follows: 
+it sets the automatically generated test suite \emph{AGTS} to be an empty set (line 5), sets the returned patch \emph{pt} to be the initial patch $pt_{initial}$ (line 6), sets the augmented test suite $TS_{aug}$ to be the manually written test suite \emph{TS} (line 7), and gets the time used by $T_{synthesis}$ to generate the initial patch $pt_{initial}$ and sets $t_{initial}$ to be the value (line 8).
+\autoref{alg:2} then identifies the set of files \{$file_i$\}(\emph{i}=1, 2,..., \emph{n}) involved in the initial patch $pt_{initial}$ (line 9) and for each identified file, it uses the automatic test case generation tool $T_{auto}$ to generate a set of tests that target behaviors related with the file and adds the generated tests to the automatically generated test suite \emph{AGTS} (lines 10-12). 
+
+Next, the algorithm will use the test suite \emph{AGTS} to refine the initial patch $pt_{initial}$. 
+For each test $t_j$ in the test suite \emph{AGTS} (line 14), the algorithm first adds it to the augmented test suite $TS_{aug}$ (line 15) and runs technique $T_{synthesis}$ with test suite $TS_{aug}$ and new time budget $t_{initial} \times 2$ against program \emph{P} (line 16).
+The new time budget is used to quickly identify tests that can potentially contribute to strengthening the repair constraint, and thus improve the scalability of the approach. 
+Then, if the generated patch $pt_{intern}$ is not an empty patch, the algorithm updates the returned patch \emph{pt} with $pt_{intern}$ (lines 17-18). 
+In other words, the algorithm deems test $t_j$ as a good test that can help improve the repair constraint. 
+Otherwise, test $t_j$ is removed from the augmented test suite $TS_{aug}$ (lines 19-20) as $t_j$ is either a bug-exposing test or it slows down the repair process too much. 
+After the above process has been completed for each test in the test suite \emph{AGTS}, the algorithm finally returns patch \emph{pt} as the desirable patch (line 24). 
+
+\subsection{Evaluation}
+\label{subsec:transversal-contributions:test-for-repair:evaluations}
+
+Defects4J (\cite{JustJE2014}) has been selected, a known database of real faults from real-world Java programs, as the experimental benchmark.
+For the approach UnsatGuided to be implemented, Nopol (\cite{nopol}) has been chosen to represent synthesis-based repair techniques. 
+The automatic test case generation tool used in this study is EvoSuite (\cite{ESECFSE11}).
+
+We evaluate the effectiveness of UnsatGuided from two points: its impact on the overfitting issue and correctness of the original patch generated by Nopol.
+
+\autoref{tab:nopol-results} displays the experimental results on combining Nopol with UnsatGuided (hereafter referred to as Nopol+\-Unsat\-Guided).
+This table only shows the Defects4J bugs that can be originally repaired by Nopol, and their identifiers are listed in column \emph{Bug ID}. 
+
+The test generation results by running EvoSuite are shown in the two columns under the column \emph{Tests}, among which the \emph{\#EvoTests} column shows the total number of tests generated by EvoSuite for all seeds and the \emph{\#Bug-expo} column shows the number of bug-exposing tests among all of the generated tests. 
+
+The results obtained by running just Nopol are shown in the columns under the column \emph{Nopol}. 
+The \emph{Time} column shows the time used by Nopol to generate the initial patch. 
+The \emph{incomplete fix (\#failing)} column shows what is the overfitting issue of incomplete fixing for the original Nopol patch. 
+Each cell in this column is of the form X (Y), where X can be ``Yes'' or ``No'' and Y is a digit number. 
+The ``Yes'' and ``No'' mean that the original Nopol patch has and does not have overfitting issue of incomplete fixing respectively. 
+The digit number in parentheses shows the number of bug-exposing tests on which the original Nopol patch fails. 
+Similarly, the \emph{regression (\#failing)} column tells what is the overfitting issue of regression introduction for the original Nopol patch, and each cell in this column is of the same form with the column \emph{incomplete fix (\#failing)}. 
+The ``Yes'' and ``No'' for this column mean that the original Nopol patch has and does not have overfitting issue of regression introduction respectively. 
+The digit number in parentheses shows the number of normal tests on which the original Nopol patch fails. 
+Finally, the column \emph{correctness} shows whether the original Nopol patch is correct, with ``Yes'' representing correct and ``No'' representing incorrect.
+
+\begin{landscape}
+	\input{tab-result-nopol2.tex}
+\end{landscape}
+
+This study aims to assess the effectiveness of UnsatGuided. 
+It can be seen from the column \emph{Change ratio (\#unique)} of \autoref{tab:nopol-results} that for the 42 buggy versions that can be initially repaired by Nopol, the patches generated for 34 buggy versions have been changed at least for one seed after running Nopol+UnsatGuided. 
+If we consider all executions (one per seed per buggy version), we obtain a total of 1220 patches with Nopol+UnsatGuided. 
+Among the 1220 patches, 702 patches are different from the original patches generated by running Nopol only. 
+Thus, UnsatGuided can significantly impact the output of the Nopol repair process. 
+We will further investigate the quality difference between the new Nopol+UnsatGuided patches and the original Nopol patches. 
+
+The results for alleviating the two kinds of overfitting issues by running Nopol+UnsatGuided are displayed in the columns \emph{fix completeness change (Avg \#Removedinc)} and \emph{regression change (Avg\#Removedreg)} of \autoref{tab:nopol-results}.
+
+With regard to alleviating the overfitting issue of incomplete fixing, we can see from the column \emph{fix completeness change (Avg\#Removedinc)} that UnsatGuided has an effect on 4 buggy program versions (Math\_50, Math\_80, Math\_87 and Time\_4). 
+For all those 4 buggy versions, the original Nopol patch already has the overfitting issue of incomplete fixing. 
+With UnsatGuided, the overfitting issue of incomplete fixing has been alleviated in 2 cases (Math\_50, Time\_4) and worsened for 2 other cases (Math\_80, Math\_87). 
+This means UnsatGuided is likely to have a minimal positive impact on alleviating overfitting issue of incomplete fixing and can possibly have a negative impact on it.
+
+In terms of alleviating overfitting issue of regression introduction, we can see from the column \emph{regression change (Avg\#Removedreg)} that UnsatGuided has an effect on 18 buggy program versions. 
+Among the 18 original Nopol patches for these 18 buggy program versions, UnsatGuided has alleviated the overfitting issue of regression introduction for 16 patches. 
+In addition, for 6 buggy program versions, the overfitting issue of regression introduction of the original Nopol patch has been completely removed.  
+These 6 cases are indicated with $(\star)$ in \autoref{tab:nopol-results}. 
+Meanwhile, UnsatGuided worsens the overfitting issue of regression introduction for two other original Nopol patches (Math\_33 and Time\_7). 
+It can possibly happen as even though the repair constraint for input points within $I_{correct}$ has been somewhat strengthened (but not completely correct), yet the solution of the constraint happens to be more convoluted.
+Overall, with 16 positive versus 2 negative cases, UnsatGuided can be considered as effective in alleviating overfitting issue of regression introduction. 
+
+\subsection{Conclusion}
+\label{subsec:transversal-contributions:test-for-repair:conclusion}
+
+To sum up, UnsatGuided can effectively alleviate the overfitting issue of regression introduction (16/19 cases), but has minimal positive impact on reducing the overfitting issue of incomplete fixing.
+
+In this study, we used Evosuite, a state-of-the-art test generation tool.
+An alternative would be to use a test amplification tool, such as \dspot in order to overcome the overfitting problems.
+
+\dspot could amplify the test suite, while discarded bug-exposing amplified test methods, and improve the constraint around the program repair problem.
+This can be implemented as a specific test-criterion.
+Thus, some input-amplification operators are well suited to this task such as literals modifications.
+
+\section{Conclusion}
+\label{sec:transversal-contributions:conclusion}

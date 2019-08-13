@@ -1,0 +1,57 @@
+\begin{table*}[htbp]
+  \tiny
+  % note that we cannot use median, because the majority of values is zero and the median also consequently, which is misleading 
+  \caption{Experimental results with Nopol+UnsatGuided on the Defects4j Repository, only show bugs with test-suite adequate patches by plain Nopol.}
+  \centering
+  \label{tab:nopol-results}
+  \begin{tabular}{|l|c|c|c|c|c|r|r|r|r|r|c|r|r|r|r|}
+    \hline
+    \multirow{7}{*}{\rotatebox{90}{Bug ID}} & \multicolumn{2}{c|}{Tests} & \multicolumn{4}{c|}{Nopol}  & \multicolumn{7}{c|}{Nopol+UnsatGuided} \\ 
+    \cline{2-14}
+     & \rotatebox{90}{\#EvoTests} & \rotatebox{90}{\#Bug-expo} & \rotatebox{90}{Time (hh:mm)} & \rotatebox{90}{\tabincell{c}{incomplete fix \\ (\#failing)}} & \rotatebox{90}{regression (\#failing)} & \rotatebox{90}{correctness} & \rotatebox{90}{\#Removed} & \rotatebox{90}{\#Removed Bug-expo} & \rotatebox{90}{Avg \#Time (hh:mm)} & \rotatebox{90}{\tabincell{c}{Change ratio \\ (\#unique)}} & \rotatebox{90}{\tabincell{c}{fix completeness \\ change \\ (Avg \#Removedinc)}} & \rotatebox{90}{\tabincell{c}{regression change\\ (Avg \#Removedreg)}} & \rotatebox{90}{correctness} \\
+    \hline
+Chart\_1 & 3012 & 0 & 00:02 & No (0) & No (0) & NO & 0 & 0 & 03:00 & 0/30 (1) &  same (0) & same (0) & NO\\
+Chart\_5 & 2931 & 3 & 00:01 & No (0) & Yes (10) & NO & 104 & 3 & 01:18 & 27/30 (27) & same (0) & improve (2.9) & NO\\
+Chart\_9 & 3165 & 0 & 00:01 & No (0) & No (0) & NO & 0 & 0 & 01:00 & 0/30 (1) & same (0) & same (0) & NO\\
+Chart\_13 & 852 & 0 & 00:02 & No (0) & No (0) & NO & 0 & 0 & 00:24 & 30/30 (2) &  same (0) & same (0) & NO\\
+Chart\_15 & 3711 & 0 & 00:04 & No (0) & Yes (4) & NO & 5 & 0 & 06:48 & 27/30 (23) & same (0) & improve (2.0) & NO\\
+Chart\_17 & 3246 & 10 & 00:01 & Yes (10) & No (0) & NO & 27 & 0 & 00:48 & 0/30 (1)  & same (0) & same (0) & NO\\
+Chart\_21 & 1584  & 0 & 00:01 & No (0) & Yes (6) & NO & 0 & 0 & 00:48 & 30/30 (30) & same (0) & improve (6.0)$\star$ & NO\\
+Chart\_25 & 441 & 0 & 00:01 & No (0) & Yes (8) & NO & 0 & 0 & 00:12 & 8/30 (6) &  same (0) & improve (8.0)$\star$ & NO\\
+Chart\_26 & 2432 & 0 & 00:03 & No (0) & Yes (6) & NO & 6 & 0 & 13:36 & 10/10 (5) &  same (0) & improve (6.0)$\star$ & NO \\
+Lang\_44 & 3039 & 13 & 00:01 & No (0) & No (0) & \bf{YES} & 13 & 13 & 00:48 & 3/30 (2) & same (0) & same (0) & \bf{YES}\\
+Lang\_51 & 3720 & 1 & 00:01 & No (0) & No (0) & NO & 15 & 1 & 01:00 & 29/30 (2) &  same (0) & same (0) & NO\\
+Lang\_53 & 2931 & 0 & 00:01 & No (0) & No (0) & NO & 0 & 0 & 00:06 & 26/30 (18) &  same (0) &  same (0) & NO\\
+Lang\_55 & 606 & 0 & 00:01 & No (0) & No (0) & \bf{YES} & 1 & 0 & 00:12 & 30/30 (1) & same (0) & same (0) & \bf{YES}\\
+Lang\_58 & 6471 & 0 & 00:01 & No (0) & Yes (5) & NO & 5 & 0 & 01:42 & 0/30 (1) &  same (0) & same (0) & NO\\
+Lang\_63 & 1383 & 1 & 00:01 & No (0) & No (0) & NO & 33 & 1 & 00:36 & 27/30 (5) & same (0) & same (0) & NO\\
+Math\_7 & 876 & 2 & 00:16 & Yes (2) & No (0) & NO & 0 & 0 & 05:00 & 2/30 (3) & same (0) &  same (0) & NO\\
+Math\_24 & 1327 & 0 & 00:15 & No (0) & No (0) & NO & 25 & 0 & 24:06 & 10/10 (10) & same (0) & same (0) & NO\\
+Math\_28 & 219 & 0 & 00:17 & No (0) & No (0) & NO & 0 & 0 & 00:30 & 0/30 (1) & same (0) & same (0) & NO\\
+Math\_33 & 1749 & 1 & 00:13 & Yes (1) & No (0) & NO & 19 & 0 & 10:30 & 28/30 (8) & same (0) & worse (-2.0) & NO\\
+Math\_40 & 831 & 71 & 00:16 & Yes (71) & Yes (21) & NO & 392 & 0 & 07:00 & 7/30 (8) & same (0) & same (0) & NO\\
+Math\_41 & 1224 & 0 & 00:06 & No (0) & Yes (41) & NO  & 35 & 0 & 02:00 & 27/30 (27) &  same (0) & improve (35.1) & NO\\
+Math\_42 & 1770 & 19 & 00:04 & Yes (19) & No (0) & NO & 2 & 0 & 03:54 & 24/30 (22) &  same (0) & same (0) & NO\\
+Math\_50 & 1107 & 26 & 00:11 & Yes (21) & Yes (45) & NO  & 23 & 1 & 04:36 & 28/30 (27) & improve (1.1) & improve (41.0) & NO\\
+Math\_57 & 651 & 0 & 00:03 & No (0) & No (0) & NO & 0 & 0 & 00:48 & 15/30 (4) &  same (0) & same (0) & NO\\
+Math\_58 & 228 & 0 & 00:06 & No (0) & No (0) & NO & 7 & 0 & 00:20 & 2/30 (2) & same (0) & same (0) & NO\\
+Math\_69 & 897 & 0 & 00:01 & No (0) & No (0) & NO & 30 & 0 & 00:12 & 30/30 (21) & same (0) & same (0) & NO\\
+Math\_71 & 951 & 0 & 00:01 & No (0) & Yes (56) & NO & 17 & 0 & 00:24 & 25/30 (11) & same (0) & improve (53.0) & NO\\
+Math\_73 & 1035 & 0 & 00:01 & No (0) & Yes (1) & NO & 10 & 0 & 00:18 & 25/30 (24) & same (0) & improve (1)$\star$ & NO\\
+Math\_78 & 1014 & 0 & 00:01 & No (0) & Yes (44) & NO & 49 & 0 & 00:24 & 28/30 (16) & same (0) & improve (34.9) & NO\\
+Math\_80 & 1356 & 67 & 00:01 & Yes (49) & No (0) & NO & 29 & 1 & 00:54 & 29/30 (27) & worse (-17.9) & same (0) & NO\\
+Math\_81 & 1320 & 4 & 00:01 & Yes (4) & Yes (35) & NO & 30 & 0 & 00:24 & 23/30 (22) & same (0) & improve (35.0)$\star$ & NO\\
+Math\_82 & 510 & 0 & 00:01 & No (0) & No (0) & NO & 0 & 0 & 00:08 & 0/30 (1) & same (0) & same (0) & NO\\
+Math\_84 & 165 & 0 & 00:01 & No (0) & No (0) & NO & 0 & 0 & 00:06 & 0/30 (1) & same (0) & same (0) & NO\\
+Math\_85 & 798 & 0 & 00:01 & No (0) & No (0) & NO & 32 & 0 & 00:12 & 28/30 (11) & same (0) & same (0) & \bf{YES}\\
+Math\_87 & 1866 & 14 & 00:01 & Yes (13) & Yes (8) & NO & 0 & 0 & 00:54 & 29/30 (29) & worse (-1) & improve (8.0)$\star$ & NO\\
+Math\_88 & 1890 & 11 & 00:01 & Yes (11) & No (0) & NO & 0 & 0 & 00:30 & 06/30 (7) & same (0) & same (0) & NO\\
+Math\_105 & 1353 & 7 & 00:09 & Yes (7) & Yes (6) & NO & 6 & 0 & 04:20 & 29/30 (30) & same (0) & improve (2.9) & NO\\
+Time\_4 & 2778 & 5 & 00:01 & Yes (5) & Yes (6) & NO & 0 & 0 & 00:54 & 23/30 (23) & improve (0.8) & improve (5.7) & NO\\
+Time\_7 & 1491 & 0 & 00:01 & No (0) & Yes (11) & NO & 12 & 0 & 00:54 & 12/30 (13) & same (0) & worse (-1) & NO\\
+Time\_11 & 1497 & 5 & 00:04 & Yes (5) & No (0) & NO & 7 & 0 & 01:36 & 0/30 (1) & same (0) & same (0) & NO\\
+Time\_14 & 687 & 0 & 00:01 & No (0) & Yes (3) & NO & 1 & 0 & 00:18 & 24/30 (23) & same (0) & improve (2.0) & NO\\
+Time\_16 & 1476 & 0 & 00:01 & No (0) & Yes (6) & NO & 5 & 0 & 00:24 & 1/30 (2) & same (0) & improve (1) & NO\\
+    \hline
+  \end{tabular}
+\end{table*}
