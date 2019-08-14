@@ -1,2 +1,69 @@
 \chapter{Conclusion}
 \label{chap:conclusion}
+
+\minitoc
+
+\graphicspath{{.}{chapitres/introduction/}}
+
+\section{Contributions Summary}
+\label{sec:conclusion:contributions-summary}
+
+\subsection{\dspot}
+\label{subsec:conclusion:contributions-summary:dspot}
+
+The major technical contribution of this thesis is \dspot, a unit test methods amplification tool.
+\dspot aims at improving existing test method with respect to an given test-criterion such as branch coverage.
+It does this in 3 main steps.
+
+1) It amplifies the input of the original test method by applying specific code transformation on the input part of the test method;
+
+2) It removes existing assertions and generates new ones, based on observations done during execution on the state of the programs.
+It uses commons getters in Java to do so, \eg non-void methods with no parameter that starts with ``get'';
+
+3) It uses a test-criterion to select amplified test methods to keep.
+For instance, one want to improve the branch coverage of the test suite.
+\dspot will keep only amplified test methods that cover branches that were not cover before.
+
+\dspot has been developed in Java, for Java programs.
+However, the whole technique remains applicable for all programming languages.
+
+All the code of \dspot is available on \gh: \url{https://github.com/STAMP-project/dspot.git}.
+I personally enliven its community by answering questions on the bug tracker, guiding new contributors and setting up developing methodologies , such as pull-request based developers or integration continue, to keep \dspot as clean as possible.
+
+Following this technical contribution, this thesis presented two large-scale evaluations of \dspot's effectiveness.
+
+\subsection{Automatic Test Amplification For Mutation Score}
+\label{subsec:conclusion:contributions-summary:test-ampl-ms}
+
+For a first evaluation, I used \ms as test-criterion.
+\dspot has automatically amplified test suites from open-source projects from \gh and improve the \ms.
+\ms has been used as a proxy of test suites' ability to detect faults.
+
+The outputted amplified test methods of \dspot have been proposed to external developers of the projects from \gh through pull-requests.
+This has been done in order to have the developers assessing the result of \dspot.
+Over 19 opened pull-requests, 14 of them have been permanently added to the test suites of these projects.
+It means that \dspot generated amplified test methods that are valuables for external developers.
+Everyday, amplified test methods are increasing the developers' confidence in the correctness of their software.
+
+Also, I evaluated \dspot in a more ``off-line'' way by amplifying 40 test classes of heavily tested projects from \gh, using also the \ms as test-criterion.
+This evaluation that \dspot is able to generate amplified test methods that increase \ms.
+
+\subsection{Automatic Test Amplification For Behavioral Changes Detection}
+\label{subsec:conclusion:contributions-summary:behavioral-change-detection}
+
+In a second evaluation, 
+
+In a second evaluation, I used \dspot to generate amplified test methods that detect behavioral changes introduce by commits in the context of continuous integration.
+
+
+
+\section{Short-term perspectives}
+\label{sec:conclusion:short-prespectives}
+
+\section{Long-term perspectives}
+\label{sec:conclusion:long-prespectives}
+
+\section{Conclusion}
+\label{sec:conclusion:conclusion}
+
+

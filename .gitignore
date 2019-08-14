@@ -275,4 +275,4 @@ TSWLatexianTemp*
 #
 
 *.mtc*
-*.bst
+#*.bst
