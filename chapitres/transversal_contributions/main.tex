@@ -411,21 +411,24 @@ It means that, \dspot amplifies the test suite in order to detect more extreme m
 \label{subsec:transversal-contributions:test-for-repair:introduction}
 
 The first role of test suites is to verify that the program behaves as expected.
-However, this was without reckoning with daring researchers, test suite have been used for others purpose such as Automated program repair.
+However, this was without reckoning with daring researchers, test suites have been used for others purpose such as automated program repair.
 
 Automated program repair holds out the promise of saving debugging costs and patching buggy programs more quickly than humans. 
 Given this great potential, there has been a surge of research on automated program repair in recent years and several different techniques have been proposed (\cite{genprog,semfix,nopol,tsepei,long2017automatic}).
 
 Test suite based repair is a widely studied family of techniques among many different techniques proposed.
 Test suite based repair uses the test suite as oracle to verify whether a patch, obtained using the automated program repair technique, fix the bug or not.
-To do see, the test suite has at least one test method that fail and others that pass.
+To do so, the test suite has at least one test method that fail and others that pass.
 The goal of test suite based repair is to make all the test methods pass, \ie fixes the bug by making the failing test method pass, and does not break others component by keeping other test methods passing (avoiding regression).
 
 However, test suites are in essence input-output specifications and are therefore typically inadequate for completely specifying the expected behavior.
 That is to say, that a patch that makes all test methods pass can be still incorrect according to the expected behavior of the program.
 The patches that are overly specific to the used test suite and fail to generalize to other tests are called \emph{overfitting} patches (\cite{smith2015cure}).
 
-In this study, an approach is proposed that try to alleviate overfitting problem for synthesis-based techniques called UnsatGuided.
+This study is focused on synthesis-based, a category of test suite based repair technique.
+Synthesis-based techniques first use test execution information to build a repair constraint, and then use a constraint solver to synthesize a patch. 
+Typical examples in this category include SemFix (\cite{semfix}), Nopol (\cite{nopol}), and Angelix (\cite{Mechtaev:2016:ASM:2884781.2884807}).
+Thus, an approach is proposed that try to alleviate overfitting problem for synthesis-based techniques called UnsatGuided.
 It makes use of automatic test case generation technique to obtain additional tests and try to solve the overfitting problem.
 
 The remainder of this section is organized as follows:
@@ -438,16 +441,10 @@ The remainder of this section is organized as follows:
 
 Let us consider the input domain $I$ of a program $P$.
 In a typical repair scenario, the program is almost correct.
-There is a bug that only affects a portion of input domain, called the ``buggy input domain'' $I_{bug}$.
+There is a bug that only affects a portion of the input domain, called the ``buggy input domain'' $I_{bug}$.
 We call the rest of the input domain, considered correct, $I_{correct}$. 
 By definition, a patch changes the behaviors of a portion of the input domain.
 This portion is called $I_{patch}$.
-
-%For input points within $I_{bug}$ whose behaviors have been changed by a patch, the patch can either correctly or incorrectly change the original buggy behaviors.
-%In the former case, input points within $I_{bug}$ are denoted $I_{patch=}$, \ie the newly behaviors of these input points are still incorrect.
-%In the latter case, input points within $I_{bug}$ are denoted $I_{patch{\cmark}}$, \ie the newly behaviors have been correctly changed by a patch. 
-%If the patch changes the behaviors of input points within $I_{correct}$, then the original correct behaviors of these input points will undesirably become incorrect and we use $I_{patch{\xmark}}$ to denote these input points within $I_{correct}$ broken by the patch.
-%One can note, the union of $I_{patch=}$, $I_{patch{\cmark}}$ and $I_{patch{\xmark}}$ makes up $I_{patch}$.
 
 \subsubsection{Algorithm}
 \label{subsubsec:transversal-contributions:test-for-repair:unsat-guided:algo}
@@ -457,10 +454,11 @@ The idea is to strengthen the initial repair constraint by augmenting the initia
 A stronger repair constraint would guide synthesis-based repair techniques towards better patches, \ie patches that are correct or at least suffer less from overfitting.
 
 UnsatGuided is proposed to overcome this problem, which gradually makes use of the new information provided by each automatically generated test to build a possibly stronger final repair constraint. 
-The key underlying idea is that if the additional repair constraint enforced by an automatically generated test has logical contradictions with the repair constraint established so far, then the generated test is likely to have its input points lying in $I_{bug}$ and is discarded. 
+The key underlying idea is that if the additional repair constraint enforced by an automatically generated test has logical contradictions with the repair constraint established so far, then the generated test is likely to have its input points lying in $I_{bug}$
+Such tests are called ``bug-exposing test'' and are discarded, the others are used to strengthen the repair constraints.
 
 \autoref{alg:2} describes the approach in detail. 
-The algorithm takes as input a buggy program \emph{P} to be repaired, a manually written test suite \emph{TS} which contains some passing tests and at least one failing test, a synthesis-based repair technique $T_{synthesis}$, a time budget \emph{TB} allocated for the execution of $T_{synthesis}$, and finally an automatic test case generation tool $T_{auto}$ which uses a certain kind of automatic test case generation technique $T_{reg}$. 
+It takes as input a buggy program \emph{P} to be repaired, a manually written test suite \emph{TS} which contains some passing tests and at least one failing test, a synthesis-based repair technique $T_{synthesis}$, a time budget \emph{TB} allocated for the execution of $T_{synthesis}$, and finally an automatic test case generation tool $T_{auto}$ which uses a certain kind of automatic test case generation technique $T_{reg}$. 
 The output of the algorithm is a patch \emph{pt} to the buggy program \emph{P}.
 
 \begin{algorithm}[t]
@@ -515,8 +513,8 @@ After the above process has been completed for each test in the test suite \emph
 \label{subsec:transversal-contributions:test-for-repair:evaluations}
 
 Defects4J (\cite{JustJE2014}) has been selected, a known database of real faults from real-world Java programs, as the experimental benchmark.
-For the approach UnsatGuided to be implemented, Nopol (\cite{nopol}) has been chosen to represent synthesis-based repair techniques. 
-The automatic test case generation tool used in this study is EvoSuite (\cite{ESECFSE11}).
+For the approach UnsatGuided to be implemented, Nopol~\cite{nopol} has been chosen to represent synthesis-based repair techniques. 
+The automatic test case generation tool used in this study is EvoSuite~\cite{ESECFSE11}.
 
 We evaluate the effectiveness of UnsatGuided from two points: its impact on the overfitting issue and correctness of the original patch generated by Nopol.
 
@@ -576,3 +574,18 @@ Thus, some input-amplification operators are well suited to this task such as li
 
 \section{Conclusion}
 \label{sec:transversal-contributions:conclusion}
+
+In this chapter, I exposed 3 transversal contributions that I made thank to the skill that I developed during my thesis.
+
+First, the study of program correctness under runtime perturbation.
+It highlighted the existence of the correctness attraction phenomenon.
+This first work could be used conjointly with \dspot, by integrating the correctness ratio as a test-criterion in order to strengthen the ability of the test suite to detect more runtime perturbation.
+
+Second, the study of pseudo-tested methods and extreme mutations.
+It showed the prevalence of pseudo-tested methods, all the tests pass even if the whole behavior, \ie body, of such methods is removed.
+This extreme mutations has been already implemented in \dspot as a test-criterion in order to reduce the number of pseudo-tested methods.
+
+Third, the study of patch overfitting in test-based repair techniques and an approach to overcome it.
+In this study, we used a test generation tool but using \dspot with a dedicated and specifically designed test-criterion could give a different outcome.
+
+The next chapter gives the short- and long-term perspectives and concludes this thesis.
