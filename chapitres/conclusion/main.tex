@@ -30,6 +30,7 @@ However, the whole technique remains applicable for all programming languages.
 All the code of \dspot is available on \gh: \url{https://github.com/STAMP-project/dspot.git}.
 I personally enliven its community by answering questions on the bug tracker, guiding new contributors and setting up developing methodologies , such as pull-request based developers or integration continue, to keep \dspot as clean as possible.
 
+
 Following this technical contribution, this thesis presented two large-scale evaluations of \dspot's effectiveness.
 
 \subsection{Automatic Test Amplification For Mutation Score}
@@ -51,17 +52,44 @@ This evaluation that \dspot is able to generate amplified test methods that incr
 \subsection{Automatic Test Amplification For Behavioral Changes Detection}
 \label{subsec:conclusion:contributions-summary:behavioral-change-detection}
 
-In a second evaluation, 
+In a second evaluation, I used \dspot in the context of continuous integration.
+The goal is to generate amplified test methods that detect behavioral changes.
 
-In a second evaluation, I used \dspot to generate amplified test methods that detect behavioral changes introduce by commits in the context of continuous integration.
+I took open-source projects from \gh and a commits selection.
+This evaluation showed that \dspot is able to generate amplified test methods that detect 25 behavioral change over 40.
+It also highlights the fact that \dspot can be easily implemented in the life cyle of software, like continuous integration.
 
-
+This evaluation brings evidence that \dspot has to potential to be a concrete part of continuous integration by improving the process of program evolution with amplified test methods that are able to distinguish between versions of the same program.
 
 \section{Short-term perspectives}
 \label{sec:conclusion:short-prespectives}
 
+In this section, I introduce short-perspectives for \dspot.
+To be a complete tools set easily usable, \dspot misses 3 key-features:
+
+1) Even if amplified test methods are based on existing ones, they are still automatically produced resulting that they might be difficult to read and understand.
+A first key-feature is to make them ``prettier'', and \autoref{subsec:conclusion:short-prespectives:prettifier} introduces a way to do it.
+
+2) Sometimes, test-improvement resulting from a given test class should not be in the same class. \eg \autoref{subsubsec:test-improvement:experiment-results:rq1:mustache}.
+This might be a limitation on the adoption of \dspot by industrials since they might be confused by the fact that the component tested is not anymore related to the original test class.
+In \autoref{subsec:conclusion:short-prespectives:location}, I introduced key-ideas to resolve this issue.
+
+3) Last but not least, a web interface, introduced in \autoref{subsec:conclusion:short-prespectives:web-interface} that allows developers to execute \dspot, inspired by guru.io.
+
+\subsection{DSpot-prettifier}
+\label{subsec:conclusion:short-prespectives:prettifier}
+
+\subsection{Changes Location}
+\label{subsec:conclusion:short-prespectives:location}
+
+\subsection{DSpot web interface}
+\label{subsec:conclusion:short-prespectives:web-interface}
+
+
+
 \section{Long-term perspectives}
 \label{sec:conclusion:long-prespectives}
+\subsection{Dspotator}
 
 \section{Conclusion}
 \label{sec:conclusion:conclusion}
