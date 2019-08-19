@@ -16,7 +16,7 @@ In one of his famous lectures~\cite{DijkstraLecture1989}, Dijkstra has stated th
 Dijkstra highlights the fact that a small fault in software might affect lives.
 For example, a flight crash happened in 1993 due to an error in the flight-control software of the the Swedish JAS 39 Gripen fighter aircraft.
 
-To avoid such situations, software editors adopted testing philosophies: the tester writes code that verify that the program is doing what the developer expects.
+To avoid such situations, software editors adopted testing philosophies: \todo{cite others kinds of verifications as proof and model checking} the tester writes code that verify that the program is doing what the developer expects.
 Over the last decade, strong unit testing has become an essential component of any serious software project, whether in industry or academia.
 The agile development movement has contributed to this cultural change with the global dissemination of test-driven development techniques~\cite{beck2003test}.
 More recently, the DevOps movement has further strengthened the testing practice with an emphasis on continuous and automated testing~\cite{Roche2013Devops}.
@@ -37,9 +37,9 @@ However, their studies showed that achieving high coverage does not necessarily 
 The difficulties to understand, integrate and maintain automated test suite prevent the adoption by developers.
 Also, most of the tools relies on weak or partial oracles, \eg absence of runtime errors, making them useless against bugs that do not set the program into a wrong state.
 
-In this thesis, I aim at addressing this issue.
+In this thesis, I aim at addressing the lack of a tool that assist developers in regression testing.
 More precisely, the ultimate goal of this thesis is to provide an usable tool that assist developers to maintain their test suite, in the context of DevOps and continuous integration.
-To do so, I use test suite amplification, which is an emerging field, that derived existing test methods to create variants of them according to an engineering goal.
+To do so, I use test suite amplification\todo{find a ref ? Ours ?}, which is an emerging field, that derived existing test methods to create variants of them according to an engineering goal.
 It means that test suite amplification exploits the knowledge that developers introduced in the seed test method.
 This knowledge is a key to obtain usable, valuable and strong test methods.
 By construction, test suite amplification's output is close to the test methods used seed, since it is obtained by applying insertions, deletions or modifications on the seed test method.
@@ -96,26 +96,6 @@ These contributions are related in \autoref{chap:transversal-contributions}.
 Eventually, I conclude and give the short- and long-term perspectives in \autoref{chap:conclusion}.
 
 \autoref{fig:intro:roadmap} summarizes the outline of these thesis.
-
-\section{Software and Impact On The Community}
-\label{sec:intro:software}
-
-During my thesis, I developed strong artifacts to evaluate the approaches.
-These artifacts are strong enough to be applicable on real code base such open-source projects from \gh or the STAMP partners' codebases.
-This show strong evidence on the applicability and generalization of the results.
-Following, the list of these artifacts and a small description.
-
-\begin{itemize}
-	\item[\dspot]\footnote{\url{https://github.com/STAMP-project/dspot.git}} is a test suite amplifier. 
-	It takes as input a project and its test suite and will produce test cases according to a test criterion adequacy such as branch coverage or mutation score. 
-	\item[DSpot-diff-test-selection]\footnote{\url{https://github.com/STAMP-project/dspot/tree/master/dspot-diff-test-selection}} is a maven plugin, based on OpenClover, that produces the list of test classes and their test methods that execute a provided diff.
-	\item[DSpot-prettifier]\footnote{\url{https://github.com/STAMP-project/dspot/tree/master/dspot-prettifier}} aims a make better good looking amplified test methods obtained with \dspot. 
-	It relies on several operations such as minimization, renaming local variables and test methods (based on code2vec)
-	\item [Test-runner]\footnote{\url{https://github.com/STAMP-project/test-runner}} is a library that allows developer to execute test in a new and clean JVM. 
-	\item[AssertFixer]\footnote{\url{https://github.com/STAMP-project/AssertFixer}} aims to fix the assertion in a test suite, using the program as specifications.
-\end{itemize}
-
-To maximize the artefacts' impact on the community, all of them are open-source and available on \gh.
 
 \section{STAMP-project}
 \label{sec:intro:stamp}
@@ -190,6 +170,26 @@ Debugging is a tedious task, and having a unit test method, automatically genera
 STAMP's final output would be micro-services that allow the developers to use STAMP's tools on their own project.
 STAMP envisions a web interface, on which the developers would be able to install, configure and execute the tools.
 Also, the developers would be able to manage the output of these executions and link them directly to their project, \eg integrate an amplified unit test into their test suite.
+
+\section{Software and Impact On The Community}
+\label{sec:intro:software}
+
+During my thesis, I developed strong artifacts to evaluate the approaches.
+These artifacts are strong enough to be applicable on real code base such open-source projects from \gh or the STAMP partners' codebases.
+This show strong evidence on the applicability and generalization of the results.
+Following, the list of these artifacts and a small description.
+
+\begin{itemize}
+	\item[\dspot]\footnote{\url{https://github.com/STAMP-project/dspot.git}} is a test suite amplifier. 
+	It takes as input a project and its test suite and will produce test cases according to a test criterion adequacy such as branch coverage or mutation score. 
+	\item[DSpot-diff-test-selection]\footnote{\url{https://github.com/STAMP-project/dspot/tree/master/dspot-diff-test-selection}} is a maven plugin, based on OpenClover, that produces the list of test classes and their test methods that execute a provided diff.
+	\item[DSpot-prettifier]\footnote{\url{https://github.com/STAMP-project/dspot/tree/master/dspot-prettifier}} aims a make better good looking amplified test methods obtained with \dspot. 
+	It relies on several operations such as minimization, renaming local variables and test methods (based on code2vec)
+	\item [Test-runner]\footnote{\url{https://github.com/STAMP-project/test-runner}} is a library that allows developer to execute test in a new and clean JVM. 
+	\item[AssertFixer]\footnote{\url{https://github.com/STAMP-project/AssertFixer}} aims to fix the assertion in a test suite, using the program as specifications.
+\end{itemize}
+
+To maximize the artefacts' impact on the community, all of them are open-source and available on \gh.
 
 \section{Publications}
 \label{sec:intro:publications}

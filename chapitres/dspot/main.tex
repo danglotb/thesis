@@ -101,6 +101,10 @@ When added to the existing test suite, it create an amplified test suite.
 This amplified test suite is better than the original test suite according to the test-criterion used during the amplification.
 For instance, one amplifies its test suite using branch coverage as test-criterion.
 This amplified test suite will execute more branches than the exiting test suite, \ie the one without amplified test methods.
+In \dspot there are for now 3 test-criterion available:
+1) keeping amplified test methods that increase the \ms;
+2) keeping amplified test methods that increase the instruction coverage;
+3) keeping amplified test methods that detect the behavioral difference between two versions of the same program.
 
 \autoref{fig:dspot:principle} shows graphically the principle of \dspot.
 
@@ -153,9 +157,12 @@ this phase consists in modifying test values (\eg literals), objects and methods
 The behavior of the system under test is considered as the oracle of the assertion, see \autoref{subsec:dspot:algorithm:new-assertions}.
 In \dspot, the combination of both techniques, \ie the combination of input space exploration and assertion improvement is called ``test amplification'';
 3) the amplified test methods selection according to a given test-criterion, \eg branch coverage.
-Eventually, \dspot either stops or continues to apply test amplification.
+Eventually, \dspot either stops or continues to apply test amplification, according to a pre-defined stop-criterion.
 By doing this, \dspot stacks the transformation of test methods.
 In other words, \dspot amplifies already amplified test methods, which is possible because \dspot's output are real test methods.
+
+In \dspot, the used stop-criterion is a number of iteration.
+However, one can imagine others kinds of stop-criterion such as a time budget, a test-criterion goal(\eg reach 50\% of \ms) or a finite number of amplified test methods.
 
 \subsection{Test method example}
 \label{subsec:dspot:overview:appliance-to-unit-test}
@@ -373,7 +380,7 @@ Then it applies $n$ times the following steps (Line 6):
 \label{subsec:dspot:algorithm:flaky-test-elimination}
 The input space exploration (see \autoref{subsec:dspot:algorithm:input-space-exploration}) may produce test inputs that results in non-deterministic executions.
 This means that, between two independent executions, the state of the program is not the same.
-Since \dspot generates assertions woper showed their interest in amplified test methods.here the expected value is a hard coded value from a specific run (see \autoref{subsec:dspot:algorithm:new-assertions}), the generated test case may become flaky: it passes or fails depending on the execution and whether the expected value is obtained or not.
+Since \dspot generates assertions where the expected value is a hard coded value from a specific run (see \autoref{subsec:dspot:algorithm:new-assertions}), the generated test case may become flaky: it passes or fails depending on the execution and whether the expected value is obtained or not.
 
 To avoid such flaky tests, \dspot run $f$ times each new test case resulting from amplification ($f$ = 3 in the default configuration). 
 If a test fails at least once, \dspot throws it away. 
