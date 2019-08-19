@@ -18,7 +18,7 @@
 \section{Study of Program Correctness}
 \label{sec:transversal-contributions:correctness}
 
-\subsection{Introduction}
+\subsection{Problem Statement}
 \label{subsec:transversal-contributions:correctness:introduction}
 
 Recalling that in \autoref{chap:introduction}, I mentioned a quote of Dijkstra:
@@ -197,7 +197,7 @@ To sum up, the main conclusions of the PONE experiment are:
 \end{itemize}
 \end{mdframed}
 
-\subsection{Conclusion}
+\subsection{Discussion}
 \label{subsec:transversal-contributions:correctness:conclusion}
 
 I have devised a protocol called \perturb to study the stability of programs under perturbation.
@@ -216,11 +216,11 @@ Second, in \perturb, I used perfect oracles.
 The problem they have been manually devised, and this could be approximated using the test suite.
 To strengthen it, one could amplifies its test suite with \dspot to have a better approximation of the perfect oracle and thus study deeper the correctness of its program.
 
-\section{Study of Pseudo-tested Methods with Extreme Mutations}
+\section{Study of Pseudo-tested Methods}
 \label{sec:transversal-contributions:descartes}
 
 
-\subsection{Introduction}
+\subsection{Problem Statement}
 \label{subsec:transversal-contributions:descartes:introduction}
 
 Niedermayr and colleagues \cite{niedermayr_will_2016} recently introduced the concept of \emph{\pseudotested{} methods}. 
@@ -389,7 +389,7 @@ In a sample of 101 \pseudotested{} methods, systematically analyzed by the lead 
 The developer decisions are based on a deep understanding of the application domain and design of the application. 
 This means that it is not reasonable to prescribe the absolute absence (zero) of \pseudotested{} methods.
 
-\subsection{Conclusion}
+\subsection{Discussion}
 \label{subsec:transversal-contributions:descartes:conclusion}
 
 To conclude, our replication confirms that all Java projects contain \pseudotested{} methods, even the very well tested ones, ranging from 1\% to 46\% in our dataset.
@@ -403,11 +403,11 @@ This technique shall kill two birds with one stone: improve the adequacy of the 
 Descartes has been integrated as default test-criterion in \dspot.
 It means that, \dspot amplifies the test suite in order to detect more extreme mutant and thus reduce the number of \pseudotested methods.
 
-\section{Test For Repair}
+\section{Study of Test Generation for Repair}
 \label{sec:transversal-contributions:test-for-repair}
 
 
-\subsection{Introduction}
+\subsection{Problem Statement}
 \label{subsec:transversal-contributions:test-for-repair:introduction}
 
 The first role of test suites is to verify that the program behaves as expected.
@@ -433,7 +433,7 @@ It makes use of automatic test case generation technique to obtain additional te
 
 The remainder of this section is organized as follows:
 
-\subsection{UnsatGuided: Alleviating the Overfitting Problem for Synthesis-based Repair Techniques}
+\subsection{UnsatGuided Technique}
 \label{subsec:transversal-contributions:test-for-repair:definitions}
 
 \subsubsection{Definitions}
@@ -560,7 +560,7 @@ Meanwhile, UnsatGuided worsens the overfitting issue of regression introduction 
 It can possibly happen as even though the repair constraint for input points within $I_{correct}$ has been somewhat strengthened (but not completely correct), yet the solution of the constraint happens to be more convoluted.
 Overall, with 16 positive versus 2 negative cases, UnsatGuided can be considered as effective in alleviating overfitting issue of regression introduction. 
 
-\subsection{Conclusion}
+\subsection{Discussion}
 \label{subsec:transversal-contributions:test-for-repair:conclusion}
 
 To sum up, UnsatGuided can effectively alleviate the overfitting issue of regression introduction (16/19 cases), but has minimal positive impact on reducing the overfitting issue of incomplete fixing.

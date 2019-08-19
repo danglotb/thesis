@@ -47,11 +47,75 @@ Which means that for developers that know very-well their software and their tes
 
 The remaining of this chapter is as follow:
 
-In \autoref{sec:intro:stamp} present the context of the thesis, the H2020 European project \emph{STAMP};
+I expose the global vision  of this thesis in \autoref{sec:intro:scientific-problem} and its outline in \autoref{sec:intro:contributions};
 
-Then, I expose the global vision  of this thesis in \autoref{sec:intro:vision} and its roadmap in \autoref{sec:intro:roadmap};
+Then in \autoref{sec:intro:stamp} present the context of the thesis, the H2020 European project \emph{STAMP};
 
 Eventually, I list the resulting software of this thesis in \autoref{sec:intro:software} and my publications in \autoref{sec:intro:publications}.
+
+\section{Scientific Problem}
+\label{sec:intro:scientific-problem}
+
+As this thesis is funded by STAMP, its ultimate goal is correlated to the one of STAMP.
+That is to say, this thesis aims at providing a set of tools to assist developers in the test suite evolution.
+In particular,  these tools apply test amplification to generate test methods.
+These amplified test methods achieve diverse goals, such as improving the overall quality of the test suite.
+
+The first objective is to improve the test suite ``offline'', \ie outside the continuous integration service.
+This aims at showing that the tool is effectively able to improve the test suite according to an engineering such as a measure of the test suite's quality.
+
+The second objective is to obtain test methods that are able to characterize a behavioral changes of the program.
+For example, in the context of collaborative project such as projects on \gh, one developer fixes a bug.
+If the developer does not provide a test method that exposes the bug fixing, \ie that fails on the version of the program before the fix but passes on the fixed program, the patch might be removed without noticing it.
+Every changes should come with a test method that characterizes and specifies the changes.
+For this second objective, the tool would improve the test suite ``online'', \ie inside the continuous integration service.
+Each time a developer makes changes, the tool would provide automatically a test method that specifies these changes inside the continuous integration, without any human intervention but the validation of the amplified test method.
+
+\section{Thesis Contributions}
+\label{sec:intro:contributions}
+
+\begin{figure}[h]
+	\centering
+	\fbox{\includegraphics[width=\linewidth]{roadmap.pdf}}
+	\caption{Thesis Contributions}
+	\label{fig:intro:roadmap}
+\end{figure}
+
+This thesis is divided into 6 chapters.
+
+First, \autoref{chap:sota} exposes the state of the art of test amplification.
+
+Then, \autoref{chap:dspot} gives the detail of the major technical contributions of this thesis: \dspot.
+
+\autoref{chap:test-improvement} and \autoref{chap:dci} relate two evaluations of \dspot on open-source projects from \gh.
+Each of these evaluations has their own characteristics, novelties and motivations.
+
+During my thesis, I developed a lot of skills that allowed me to participate to transversal contributions. 
+These contributions are related in \autoref{chap:transversal-contributions}.
+
+Eventually, I conclude and give the short- and long-term perspectives in \autoref{chap:conclusion}.
+
+\autoref{fig:intro:roadmap} summarizes the outline of these thesis.
+
+\section{Software and Impact On The Community}
+\label{sec:intro:software}
+
+During my thesis, I developed strong artifacts to evaluate the approaches.
+These artifacts are strong enough to be applicable on real code base such open-source projects from \gh or the STAMP partners' codebases.
+This show strong evidence on the applicability and generalization of the results.
+Following, the list of these artifacts and a small description.
+
+\begin{itemize}
+	\item[\dspot]\footnote{\url{https://github.com/STAMP-project/dspot.git}} is a test suite amplifier. 
+	It takes as input a project and its test suite and will produce test cases according to a test criterion adequacy such as branch coverage or mutation score. 
+	\item[DSpot-diff-test-selection]\footnote{\url{https://github.com/STAMP-project/dspot/tree/master/dspot-diff-test-selection}} is a maven plugin, based on OpenClover, that produces the list of test classes and their test methods that execute a provided diff.
+	\item[DSpot-prettifier]\footnote{\url{https://github.com/STAMP-project/dspot/tree/master/dspot-prettifier}} aims a make better good looking amplified test methods obtained with \dspot. 
+	It relies on several operations such as minimization, renaming local variables and test methods (based on code2vec)
+	\item [Test-runner]\footnote{\url{https://github.com/STAMP-project/test-runner}} is a library that allows developer to execute test in a new and clean JVM. 
+	\item[AssertFixer]\footnote{\url{https://github.com/STAMP-project/AssertFixer}} aims to fix the assertion in a test suite, using the program as specifications.
+\end{itemize}
+
+To maximize the artefacts' impact on the community, all of them are open-source and available on \gh.
 
 \section{STAMP-project}
 \label{sec:intro:stamp}
@@ -126,72 +190,6 @@ Debugging is a tedious task, and having a unit test method, automatically genera
 STAMP's final output would be micro-services that allow the developers to use STAMP's tools on their own project.
 STAMP envisions a web interface, on which the developers would be able to install, configure and execute the tools.
 Also, the developers would be able to manage the output of these executions and link them directly to their project, \eg integrate an amplified unit test into their test suite.
-
-\section{Thesis Vision}
-\label{sec:intro:vision}
-
-As this thesis is funded by STAMP, its ultimate goal is correlated to the one of STAMP.
-That is to say, this thesis aims at providing a set of tools to assist developers in the test suite evolution.
-In particular,  these tools apply test amplification to generate test methods.
-These amplified test methods achieve diverse goals, such as improving the overall quality of the test suite.
-
-The first objective is to improve the test suite ``offline'', \ie outside the continuous integration service.
-This aims at showing that the tool is effectively able to improve the test suite according to an engineering such as a measure of the test suite's quality.
-
-The second objective is to obtain test methods that are able to characterize a behavioral changes of the program.
-For example, in the context of collaborative project such as projects on \gh, one developer fixes a bug.
-If the developer does not provide a test method that exposes the bug fixing, \ie that fails on the version of the program before the fix but passes on the fixed program, the patch might be removed without noticing it.
-Every changes should come with a test method that characterizes and specifies the changes.
-For this second objective, the tool would improve the test suite ``online'', \ie inside the continuous integration service.
-Each time a developer makes changes, the tool would provide automatically a test method that specifies these changes inside the continuous integration, without any human intervention but the validation of the amplified test method.
-
-\section{Thesis Roadmap}
-\label{sec:intro:roadmap}
-
-\begin{figure}[h]
-	\centering
-	\fbox{\includegraphics[width=\linewidth]{roadmap.pdf}}
-	\caption{Dissertation Roadmap}
-	\label{fig:intro:roadmap}
-\end{figure}
-
-This thesis is divided into 6 chapters.
-
-First, \autoref{chap:sota} exposes the state of the art of test amplification.
-
-Then, \autoref{chap:dspot} gives the detail of the major technical contributions of this thesis: \dspot.
-
-\autoref{chap:test-improvement} and \autoref{chap:dci} relate two evaluations of \dspot on open-source projects from \gh.
-Each of these evaluations has their own characteristics, novelties and motivations.
-
-During my thesis, I developed a lot of skills that allowed me to participate to transversal contributions. 
-These contributions are related in \autoref{chap:transversal-contributions}.
-
-Eventually, I conclude and give the short- and long-term perspectives in \autoref{chap:conclusion}.
-
-\autoref{fig:intro:roadmap} summarizes the roadmap.
-
-\section{Software and Impact On The Community}
-\label{sec:intro:software}
-
-During my thesis, I developed strong artifacts to evaluate the approaches.
-These artifacts are strong enough to be applicable on real code base such open-source projects from \gh or the STAMP partners' codebases.
-This show strong evidence on the applicability and generalization of the results.
-Following, the list of these artifacts and a small description.
-
-\begin{itemize}
-	\item[\dspot]\footnote{\url{https://github.com/STAMP-project/dspot.git}} is a test suite amplifier. 
-	It takes as input a project and its test suite and will produce test cases according to a test criterion adequacy such as branch coverage or mutation score. 
-	\item[DSpot-diff-test-selection]\footnote{\url{https://github.com/STAMP-project/dspot/tree/master/dspot-diff-test-selection}} is a maven plugin, based on OpenClover, that produces the list of test classes and their test methods that execute a provided diff.
-	\item[DSpot-prettifier]\footnote{\url{https://github.com/STAMP-project/dspot/tree/master/dspot-prettifier}} aims a make better good looking amplified test methods obtained with \dspot. 
-	It relies on several operations such as minimization, renaming local variables and test methods (based on code2vec)
-	\item [Test-runner]\footnote{\url{https://github.com/STAMP-project/test-runner}} is a library that allows developer to execute test in a new and clean JVM. 
-	\item[AssertFixer]\footnote{\url{https://github.com/STAMP-project/AssertFixer}} aims to fix the assertion in a test suite, using the program as specifications.
-\end{itemize}
-
-To maximize the artefacts' impact on the community, all of them are open-source and available on \gh.
-
-\clearpage
 
 \section{Publications}
 \label{sec:intro:publications}

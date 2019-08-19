@@ -29,15 +29,6 @@
 
 \minitoc
 
-% -----------------------
-%  Introduction
-% -----------------------
-\section{Introduction}
-\label{sec:dci:introduction}
-
-% intro CI
-\subsection{Collaborative software development} 
-\label{subsec:dci:introduction:collaborative-software-development}
 In collaborative software projects, developers work in parallel on the same code base. 
 Every time a developer integrates her changes, she submits them in the form of a \emph{commit} to a version control system.
 The \emph{Continuous Integration} (CI) server~\cite{fowler2006continuous} merges the commit with the master branch, compiles and automatically runs the test suite to check that the commit behaves as expected.
@@ -50,9 +41,6 @@ This can be mechanically verified: $t_{new}$ should fail on the version of the c
 However, many commits either do not include a $t_{new}$ or $t_{new}$ does not meet this fail/pass criterion.
 The reason is that developers sometimes cut corners because of lack of time, expertise or discipline. 
 This is the problem addressed in this chapter.
-
-\subsection{Goal}
-\label{subsec:dci:introduction:goal}
 
 The goal is to automatically generate test methods for each commit that is submitted to the CI.
 In particular, a test method $t_{gen}$ that specifies the behavioral change of each commit.
