@@ -126,7 +126,7 @@ In \autoref{alg:systexplor}, $R_{ref}[,i]$ denotes column $i$ of matrix $R_{ref}
 The statement \emph{runWithoutPerturbation(prog, i)} returns a column vector which is assigned to the $i\thb$ column of matrix $R_{ref}$; each element is one perturbation point: it contains the number of times each perturbation point is executed in the program \emph{prog} for each input \emph{i}. 
 On the other hand, the statement \emph{runWithPerturbationAt(prog, model, i, pp, j)} runs the program \emph{prog} while using the perturbation model \emph{model}, the perturbation point \emph{pp} at its $j\thb$ execution for the given input \emph{i}.
 
-\subsection{Experimentation}
+\subsection{Evaluation}
 \label{subsec:transversal-contributions:correctness:experimentation}
 
 The experimentation with a dataset of 10 programs. 
@@ -202,7 +202,7 @@ To sum up, the main conclusions of the PONE experiment are:
 
 I have devised a protocol called \perturb to study the stability of programs under perturbation.
 \perturb exhaustively explores the perturbation space of a given program for a set of inputs according to a perturbation model.
-An experimentation have been conducted on 10 subjects using the PONE perturbation models.
+An experimentation have been conducted on 10 subjects using the PONE perturbation model.
 In total, 2509012 perturbed executions have been performed and studied, which makes it one of the largest perturbation experiments ever made.
 From this experimentation, the presence of ``correctness attraction'' has been observed. Over all perturbed execution, 66\% of them do not break the correctness of the output. 
 
@@ -393,12 +393,11 @@ This means that it is not reasonable to prescribe the absolute absence (zero) of
 \label{subsec:transversal-contributions:descartes:conclusion}
 
 To conclude, our replication confirms that all Java projects contain \pseudotested{} methods, even the very well tested ones, ranging from 1\% to 46\% in our dataset.
-Developers of 3 projects consider that 30\% methods were considered worth of additional testing actions
+Developers of 3 projects consider that 30\% methods were considered worth of additional testing actions.
 
 In the light of these conclusions, the immediate next step in our research agenda is to investigate an automatic test improvement technique targeted towards \pseudotested{} methods.
 This technique shall kill two birds with one stone: improve the adequacy of the test suite for \pseudotested{} methods; 
 let the developers focus their efforts on core features and relieve them from the test improvement task.
-This technique shall kill two birds with one stone: improve the adequacy of the test suite for \pseudotested{} methods; let the developers focus their efforts on core features and relieve them from the test improvement task.
 
 Descartes has been integrated as default test-criterion in \dspot.
 It means that, \dspot amplifies the test suite in order to detect more extreme mutant and thus reduce the number of \pseudotested methods.

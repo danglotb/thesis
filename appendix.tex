@@ -1,0 +1,67 @@
+\chapter{DSpot web interface}
+
+\begin{figure}
+	\centering
+	\fbox{\includegraphics[width=0.9\textwidth]{dspot-web-1.png}}
+	\caption{Screenshot of the web interface for \dspot.}
+	\label{fig:dspot-web}
+\end{figure}
+
+\begin{lstlisting}[label=verbatim-example-report-dspot-web, caption=Example of report provided by dspot web interface.]
+Here is your amplified tests 
+
+MainTest.java:
+--CONTENT--START-- 
+package fr.inria.stamp;
+
+
+import fr.inria.stamp.tavern.Item;
+import fr.inria.stamp.tavern.Player;
+import fr.inria.stamp.tavern.Seller;
+import java.util.Collection;
+import java.util.Collections;
+import org.junit.Assert;
+import org.junit.Test;
+
+
+public class MainTest {
+@Test(timeout = 10000)
+public void test() throws Exception {
+Seller seller = new Seller(100, Collections.singletonList(new Item("Potion", 5)));
+Assert.assertFalse(((Collection) (((Seller) (seller)).getItems())).isEmpty());
+Assert.assertEquals(100, ((int) (((Seller) (seller)).getGold())));
+Player player = new Player("Timoleon", 1000);
+Assert.assertTrue(((Collection) (((Player) (player)).getItems())).isEmpty());
+Assert.assertEquals(1000, ((int) (((Player) (player)).getGold())));
+Assert.assertEquals("Timoleon", ((Player) (player)).getName());
+int o_test__7 = player.getGold();
+Assert.assertEquals(1000, ((int) (o_test__7)));
+int o_test__8 = player.getItems().size();
+Assert.assertEquals(0, ((int) (o_test__8)));
+int o_test__10 = seller.getGold();
+Assert.assertEquals(100, ((int) (o_test__10)));
+player.buyItem("Potion", seller);
+int o_test__12 = player.getGold();
+Assert.assertEquals(995, ((int) (o_test__12)));
+int o_test__13 = player.getItems().size();
+Assert.assertEquals(1, ((int) (o_test__13)));
+int o_test__15 = seller.getGold();
+Assert.assertEquals(105, ((int) (o_test__15)));
+Assert.assertFalse(((Collection) (((Seller) (seller)).getItems())).isEmpty());
+Assert.assertEquals(105, ((int) (((Seller) (seller)).getGold())));
+Assert.assertFalse(((Collection) (((Player) (player)).getItems())).isEmpty());
+Assert.assertEquals(995, ((int) (((Player) (player)).getGold())));
+Assert.assertEquals("Timoleon", ((Player) (player)).getName());
+Assert.assertEquals(1000, ((int) (o_test__7)));
+Assert.assertEquals(0, ((int) (o_test__8)));
+Assert.assertEquals(100, ((int) (o_test__10)));
+Assert.assertEquals(995, ((int) (o_test__12)));
+Assert.assertEquals(1, ((int) (o_test__13)));
+}
+}
+
+
+--CONTENT--END--
+
+--STAMP/Dspot
+\end{lstlisting}
