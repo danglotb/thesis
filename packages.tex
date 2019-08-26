@@ -369,3 +369,17 @@ urlcolor=linkcol %couleur des liens pour les url
 \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
 
 \newcommand{\dspotprettifier}{DSpot-prettifier\xspace}
+
+\newcommand{\lstbg}[3][0pt]{{\fboxsep#1\colorbox{#2}{\strut #3}}}
+\lstdefinelanguage{diff}{
+	basicstyle=\scriptsize,
+	morecomment=[f][\lstbg{red!20}]-,
+	morecomment=[f][\lstbg{green!20}]+,
+	morecomment=[f][\textit]{@@},
+	breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+	breaklines=true,                 % sets automatic line breaking
+	showtabs=false,                  % show tabs within strings adding particular underscores
+	tabsize=1                       % sets default tabsize to 2 spaces
+	%morecomment=[f][\textit]{---},
+	%morecomment=[f][\textit]{+++},
+} 

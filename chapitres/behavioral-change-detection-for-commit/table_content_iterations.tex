@@ -6,8 +6,8 @@ $it=2$&
 Time&
 $it=3$&
 Time\\
-\hline
-\multirow{11}{*}{\rotvertical{commons-io}}
+\midrule
+\multirow{11}{*}{\rotverticalinv{commons-io}}
 &  c6b8a38  &  0 &  25.0s  &  0  &  62.0s  &  0  &  98.0s\\
 &  2736b6f  &  \cmark(1) &  26.1m  &  \cmark(2)  &  44.2m  &  \cmark(12)  &  76.3m\\
 &  a4705cc  &  0 &  4.1m  &  0  &  21.1m  &  0  &  38.1m\\
@@ -18,12 +18,14 @@ Time\\
 &  81210eb  &  \cmark(2) &  14.0s  &  \cmark(4)  &  18.0s  &  \cmark(8)  &  23.0s\\
 &  57f493a  &  0 &  20.0s  &  0  &  32.0s  &  0  &  54.0s\\
 &  5d072ef  &  \cmark(461) &  32.2m  &  \cmark(1014)  &  65.5m  &  \cmark(1538)  &  2.2h\\
-\hline
+\midrule
 \rowcolor[HTML]{EFEFEF}
-&  total  &  47.70 &  avg(12.3m)  &  105.80  &  avg(24.0m)  &  160.80  &  avg(38.8m)\\
-\hline
-\multirow{11}{*}{\rotvertical{commons-lang}}
-&  f56931c  &  0 &  0.0s  &  \cmark(6)  &  9.8h  &  \cmark(0)  &  8.3m\\
+&  total  &  477 &  2.0h  &  1058  &  4.0h  &  1608  &  6.5h\\
+\midrule
+&  average  &  47.70 &  12.3m  &  105.80  &  24.0m  &  160.80  &  38.8m\\
+\midrule
+\multirow{11}{*}{\rotverticalinv{commons-lang}}
+&  f56931c  &  0 &  0.0s  &  0  &  3.7m  &  0  &  8.5m\\
 &  87937b2  &  0 &  3.5m  &  0  &  10.5m  &  0  &  18.1m\\
 &  09ef69c  &  0 &  97.0s  &  0  &  21.0m  &  0  &  98.8m\\
 &  3fadfdd  &  \cmark(1) &  2.0m  &  \cmark(1)  &  9.3m  &  \cmark(4)  &  17.2m\\
@@ -33,11 +35,13 @@ Time\\
 &  c8e61af  &  0 &  16.0s  &  0  &  16.0s  &  0  &  16.0s\\
 &  d8ec011  &  0 &  36.0s  &  0  &  68.0s  &  0  &  2.3m\\
 &  7d061e3  &  0 &  79.0s  &  0  &  5.8m  &  0  &  11.4m\\
-\hline
+\midrule
 \rowcolor[HTML]{EFEFEF}
-&  total  &  6.50 &  avg(2.3m)  &  10.60  &  avg(68.2m)  &  14.10  &  avg(24.0m)\\
-\hline
-\multirow{11}{*}{\rotvertical{gson}}
+&  total  &  65 &  23.3m  &  100  &  96.4m  &  141  &  4.0h\\
+\midrule
+&  average  &  6.50 &  2.3m  &  10.00  &  9.6m  &  14.10  &  24.0m\\
+\midrule
+\multirow{11}{*}{\rotverticalinv{gson}}
 &  b1fb9ca  &  0 &  14.6m  &  0  &  51.0m  &  0  &  92.5m\\
 &  7a9fd59  &  \cmark(7) &  33.0s  &  \cmark(48)  &  73.0s  &  \cmark(108)  &  2.1m\\
 &  03a72e7  &  0 &  30.2m  &  0  &  102.3m  &  0  &  3.2h\\
@@ -48,11 +52,13 @@ Time\\
 &  9e6f2ba  &  0 &  79.0s  &  0  &  4.5m  &  \cmark(2)  &  8.5m\\
 &  44cad04  &  \cmark(4) &  21.0s  &  \cmark(21)  &  30.0s  &  \cmark(37)  &  40.0s\\
 &  b2c00a3  &  0 &  31.5m  &  0  &  111.8m  &  0  &  3.6h\\
-\hline
+\midrule
 \rowcolor[HTML]{EFEFEF}
-&  total  &  1.10 &  avg(13.6m)  &  7.30  &  avg(46.0m)  &  15.30  &  avg(86.5m)\\
-\hline
-\multirow{11}{*}{\rotvertical{jsoup}}
+&  total  &  11 &  2.3h  &  73  &  7.7h  &  153  &  14.4h\\
+\midrule
+&  average  &  1.10 &  13.6m  &  7.30  &  46.0m  &  15.30  &  86.5m\\
+\midrule
+\multirow{11}{*}{\rotverticalinv{jsoup}}
 &  426ffe7  &  \cmark(126) &  5.4m  &  \cmark(172)  &  19.2m  &  \cmark(198)  &  33.6m\\
 &  a810d2e  &  0 &  90.0s  &  0  &  13.9m  &  0  &  26.6m\\
 &  6be19a6  &  0 &  8.1m  &  0  &  39.7m  &  0  &  67.7m\\
@@ -63,11 +69,13 @@ Time\\
 &  e5210d1  &  0 &  45.0s  &  0  &  2.3m  &  0  &  4.9m\\
 &  df272b7  &  0 &  43.0s  &  0  &  2.2m  &  0  &  4.6m\\
 &  3676b13  &  \cmark(6) &  21.4m  &  \cmark(35)  &  2.9h  &  \cmark(52)  &  6.8h\\
-\hline
+\midrule
 \rowcolor[HTML]{EFEFEF}
-&  total  &  13.30 &  avg(19.4m)  &  21.40  &  avg(69.8m)  &  28.60  &  avg(2.6h)\\
-\hline
-\multirow{11}{*}{\rotvertical{mustache.java}}
+&  total  &  133 &  3.2h  &  214  &  11.6h  &  286  &  25.8h\\
+\midrule
+&  average  &  13.30 &  19.4m  &  21.40  &  69.8m  &  28.60  &  2.6h\\
+\midrule
+\multirow{11}{*}{\rotverticalinv{mustache.java}}
 &  a1197f7  &  \cmark(28) &  5.9h  &  \cmark(124)  &  8.4h  &  \cmark(204)  &  10.1h\\
 &  8877027  &  0 &  30.5m  &  0  &  58.4m  &  0  &  100.2m\\
 &  d8936b4  &  0 &  3.2m  &  0  &  4.8m  &  0  &  84.2m\\
@@ -78,11 +86,13 @@ Time\\
 &  eca08ca  &  0 &  8.1m  &  0  &  24.3m  &  0  &  41.8m\\
 &  6d7225c  &  0 &  7.9m  &  0  &  26.8m  &  0  &  40.1m\\
 &  8ac71b7  &  \cmark(2) &  2.7m  &  \cmark(48)  &  3.8m  &  \cmark(124)  &  5.6m\\
-\hline
+\midrule
 \rowcolor[HTML]{EFEFEF}
-&  total  &  32.60 &  avg(84.3m)  &  160.10  &  avg(2.5h)  &  442.20  &  avg(4.2h)\\
-\hline
-\multirow{11}{*}{\rotvertical{xwiki-commons}}
+&  total  &  326 &  14.0h  &  1601  &  25.0h  &  4422  &  42.0h\\
+\midrule
+&  average  &  32.60 &  84.3m  &  160.10  &  2.5h  &  442.20  &  4.2h\\
+\midrule
+\multirow{11}{*}{\rotverticalinv{xwiki-commons}}
 &  ffc3997  &  0 &  19.0s  &  0  &  18.0s  &  0  &  18.0s\\
 &  ced2635  &  0 &  8.0m  &  0  &  31.8m  &  0  &  2.5h\\
 &  10841b1  &  0 &  56.2m  &  0  &  2.9h  &  0  &  3.4h\\
@@ -93,10 +103,12 @@ Time\\
 &  78ff099  &  \cmark(4) &  2.6m  &  \cmark(4)  &  4.6m  &  \cmark(4)  &  6.6m\\
 &  1b79714  &  0 &  4.0m  &  0  &  10.7m  &  0  &  17.9m\\
 &  6dc9059  &  0 &  4.0m  &  0  &  10.8m  &  0  &  20.5m\\
-\hline
+\midrule
 \rowcolor[HTML]{EFEFEF}
-&  total  &  4.50 &  avg(10.3m)  &  9.00  &  avg(29.7m)  &  9.80  &  avg(49.5m)\\
-\hline
-\hline
-&  total  &  22(18.12) &  avg(23.7m)  &  23(53.47)  &  avg(64.7m)  &  25(114.76)  &  avg(100.9m)\\
-\hline
+&  total  &  45 &  102.8m  &  90  &  4.9h  &  98  &  8.2h\\
+\midrule
+&  average  &  4.50 &  10.3m  &  9.00  &  29.7m  &  9.80  &  49.5m\\
+\midrule
+\midrule
+&  total  &  23(1057) &  23.7h  &  24(3136)  &  54.9h  &  25(6708)  &  100.9h\\
+\bottomrule
