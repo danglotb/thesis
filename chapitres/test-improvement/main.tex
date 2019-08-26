@@ -304,25 +304,28 @@ The fifth column is the number of pull requests that are still being discussed, 
 Note that these numbers might change over time if pull-requests are merged or closed.
 
 \begin{table}[h]
-	\centering
-	\caption{Overall result of the opened pull request built from result of \dspot.}
-	\begin{tabular}{l|cccc}
-		project & \# opened & \# merged & \# closed & \begin{tabular}{cc} \# under \\ discussion \end{tabular}\\
-		\hline
-		javapoet & 4 & 4 & 0 & 0\\
-		mybatis-3 & 2 & 2 & 0 & 0\\
-		traccar & 2 & 1 & 0 & 1\\
-		stream-lib & 1 & 1 & 0 & 0\\
-		mustache & 2 & 2 & 0 & 0\\
-		twilio & 2 & 1 & 0 & 1\\
-		jsoup & 2 & 1 & 1 & 0\\
-		prostostuff & 2 & 2 & 0 & 0\\
-		logback & 2 & 0 & 0 & 2\\
-		retrofit & 0 & 0 & 0 & 0\\
-		\hline
-		total & 19 & 14 & 1 & 4
-	\end{tabular}
 	\label{tab:res-pr}
+	\centering
+    \rowcolors{2}{white}{gray!25}
+	\caption{Overall result of the opened pull request built from result of \dspot.}
+		\begin{tabular}{lcccc}
+			\toprule
+			Project & \# opened & \# merged & \# closed & \begin{tabular}{cc} \# under \\ discussion \end{tabular}\\
+			\midrule
+			javapoet & 4 & 4 & 0 & 0\\
+			mybatis-3 & 2 & 2 & 0 & 0\\
+			traccar & 2 & 1 & 0 & 1\\
+			stream-lib & 1 & 1 & 0 & 0\\
+			mustache & 2 & 2 & 0 & 0\\
+			twilio & 2 & 1 & 0 & 1\\
+			jsoup & 2 & 1 & 1 & 0\\
+			prostostuff & 2 & 2 & 0 & 0\\
+			logback & 2 & 0 & 0 & 2\\
+			retrofit & 0 & 0 & 0 & 0\\
+			\midrule
+			total & 19 & 14 & 1 & 4\\
+			\bottomrule
+		\end{tabular}
 \end{table}
 
 \input{chapitres/test-improvement/table_list_prs}
@@ -551,23 +554,27 @@ For the latter point, this puts in evidence the technical challenge of amplifyin
 \subsubsection{Contributions of \Aampl and \Iampl to the Pull-requests}
 
 \begin{table}[]
+    \rowcolors{2}{white}{gray!25}
 	\caption{Contributions of \Aampl and \Iampl on the amplified test method used to create a pull request.}
 	\label{tab:contrib-a-i-ampl}
-	\centering\begin{tabular}{lcc}
-		\hline
-		Project & \#\Aampl &  \#\Iampl \\
-		\hline
-		javapoet & 2 & 2 \\
-		mybatis-3 & 3 & 3 \\
-		traccar & 10 & 7 \\
-		stream-lib & 2 & 2 \\
-		mustache & 4 & 3 \\
-		twilio & 3 & 4 \\
-		jsoup & 34 & 0 \\
-		protostuff & 1 & 1 \\
-		logback & 2 & 2 \\
-		\hline
-	\end{tabular}
+	\centering
+    \begin{adjustbox}{max width=\textwidth,center=\textwidth}
+		\begin{tabular}{lcc}
+			\toprule
+			Project & \#\Aampl &  \#\Iampl \\
+			\midrule
+			javapoet & 2 & 2 \\
+			mybatis-3 & 3 & 3 \\
+			traccar & 10 & 7 \\
+			stream-lib & 2 & 2 \\
+			mustache & 4 & 3 \\
+			twilio & 3 & 4 \\
+			jsoup & 34 & 0 \\
+			protostuff & 1 & 1 \\
+			logback & 2 & 2 \\
+			\bottomrule
+		\end{tabular}
+	\end{adjustbox}
 \end{table}
 
 \autoref{tab:contrib-a-i-ampl} summarizes the contribution of \Aampl and \Iampl, where a contribution means an source code modification added during the main amplification loop. 
@@ -581,8 +588,6 @@ Note that this does not contradict with the fact that the pull requests are one-
 Most one-liner pull requests contain both a new assertion and a new input. Consider the following Javapoet's one liner \texttt{assertFalse(x.equals(null))} (javapoet). 
 In this example, although there is a single line starting with ``assert'', there is indeed a new input, the value ``null''.
 
-~\\
-~\\
 \begin{mdframed}
 	\textit{\rqpullrequest: Would developers be ready to permanently accept improved test cases into the test repository?}\\
 	Answer: 19 test improvements have been proposed to developers of notable open-source projects. 

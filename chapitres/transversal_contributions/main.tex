@@ -157,13 +157,15 @@ An experimentation as been also performed using MONE, however, the results are n
 For more information, see the dedicated article.\cite{Danglot2018}
 
 \begin{table}[h]
-	\caption{PONE Results. The correctness ratio may not correspond directly to the number of Antifragile and Robust expressions because it is computed over all executions. Some points are executed much more than others, as explained in \autoref{subsec:realization}.}
+	\caption{PONE Results. The correctness ratio may not correspond directly to the number of Antifragile and Robust expressions because it is computed over all executions.}
 	\label{tab:results-PONE}
+	\rowcolors{2}{white}{gray!25}
 	\def\arraystretch{0.55}%  1 is the default, change whatever you need
 	\setlength\tabcolsep{0.45pt} % default value: 6pt
 	\centering\begin{tabular}{lllllll}
+		\toprule
 		Subject & $N^{int}_{pp}$ & |Search space| & \# Fragile exp. & \#Robust exp.& \# Antifragile exp. & Correctness ratio\\
-		\hline
+		\midrule
 		quicksort&41&151444&6&10&19&\textendash\textendash\textendash\textendash\textendash\textendash\textendash { }  77 \%\\
 		zip&19&38840&5&2&5&\textendash\textendash\textendash\textendash\textendash\textendash\textendash { }  76 \%\\
 		sudoku&89&98211&12&27&8&\textendash\textendash\textendash\textendash\textendash\textendash { }  68 \%\\
@@ -174,7 +176,8 @@ For more information, see the dedicated article.\cite{Danglot2018}
 		lcs&79&231786&10&47&13&\textendash\textendash\textendash\textendash\textendash\textendash\textendash\textendash { }  89 \%\\
 		laguerre&72&423454&15&24&15&\textendash\textendash\textendash\textendash\textendash\textendash\textendash\textendash\textendash { }  90 \%\\
 		linreg&75&543720&43&18&11&\textendash\textendash\textendash\textendash { }  47 \%\\
-		total & 1221&2509012&366&296&255&\textendash\textendash\textendash\textendash\textendash\textendash { }  66 \%
+		total & 1221&2509012&366&296&255&\textendash\textendash\textendash\textendash\textendash\textendash { }  66 \%\\
+		\bottomrule
 	\end{tabular}
 \end{table}
 
@@ -317,10 +320,11 @@ We analyzed each study subject following the procedure described in Section \ref
 	\label{tab:testedclass}
 	\def\arraystretch{1}%  1 is the default, change whatever you need
 	\setlength\tabcolsep{1.2pt} % default value: 6pt
-	\begin{tabular}{rrrrrrr}
-			\hline
+    \rowcolors{2}{white}{gray!25}
+	\begin{tabular}{lrrrrrr}
+			\toprule
 			Project & {\#Methods} & {\#Covered} & C\_RATE & {\#MUA} & {\#PSEUDO}  & PS\_RATE  \\
-			\hline
+			\midrule
 			\texttt{authzforce}          &    697 &  325 & 47\% &  291 &   13 &  4\% \\  
 			\texttt{aws-sdk-java}        & 177449 & 2314 &  1\% & 1800 &  224 & 12\% \\
 			\texttt{commons-cli}         &    237 &  181 & 76\% &  141 &    2 &  1\% \\  
@@ -342,9 +346,9 @@ We analyzed each study subject following the procedure described in Section \ref
 			\texttt{spoon}               &   4470 & 2976 & 67\% & 2938 &  213 &  7\% \\  
 			\texttt{urbanairship}        &   2933 & 2140 & 73\% & 1989 &   28 &  1\% \\  
 			\texttt{xwiki-rendering}     &   5002 & 2232 & 45\% & 2049 &  239 & 12\% \\
-			\hline
+			\midrule
 			Total               & 234923 & 32650 & 14\% & 28808 & 2540 & 9\% \\
-			\hline
+			\bottomrule
 	\end{tabular}
 \end{table}
 
@@ -372,6 +376,7 @@ Table \ref{tab:todevelopers} shows the projects involved, footnotes with links t
 	\caption{The \pseudotested{} methods systematically analyzed by the lead developers, through a video call.}
 	\label{tab:todevelopers}
 	\centering
+    \rowcolors{2}{white}{gray!25}
 	\begin{tabular}{lrrrrrr}
 		\toprule
 		Project             & Sample size & Worth & Percentage  & Time spent (HH:MM)  \\
@@ -533,9 +538,7 @@ The ``Yes'' and ``No'' for this column mean that the original Nopol patch has an
 The digit number in parentheses shows the number of normal tests on which the original Nopol patch fails. 
 Finally, the column \emph{correctness} shows whether the original Nopol patch is correct, with ``Yes'' representing correct and ``No'' representing incorrect.
 
-\begin{landscape}
-	\input{tab-result-nopol2.tex}
-\end{landscape}
+\input{tab-result-nopol2.tex}
 
 This study aims to assess the effectiveness of UnsatGuided. 
 It can be seen from the column \emph{Change ratio (\#unique)} of \autoref{tab:nopol-results} that for the 42 buggy versions that can be initially repaired by Nopol, the patches generated for 34 buggy versions have been changed at least for one seed after running Nopol+UnsatGuided. 

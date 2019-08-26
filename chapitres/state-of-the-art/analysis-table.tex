@@ -1,11 +1,10 @@
-
     \begin{table*}
-        \caption{List of papers included in this snowballing survey. The columns correspond to the article categorization, the engineering goals, techniques employed, the programming language of the systems under test and the publication details. The last column shows the iteration the paper was included in our study.}
-        
+    	\centering
+        \caption{List of papers included in this snowballing survey.} %The columns correspond to the article categorization, the engineering goals, techniques employed, the programming language of the systems under test and the publication details. The last column shows the iteration the paper was included in our study.
         \label{tab:summary}
         \begin{adjustbox}{max width=\textwidth,center=\textwidth}
-        \rowcolors{2}{gray!25}{white}
-         \begin{tabular}{l|l|llll|llllll|llllll|l|llll|l}
+        \rowcolors{2}{white}{gray!25}
+       	\begin{tabular}{llllllllllllllllllllllll}
             \toprule
             \vertical{Reference}
             & Term used 
@@ -38,8 +37,6 @@
             \cite{Pacheco2005}                              & generation                        & \X &    &    &    &    &    & \X &    &    &    & \X &    &    &    &    &    & Java        & ECOOP                                                    & 2005 & Pacheco        & 1 \\
             \cite{Baudry:2006:ITS:1134285.1134299}          & optimization                      & \X &    &    &    &    &    &    & \X &    &    & \X &    &    &    &    &    & Java        & ICSE                                                     & 2006 & Baudry         & 4 \\
             \cite{tillmann2006unit}                         & generation                        & \X &    &    & \X & \X &    &    &    &    &    & \X &    &    &    & \X &    & Spec\#      & IEEE Software                                            & 2006 & Tillmann       & 5 \\
-          % \cite{smith2009guiding}                         & augmentation                      & \X &    &    &    & \X &    &    &    &    &    & \X &    &    &    &    &    & Java        & EmSE                                                     & 2009 & Smith          & \\
-          % \cite{smith2009should}                          & augmentation                      & \X &    &    &    & \X &    &    &    &    &    & \X &    &    &    &    &    & Java        & JSS                                                      & 2009 & Smith          & \\
             \cite{marri2010retrofitting}                    & generalization                    & \X &    &    & \X & \X &    &    &    &    &    & \X &    &    &    & \X &    & C\#         & FASE                                                     & 2011 & Thummalapenta  & 5 \\
             \cite{fraser2011generating}                     & generation                        & \X &    &    &    &    &    & \X &    &    &    & \X & \X &    &    &    &    & Java        & ISSTA                                                    & 2011 & Fraser         & 6 \\
             \cite{robetaler2012isolating}                   & generation                        & \X &    &    &    &    &    &    & \X &    &    & \X &    &    &    &    &    & Java        & ISSTA                                                    & 2012 & Ropler         & 5 \\
@@ -82,7 +79,7 @@
             \cite{Carzaniga:2014:COI:2568225.2568287}       & cross-checking                    &    &    &    & \X &    &    &    &    &    & \X &    &    & \X &    &    &    & Java        & ICSE                                                     & 2014 & Carzaniga      & 6 \\
             \cite{xuan2014test}                             & purification                      &    &    &    & \X &    &    &    & \X &    &    & \X &    &    &    &    &    & Java        & FSE                                                      & 2014 & Xuan           & 5 \\
             \cite{xuan:hal-01309004}                        & \stack{purification}{refactoring} &    &    &    & \X &    &    &    &    & \X &    & \X &    &    &    &    &    & Java        & IST                                                      & 2016 & Xuan           & 1\\
-            \midrule
+            \bottomrule
         \end{tabular}
     \end{adjustbox}
     \end{table*}

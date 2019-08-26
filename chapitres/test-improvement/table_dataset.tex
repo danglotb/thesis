@@ -1,13 +1,16 @@
 	\begin{table}[ht]
-		
+		\caption{Dataset of 10 active \gh projects considered for experiments.}
+		\label{tab:dataset}
 		\scriptsize
-		\begin{tabular}{l|l|r|r|l}
-			\label{tab:dataset}
-			project & 
-			description &
-			\# LOC & \# PR &considered test classes\\
-			\hline
-			\rowcolor[HTML]{EEEEEE}
+		\def\arraystretch{0.5}
+		\setlength\tabcolsep{2pt}
+        \rowcolors{2}{white}{gray!25}
+		\begin{tabular}{llrrl}
+			\toprule
+			Project & 
+			Description &
+			\# LOC & \# PR &Considered test classes\\
+			\midrule
 			javapoet & Java source file generator & 
 			3150 & 93 &
 			\begin{tabular}{@{}l@{}}
@@ -18,7 +21,6 @@
 			\begin{tabular}{@{}l@{}}
 				MetaClassTest$^h$~~ParameterExpressionTest$^h$\\WrongNamespacesTest$^l$~~WrongMapperTest$^l$
 			\end{tabular}\\
-			\rowcolor[HTML]{EEEEEE}
 			traccar & Server for GPS tracking devices &
 			32648 & 373 &
 			\begin{tabular}{@{}l@{}}
@@ -29,18 +31,16 @@
 			\begin{tabular}{@{}l@{}}
 				TestLookup3Hash$^h$~~TestDoublyLinkedList$^h$\\TestICardinality$^l$~~TestMurmurHash$^l$
 			\end{tabular}\\
-			\rowcolor[HTML]{EEEEEE}
 			mustache.java & Web application templating system &
 			3166 & 11 &
 			\begin{tabular}{@{}l@{}}
 				ArraysIndexesTest$^h$~~ClasspathResolverTest$^h$\\ConcurrencyTest$^l$~~AbstractClassTest$^l$
 			\end{tabular}\\
-			twilio-java & Library for communicating with Twilio REST API &
+			twilio-java & Library for communicating REST API &
 			54423 & 87 &
 			\begin{tabular}{@{}l@{}}
 				RequestTest$^h$~~PrefixedCollapsibleMapTest$^h$\\AllTimeTest$^l$~~DailyTest$^l$
 			\end{tabular}\\
-			\rowcolor[HTML]{EEEEEE}
 			jsoup & HTML parser &
 			10925 & 72 &
 			\begin{tabular}{@{}l@{}}
@@ -51,7 +51,6 @@
 			\begin{tabular}{@{}l@{}}
 				TailDelimiterTest$^h$~~LinkBufferTest$^h$\\CodedDataInputTest$^l$~~CodedInputTest$^h$
 			\end{tabular}\\
-			\rowcolor[HTML]{EEEEEE}
 			logback & Logging framework &
 			15490 & 104 &
 			\begin{tabular}{@{}l@{}}
@@ -62,6 +61,6 @@
 			\begin{tabular}{@{}l@{}}
 				RequestBuilderAndroidTest$^h$~~CallAdapterTest$^h$\\ExecutorCallAdapterFactoryTest$^h$~~CallTest$^h$
 			\end{tabular}\\
+		\bottomrule
 		\end{tabular}
-		\caption{Dataset of 10 active \gh projects considered on our relevance study (RQ1) and quantitative experiments (RQ2, RQ3).}
 	\end{table}

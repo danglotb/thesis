@@ -215,25 +215,40 @@ Since \dspot needs to execute multiple times the tests under amplification, it m
 \dspot uses three kinds of \Iampl.
 
 \emph{1) Amplification of literals}: the new input point is obtained by changing a literal used in the test (numeric, boolean, string).
+These transformations are summarized in \autoref{table:test-transformations}.
 
-For numeric values, there are five operators: 
-$+1$,
-$-1$,
-replacement by hard-coded values: max value,
-min value,
-0, 
-and replacement by an existing literal of the same type, if such literal exists.
-
-For Strings, there are seven operators: 
-add a random char, 
-remove a random char, 
-replace a random char by a random char, 
-replace the string by a fully random string of the same size, 
-replace the string by an empty string, 
-replace the string by system line separator 
-and replace the string by the system path separator.
-
-For booleans, there is only one operator: negate the value;
+\begin{table}
+	\label{table:test-transformations}
+	\caption{Literal test transformations in \dspot}
+	\centering
+	\begin{tabular}{cl}
+		\toprule
+		Types & Operators\\
+		\midrule
+		\multirow{5}{*}{Number}
+		&\cellcolor{gray!25}add 1 to an integer\\
+		&minus 1 to an integer\\
+		&\cellcolor{gray!25}replace an integer by zero\\
+		&replace an integer by the maximum value (Integer.MAX\_VALUE in Java)\\
+		&\cellcolor{gray!25}replace an integer by the minimum value (\texttt{Integer.MIN\_VALUE} in Java).\\
+		\midrule
+		Boolean &  	
+		\begin{tabular}{l}
+			negate the value.
+		\end{tabular}\\
+		\midrule
+		\multirow{6}{*}{String}
+		&\cellcolor{gray!25}replace a string with another existing string.\\
+		&replace a string with white space, or a system path separator, or a system\\
+		&file separator.\\
+		&\cellcolor{gray!25}add 1 random character to the string.\\
+		&remove 1 random character from the string.\\
+		&\cellcolor{gray!25}replace 1 random character in the string by another random character.\\
+		&replace the string with a random string of the same size.\\
+		&\cellcolor{gray!25}replace the string with the \texttt{null} value.\\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 \emph{2) Amplification of method calls}: \dspot manipulates method calls as follows:
 \dspot duplicates an existing method call; removes a method call;

@@ -1,11 +1,12 @@
 \begin{table}
-	\caption{The effectiveness of test amplification with \dspot on 40 test classes: 24 well-tested (upper part) and 16 average-tested (lower part) real test classes from notable open-source Java projects.}
-	%A star after a test name means that the test is considered as subject for the relevance study of \rqpullrequest.}
+	\caption{The effectiveness of test amplification with \dspot on 40 test classes: 22 well-tested (upper part) and 18 average-tested (lower part) real test classes from notable open-source Java projects.}
 	\label{tab:overall-results}
-	\def\arraystretch{0.55}%  1 is the default, change whatever you need
-	\setlength\tabcolsep{0.45pt} % default value: 6pt
+	\def\arraystretch{1}%  1 is the default, change whatever you need
+	\setlength\tabcolsep{1pt} % default value: 6pt
 	\small
-	\begin{tabular}{|llrrrr|rrrr|rrr|r|}
+	\centering
+	\begin{tabular}{llrrrrrrrrrrrr}
+		\toprule
 		\rotverticalinv{ID}&
 		\rotverticalinv{Class}&
 		\rotverticalinv{\# Orig. test methods}&
@@ -28,72 +29,72 @@
 		\end{tabular}}&
 		&%arrow for killed
 		\rotverticalinv{Time (minutes)}\\
-		\hline\\
+		\midrule
 		&\multicolumn{3}{l}{High \ms}\\
-		\hline\\
+		\midrule
+		\rowcolor{gray!25}
 		1&\scriptsize{TypeNameTest}&12&50\%&19&8&599&715&19\%&{\color{ForestGreen}$\nearrow$}&599&0.0\%&$\rightarrow$&11.11 \\
-		\rowcolor[HTML]{EFEFEF}
 		2&\scriptsize{NameAllocatorTest}&11&87\%&0&0&79&79&0.0\%&$\rightarrow$&79&0.0\%&$\rightarrow$&4.76 \\
+		\rowcolor{gray!25}
 		3&\scriptsize{MetaClassTest}&7&58\%&108&10&455&534&17\%&{\color{ForestGreen}$\nearrow$}&455&0.0\%&$\rightarrow$&235.71 \\
-		\rowcolor[HTML]{EFEFEF}
 		4&\scriptsize{ParameterExpressionTest}&14&91\%&2&2&162&164&1\%&{\color{ForestGreen}$\nearrow$}&162&0.0\%&$\rightarrow$&25.93 \\
+		\rowcolor{gray!25}
 		5&\scriptsize{ObdDecoderTest}&1&80\%&9&2&51&54&5\%&{\color{ForestGreen}$\nearrow$}&51&0.0\%&$\rightarrow$&2.20 \\
-		\rowcolor[HTML]{EFEFEF}
 		6&\scriptsize{MiscFormatterTest}&1&72\%&5&5&42&47&11\%&{\color{ForestGreen}$\nearrow$}&42&0.0\%&$\rightarrow$&1.21 \\
+		\rowcolor{gray!25}
 		7&\scriptsize{TestLookup3Hash}&2&95\%&0&0&464&464&0.0\%&$\rightarrow$&464&0.0\%&$\rightarrow$&6.76 \\
-		\rowcolor[HTML]{EFEFEF}
 		8&\scriptsize{TestDoublyLinkedList}&7&92\%&1&1&104&105&0.97\%&{\color{ForestGreen}$\nearrow$}&104&0.0\%&$\rightarrow$&3.03 \\
+		\rowcolor{gray!25}
 		9&\scriptsize{ArraysIndexesTest}&1&53\%&15&4&576&647&12\%&{\color{ForestGreen}$\nearrow$}&586&1\%&{\color{ForestGreen}$\nearrow$}&10.58 \\
-		\rowcolor[HTML]{EFEFEF}
 		10&\scriptsize{ClasspathResolverTest}&10&67\%&0&0&50&50&0.0\%&$\rightarrow$&50&0.0\%&$\rightarrow$&4.18 \\
+		\rowcolor{gray!25}
 		11&\scriptsize{RequestTest}&17&81\%&4&3&141&156&10\%&{\color{ForestGreen}$\nearrow$}&141&0.0\%&$\rightarrow$&60.55 \\
-		\rowcolor[HTML]{EFEFEF}
 		12&\scriptsize{PrefixedCollapsibleMapTest}&4&96\%&0&0&54&54&0.0\%&$\rightarrow$&54&0.0\%&$\rightarrow$&13.28 \\
+		\rowcolor{gray!25}
 		13&\scriptsize{TokenQueueTest}&6&69\%&18&6&152&165&8\%&{\color{ForestGreen}$\nearrow$}&152&0.0\%&$\rightarrow$&15.61 \\
-		\rowcolor[HTML]{EFEFEF}
 		14&\scriptsize{CharacterReaderTest}&19&79\%&71&9&309&336&8\%&{\color{ForestGreen}$\nearrow$}&309&0.0\%&$\rightarrow$&57.06 \\
+		\rowcolor{gray!25}
 		15&\scriptsize{TailDelimiterTest}&10&71\%&1&1&381&384&0.79\%&{\color{ForestGreen}$\nearrow$}&381&0.0\%&$\rightarrow$&12.90 \\
-		\rowcolor[HTML]{EFEFEF}
 		16&\scriptsize{LinkBufferTest}&3&48\%&12&7&66&90&36\%&{\color{ForestGreen}$\nearrow$}&66&0.0\%&$\rightarrow$&3.24 \\
+		\rowcolor{gray!25}
 		17&\scriptsize{FileNamePatternTest}&12&58\%&27&9&573&686&19\%&{\color{ForestGreen}$\nearrow$}&573&0.0\%&$\rightarrow$&25.08 \\
-		\rowcolor[HTML]{EFEFEF}
 		18&\scriptsize{SyslogAppenderBaseTest}&1&95\%&1&1&143&148&3\%&{\color{ForestGreen}$\nearrow$}&143&0.0\%&$\rightarrow$&7.88 \\
+		\rowcolor{gray!25}
 		19&\scriptsize{RequestBuilderAndroidTest}&2&99\%&0&0&513&513&0.0\%&$\rightarrow$&513&0.0\%&$\rightarrow$&0.04 \\
-		\rowcolor[HTML]{EFEFEF}
 		20&\scriptsize{CallAdapterTest}&4&94\%&0&0&55&55&0.0\%&$\rightarrow$&55&0.0\%&$\rightarrow$&7.30 \\
-		\hline
-		&\multicolumn{3}{l}{Low \ms}\\
-		\hline
-		21&\scriptsize{FieldSpecTest}&2&31\%&12&4&223&316&41\%&{\color{ForestGreen}$\nearrow$}&223&0.0\%&$\rightarrow$&4.44 \\
-		\rowcolor[HTML]{EFEFEF}
-		22&\scriptsize{ParameterSpecTest}&2&32\%&11&5&214&293&36\%&{\color{ForestGreen}$\nearrow$}&214&0.0\%&$\rightarrow$&3.66 \\
-		23&\scriptsize{WrongNamespacesTest}&2&8\%&6&1&78&249&219\%&{\color{ForestGreen}$\nearrow$}&249&219\%&{\color{ForestGreen}$\nearrow$}&29.70 \\
-		\rowcolor[HTML]{EFEFEF}
-		24&\scriptsize{WrongMapperTest}&1&8\%&3&1&97&325&235\%&{\color{ForestGreen}$\nearrow$}&325&235\%&{\color{ForestGreen}$\nearrow$}&7.13 \\
-		25&\scriptsize{ProgressProtocolDecoderTest}&1&16\%&2&1&18&27&50\%&{\color{ForestGreen}$\nearrow$}&23&27\%&{\color{ForestGreen}$\nearrow$}&1.30 \\
-		\rowcolor[HTML]{EFEFEF}
-		26&\scriptsize{IgnitionEventHandlerTest}&1&22\%&0&0&13&13&0.0\%&$\rightarrow$&13&0.0\%&$\rightarrow$&0.77 \\
-		27&\scriptsize{TestICardinality}&2&7\%&0&0&19&19&0.0\%&$\rightarrow$&19&0.0\%&$\rightarrow$&2.13 \\
-		\rowcolor[HTML]{EFEFEF}
-		28&\scriptsize{TestMurmurHash}&2&17\%&40&2&52&275&428\%&{\color{ForestGreen}$\nearrow$}&174&234\%&{\color{ForestGreen}$\nearrow$}&2.18 \\
-		29&\scriptsize{ConcurrencyTest}&2&28\%&2&0&210&342&62\%&{\color{ForestGreen}$\nearrow$}&210&0.0\%&$\rightarrow$&315.56 \\
-		\rowcolor[HTML]{EFEFEF}
-		30&\scriptsize{AbstractClassTest}&2&34\%&28&4&383&475&24\%&{\color{ForestGreen}$\nearrow$}&405&5\%&{\color{ForestGreen}$\nearrow$}&12.67 \\
-		31&\scriptsize{AllTimeTest}&3&42\%&0&0&163&163&0.0\%&$\rightarrow$&163&0.0\%&$\rightarrow$&0.02 \\
-		\rowcolor[HTML]{EFEFEF}
-		32&\scriptsize{DailyTest}&3&42\%&0&0&163&163&0.0\%&$\rightarrow$&163&0.0\%&$\rightarrow$&0.02 \\
-		33&\scriptsize{AttributeTest}&2&36\%&33&11&178&225&26\%&{\color{ForestGreen}$\nearrow$}&180&1\%&{\color{ForestGreen}$\nearrow$}&10.76 \\
-		\rowcolor[HTML]{EFEFEF}
-		34&\scriptsize{AttributesTest}&5&52\%&9&6&316&322&1\%&{\color{ForestGreen}$\nearrow$}&316&0.0\%&$\rightarrow$&6.21 \\
-		35&\scriptsize{CodedDataInputTest}&1&1\%&0&0&5&5&0.0\%&$\rightarrow$&5&0.0\%&$\rightarrow$&3.58 \\
-		\rowcolor[HTML]{EFEFEF}
-		36&\scriptsize{CodedInputTest}&1&27\%&29&28&108&166&53\%&{\color{ForestGreen}$\nearrow$}&108&0.0\%&$\rightarrow$&0.88 \\
-		37&\scriptsize{FileAppenderResilience\_AS\_ROOT\_Test}&1&4\%&0&0&4&4&0.0\%&$\rightarrow$&4&0.0\%&$\rightarrow$&0.65 \\
-		\rowcolor[HTML]{EFEFEF}
-		38&\scriptsize{Basic}&1&10\%&0&0&6&6&0.0\%&$\rightarrow$&6&0.0\%&$\rightarrow$&0.89 \\
+		\rowcolor{gray!25}
 		39&\scriptsize{ExecutorCallAdapterFactoryTest}&7&62\%&0&0&119&119&0.0\%&$\rightarrow$&119&0.0\%&$\rightarrow$&0.09 \\
-		\rowcolor[HTML]{EFEFEF}
 		40&\scriptsize{CallTest}&35&69\%&3&1&642&644&0.32\%&{\color{ForestGreen}$\nearrow$}&642&0.0\%&$\rightarrow$&52.84 \\
-		\hline
+		\midrule
+		&\multicolumn{3}{l}{Low \ms}\\
+		\midrule
+		\rowcolor{gray!25}
+		21&\scriptsize{FieldSpecTest}&2&31\%&12&4&223&316&41\%&{\color{ForestGreen}$\nearrow$}&223&0.0\%&$\rightarrow$&4.44 \\
+		22&\scriptsize{ParameterSpecTest}&2&32\%&11&5&214&293&36\%&{\color{ForestGreen}$\nearrow$}&214&0.0\%&$\rightarrow$&3.66 \\
+		\rowcolor{gray!25}
+		23&\scriptsize{WrongNamespacesTest}&2&8\%&6&1&78&249&219\%&{\color{ForestGreen}$\nearrow$}&249&219\%&{\color{ForestGreen}$\nearrow$}&29.70 \\
+		24&\scriptsize{WrongMapperTest}&1&8\%&3&1&97&325&235\%&{\color{ForestGreen}$\nearrow$}&325&235\%&{\color{ForestGreen}$\nearrow$}&7.13 \\
+		\rowcolor{gray!25}
+		25&\scriptsize{ProgressProtocolDecoderTest}&1&16\%&2&1&18&27&50\%&{\color{ForestGreen}$\nearrow$}&23&27\%&{\color{ForestGreen}$\nearrow$}&1.30 \\
+		26&\scriptsize{IgnitionEventHandlerTest}&1&22\%&0&0&13&13&0.0\%&$\rightarrow$&13&0.0\%&$\rightarrow$&0.77 \\
+		\rowcolor{gray!25}
+		27&\scriptsize{TestICardinality}&2&7\%&0&0&19&19&0.0\%&$\rightarrow$&19&0.0\%&$\rightarrow$&2.13 \\
+		28&\scriptsize{TestMurmurHash}&2&17\%&40&2&52&275&428\%&{\color{ForestGreen}$\nearrow$}&174&234\%&{\color{ForestGreen}$\nearrow$}&2.18 \\
+		\rowcolor{gray!25}
+		29&\scriptsize{ConcurrencyTest}&2&28\%&2&0&210&342&62\%&{\color{ForestGreen}$\nearrow$}&210&0.0\%&$\rightarrow$&315.56 \\
+		30&\scriptsize{AbstractClassTest}&2&34\%&28&4&383&475&24\%&{\color{ForestGreen}$\nearrow$}&405&5\%&{\color{ForestGreen}$\nearrow$}&12.67 \\
+		\rowcolor{gray!25}
+		31&\scriptsize{AllTimeTest}&3&42\%&0&0&163&163&0.0\%&$\rightarrow$&163&0.0\%&$\rightarrow$&0.02 \\
+		32&\scriptsize{DailyTest}&3&42\%&0&0&163&163&0.0\%&$\rightarrow$&163&0.0\%&$\rightarrow$&0.02 \\
+		\rowcolor{gray!25}
+		33&\scriptsize{AttributeTest}&2&36\%&33&11&178&225&26\%&{\color{ForestGreen}$\nearrow$}&180&1\%&{\color{ForestGreen}$\nearrow$}&10.76 \\
+		34&\scriptsize{AttributesTest}&5&52\%&9&6&316&322&1\%&{\color{ForestGreen}$\nearrow$}&316&0.0\%&$\rightarrow$&6.21 \\
+		\rowcolor{gray!25}
+		35&\scriptsize{CodedDataInputTest}&1&1\%&0&0&5&5&0.0\%&$\rightarrow$&5&0.0\%&$\rightarrow$&3.58 \\
+		36&\scriptsize{CodedInputTest}&1&27\%&29&28&108&166&53\%&{\color{ForestGreen}$\nearrow$}&108&0.0\%&$\rightarrow$&0.88 \\
+		\rowcolor{gray!25}
+		37&\scriptsize{FileAppenderResilience\_AS\_ROOT\_Test}&1&4\%&0&0&4&4&0.0\%&$\rightarrow$&4&0.0\%&$\rightarrow$&0.65 \\
+		38&\scriptsize{Basic}&1&10\%&0&0&6&6&0.0\%&$\rightarrow$&6&0.0\%&$\rightarrow$&0.89 \\
+		\bottomrule
 	\end{tabular}
 \end{table}

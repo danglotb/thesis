@@ -280,10 +280,12 @@ Together, these criteria ensure that all selected commits:
 \paragraph{Final benchmark}
 \begin{table}[h]
 	\centering
+	\scriptsize
+    \rowcolors{2}{white}{gray!25}
 	\def\arraystretch{1}
-	\setlength\tabcolsep{0.8pt}
-	\caption{Considered Period for Selecting Commits.}
-	\begin{tabular}{lc|rr|cccc}
+	\setlength\tabcolsep{4pt}
+	\caption{Selected projects and commits dataset.}
+	\begin{tabular}{lcrrcccc}
 		\toprule
 		project &
 		LOC &
@@ -295,13 +297,10 @@ Together, these criteria ensure that all selected commits:
 		\begin{tabular}{c}\#selected\\commits\end{tabular}\\
 		\midrule
 		\scriptsize{commons-io}	&	59607	&	9/10/2015	&	9/29/2018	&	385	&	375	&	16(4.16\%)	&	10	\\
-		\rowcolor[HTML]{EFEFEF}
 		\scriptsize{commons-lang}	&	77410	&	11/22/2017	&	10/9/2018	&	227	&	217	&	13(5.73\%)	&	10	\\
 		\scriptsize{gson}	&	49766	&	6/14/2016	&	10/9/2018	&	159	&	149	&	13(8.18\%)	&	10	\\
-		\rowcolor[HTML]{EFEFEF}
 		\scriptsize{jsoup}	&	20088	&	12/21/2017	&	10/10/2018	&	50	&	40	&	11(22.00\%)	&	10	\\
 		\scriptsize{mustache.java}	&	10289	&	7/6/2016	&	04/18/2019	&	68	&	58	&	11(16.18\%)	&	10	\\
-		\rowcolor[HTML]{EFEFEF}
 		\scriptsize{xwiki-commons}	&	87289	&	10/31/2017	&	9/29/2018	&	687	&	677	&	23(3.35\%)	&	10	\\
 		\midrule
 		\scriptsize{summary}	&	304449	&	9/10/2015	&	04/18/2019	&	avg(262.67)	&	avg(252.67)	&	avg(14.50(9.93\%))	&	60	\\
@@ -351,18 +350,8 @@ This ground-truth test method is compared to the amplified test methods that det
 
 \subsection{Results}
 \label{subsec:result}
-\begin{table}
-\centering
-\small
-\def\arraystretch{0.1}%  1 is the default, change whatever you need
-\setlength\tabcolsep{.3pt} % default value: 6pt
-\caption{Evaluation of \DCI on 60 commits from 6 large open-source projects.}
-\label{tab:overall_result}
-\begin{tabular}{l|c|rcccc|c|cc|cc|cc|cc}
-\toprule
+
 \input{chapitres/behavioral-change-detection-for-commit/table_content}
-\end{tabular}
-\end{table}
 
 The overall results are reported in \autoref{tab:overall_result}.
 This table can be read as follow:
@@ -542,33 +531,21 @@ This increase is explained by the fact that \DCII explores more with more iterat
 In average \DCII takes 23, 64, and 105 minutes to perform the amplification for respectively $iteration=1$, $iteration=2$ and $iteration=3$.
 This number increases by 356\% from $iteration=1$ to $iteration=3$.
 
-\begin{table*}
-\small
-\def\arraystretch{0.05}%  1 is the default, change whatever you need
-\setlength\tabcolsep{6pt} % default value: 6pt
-\caption{Evaluation of the impact of the number of iteration done by \DCII on 60 commits from 6 open-source projects.}
-%\rotvertical{
-\label{tab:overall_result_iteration}
-\begin{tabular}{l|c|cc|cc|cc}
-\toprule
 \input{chapitres/behavioral-change-detection-for-commit/table_content_iterations}
-\end{tabular}
-%}
-\end{table*}
 
 \paragraph{Impact of the randomness}
 
 The number of amplified test methods obtained by the different seeds are reported in \autoref{tab:overall_result_seeds}.
 
 \begin{table*}
-	\small
 	\caption{Number of successes, \ie \DCI produced at least one amplified test method that detects the behavioral changes, for 11 different seeds.}
 	\centering
 	\label{tab:overall_result_seeds}
-	\begin{tabular}{l|ccccccccccc}
+	\begin{tabular}{lccccccccccc}
 		\toprule
 		Seed	&	ref	&	1	&	2	&	3	&	4	&	5	&	6	&	7	&	8	&	9\\
 		\midrule
+		\rowcolor{gray!25}
 		\#Success	&	23	&	18	&	17	&	17	&	17	&	19	&	21	&	18	&	21	&	18\\
 		\bottomrule
 	\end{tabular}

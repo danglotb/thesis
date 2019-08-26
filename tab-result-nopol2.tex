@@ -1,15 +1,31 @@
 \begin{table*}[htbp]
-  \tiny
+  \scriptsize
   % note that we cannot use median, because the majority of values is zero and the median also consequently, which is misleading 
   \caption{Experimental results with Nopol+UnsatGuided on the Defects4j Repository, only show bugs with test-suite adequate patches by plain Nopol.}
   \centering
+  \rowcolors{2}{white}{gray!25}
   \label{tab:nopol-results}
-  \begin{tabular}{|l|c|c|c|c|c|r|r|r|r|r|c|r|r|r|r|}
-    \hline
-    \multirow{7}{*}{\rotatebox{90}{Bug ID}} & \multicolumn{2}{c|}{Tests} & \multicolumn{4}{c|}{Nopol}  & \multicolumn{7}{c|}{Nopol+UnsatGuided} \\ 
+	\def\arraystretch{1}
+  \setlength\tabcolsep{2.5pt}
+  \begin{tabular}{lcccccrrrrrcrrrr}
+	\toprule
+    \multirow{7}{*}{\rotatebox{90}{Bug ID}} & \multicolumn{2}{c}{Tests} & \multicolumn{4}{c}{Nopol}  & \multicolumn{7}{c}{Nopol+UnsatGuided} \\ 
+    \midrule
     \cline{2-14}
-     & \rotatebox{90}{\#EvoTests} & \rotatebox{90}{\#Bug-expo} & \rotatebox{90}{Time (hh:mm)} & \rotatebox{90}{\tabincell{c}{incomplete fix \\ (\#failing)}} & \rotatebox{90}{regression (\#failing)} & \rotatebox{90}{correctness} & \rotatebox{90}{\#Removed} & \rotatebox{90}{\#Removed Bug-expo} & \rotatebox{90}{Avg \#Time (hh:mm)} & \rotatebox{90}{\tabincell{c}{Change ratio \\ (\#unique)}} & \rotatebox{90}{\tabincell{c}{fix completeness \\ change \\ (Avg \#Removedinc)}} & \rotatebox{90}{\tabincell{c}{regression change\\ (Avg \#Removedreg)}} & \rotatebox{90}{correctness} \\
-    \hline
+     & \rotatebox{90}{\#EvoTests} 
+     & \rotatebox{90}{\#Bug-expo} 
+     & \rotatebox{90}{Time (hh:mm)} 
+     & \rotatebox{90}{\tabincell{c}{incomplete fix \\ (\#failing)}} 
+     & \rotatebox{90}{regression (\#failing)} 
+     & \rotatebox{90}{correctness} 
+     & \rotatebox{90}{\#Removed} 
+     & \rotatebox{90}{\#Removed Bug-expo} 
+     & \rotatebox{90}{Avg \#Time (hh:mm)} 
+     & \rotatebox{90}{\tabincell{c}{Change ratio \\ (\#unique)}} 
+     & \rotatebox{90}{\tabincell{c}{fix completeness \\ change \\ (Avg \#Removedinc)}} 
+     & \rotatebox{90}{\tabincell{c}{regression change\\ (Avg \#Removedreg)}} 
+     & \rotatebox{90}{correctness} \\
+	\midrule
 Chart\_1 & 3012 & 0 & 00:02 & No (0) & No (0) & NO & 0 & 0 & 03:00 & 0/30 (1) &  same (0) & same (0) & NO\\
 Chart\_5 & 2931 & 3 & 00:01 & No (0) & Yes (10) & NO & 104 & 3 & 01:18 & 27/30 (27) & same (0) & improve (2.9) & NO\\
 Chart\_9 & 3165 & 0 & 00:01 & No (0) & No (0) & NO & 0 & 0 & 01:00 & 0/30 (1) & same (0) & same (0) & NO\\
@@ -52,6 +68,6 @@ Time\_7 & 1491 & 0 & 00:01 & No (0) & Yes (11) & NO & 12 & 0 & 00:54 & 12/30 (13
 Time\_11 & 1497 & 5 & 00:04 & Yes (5) & No (0) & NO & 7 & 0 & 01:36 & 0/30 (1) & same (0) & same (0) & NO\\
 Time\_14 & 687 & 0 & 00:01 & No (0) & Yes (3) & NO & 1 & 0 & 00:18 & 24/30 (23) & same (0) & improve (2.0) & NO\\
 Time\_16 & 1476 & 0 & 00:01 & No (0) & Yes (6) & NO & 5 & 0 & 00:24 & 1/30 (2) & same (0) & improve (1) & NO\\
-    \hline
+	\bottomrule
   \end{tabular}
 \end{table*}
