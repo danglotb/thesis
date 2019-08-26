@@ -297,7 +297,7 @@ urlcolor=linkcol %couleur des liens pour les url
 \lstset{ %
 	%  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
 	basicstyle=\small\ttfamily,        % the size of the fonts that are used for the code
-	captionpos=b,                    % sets the caption-position to bottom
+	captionpos=t,                    % sets the caption-position to bottom
 	commentstyle=\small\color{ForestGreen},    % comment style
 	escapeinside={(*@}{@*)},          % if you want to add LaTeX within your code
 	keywordstyle=\color{blue},       % keyword style
@@ -309,13 +309,13 @@ urlcolor=linkcol %couleur des liens pour les url
 	breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
 	breaklines=true,                 % sets automatic line breaking
 	extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
-	%frame=single,                    % adds a frame around the code
 	showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
 	showstringspaces=false,          % underline spaces within strings only
 	showtabs=false,                  % show tabs within strings adding particular underscores
 	tabsize=1,                       % sets default tabsize to 2 spaces
 	framexleftmargin=15pt,
-	frame = single
+	frame = single,
+	numbers=left
 }
 
 \newcommand{\rev}[1]{\textcolor{orange}{#1}\GenericWarning{}{LaTeX Warning: Revision: #1}}
@@ -373,6 +373,8 @@ urlcolor=linkcol %couleur des liens pour les url
 \newcommand{\lstbg}[3][0pt]{{\fboxsep#1\colorbox{#2}{\strut #3}}}
 \lstdefinelanguage{diff}{
 	basicstyle=\scriptsize,
+	caption=t,
+	numbers=left,
 	morecomment=[f][\lstbg{red!20}]-,
 	morecomment=[f][\lstbg{green!20}]+,
 	morecomment=[f][\textit]{@@},

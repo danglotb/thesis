@@ -69,9 +69,9 @@ The developer did not write a test method nor modify an existing one.
 
 \begin{figure}[h]
 	\centering
-	\fbox{\includegraphics[width=.95\linewidth, trim=7.3cm 8.6cm 4.4cm 14.5cm, clip]{img/motivating_example.pdf}}
 	\caption{Commit 7e79f77 on XWiki-Commons that changes the behavior without a test.}
 	\label{fig:motivating_example}
+	\fbox{\includegraphics[width=.95\linewidth, trim=7.3cm 8.6cm 4.4cm 14.5cm, clip]{img/motivating_example.pdf}}
 \end{figure}
 
 In this commit, the intent is to take into account the \texttt{version} (from method \texttt{getVersion}) in the \texttt{equals} method.
@@ -164,9 +164,9 @@ The resulting amplified test methods detect the behavioral change.
 This process produces test methods that pass on the pre-commit version, fail on the post-commit version, hence they detect at least one behavioral change introduced by a given commit.
 
 \begin{figure}
-    \fbox{\includegraphics[width=.95\linewidth]{img/global_flow.pdf}}
     \caption{Overview of the approach to detect behavioral changes in commits.}
-    \label{fig:global_approach}
+	\label{fig:global_approach}
+    \fbox{\includegraphics[width=.95\linewidth]{img/global_flow.pdf}}
 \end{figure}
 
 \subsection{Test Selection and Diff Coverage}
@@ -386,10 +386,10 @@ Overall, 31 / 60 commits have at least 75\% of the changed lines covered.
 This validates the correct implementation of the selection criteria that ensures the presence of a test specifying the behavioral change.
 
 \begin{figure}
-\centering
-\includegraphics[width=.95\linewidth]{img/diff_cov_hist.png}
-\caption{Distribution of diff coverage per project of our benchmark.}
-\label{fig:histdiffcoverage}
+	\centering
+	\caption{Distribution of diff coverage per project of our benchmark.}
+	\label{fig:histdiffcoverage}
+	\includegraphics[width=.95\linewidth]{img/diff_cov_hist.png}
 \end{figure}
 
 Thanks to the selection criteria, 

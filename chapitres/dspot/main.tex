@@ -84,13 +84,13 @@ If the actual observed values of the program state and the oracle are different 
 
 \begin{figure}[h]
 	\centering
-	\fbox{\includegraphics[width=.6\linewidth]{dspot_principle.pdf}}
-	\caption{
+		\caption{
 		\dspot's principle: \dspot takes as input a program, an existing test suite, and a test-criterion. 
 		\dspot outputs a set of amplified test methods.
 		When added to the existing test suite, these amplified test methods increase the test-criterion, \ie the amplified test suite is better than the original one.
 	}
 	\label{fig:dspot:principle}
+	\fbox{\includegraphics[width=.6\linewidth]{dspot_principle.pdf}}
 \end{figure}
 
 DSpot is a test amplification tool.
@@ -128,9 +128,9 @@ An amplified test method's integration can be done in two way:
 This enrich directly an existing test method.
 
 \begin{figure}[h]
-	\centering\fbox{\includegraphics[width=0.98\textwidth, trim=4.15cm 17.52cm 4.05cm 10.76cm, clip]{protostuff.pdf}}
 	\caption{Example of what \dspot produces: a diff to improve an existing test case.}
 	\label{fig:diff-protostuff}
+	\centering\fbox{\includegraphics[width=0.98\textwidth, trim=4.15cm 17.52cm 4.05cm 10.76cm, clip]{protostuff.pdf}}
 \end{figure}
 
 \autoref{fig:diff-protostuff} shows an example of changes' set obtained using DSpot.
@@ -141,13 +141,14 @@ By construction, all \dspot's amplification can be represented as a diff on an e
 \label{subsec:dspot:overview:workflow}
 
 \begin{figure}[h]
-	\centering\fbox{\includegraphics{dspot-workflow.pdf}}
 	\caption{DSpot's workflow in three main steps: 
 		1) the modification of test code's inputs, called ``input space exploration''; 
 		2) the addition of new assertions called ``assertion improvement''; 
 		3) the amplified test methods selection according to a test-criterion.
 	}
 	\label{fig:dspot-workflow}
+	\centering
+	\fbox{\includegraphics{dspot-workflow.pdf}}
 \end{figure}
 
 The main workflow of \dspot is composed of 3 main phases:
@@ -177,17 +178,17 @@ Note that this notion of call sequence and complex objects is different from tes
 
 \begin{lstlisting}[caption={An example of an object-oriented test case  (inspired from Apache Commons Collections)},label=lst:archetype,float,language=java,numbers=left] 
 testIterationOrder() {
-// contract: the iteration order is the same as the insertion order
-
-TreeList tl=new TreeList(); (*@\label{input-begin}@*)
-tl.add(1);
-tl.add(2); (*@\label{input-end}@*)
-
-ListIterator it = tl.listIterator();(*@\label{test}@*)
-
-// assertions
-assertEquals(1, it.next().intValue());(*@\label{assertion-1}@*)
-assertEquals(2, it.next().intValue());(*@\label{assertion-2}@*)
+	// contract: the iteration order is the same as the insertion order
+	
+	TreeList tl=new TreeList(); (*@\label{input-begin}@*)
+	tl.add(1);
+	tl.add(2); (*@\label{input-end}@*)
+	
+	ListIterator it = tl.listIterator();(*@\label{test}@*)
+	
+	// assertions
+	assertEquals(1, it.next().intValue());(*@\label{assertion-1}@*)
+	assertEquals(2, it.next().intValue());(*@\label{assertion-2}@*)
 }
 \end{lstlisting}
 
@@ -336,7 +337,9 @@ testIterationOrder() {
 \subsection{Pseudo-algorithm}
 \label{subsec:dspot:algorithm:pseudo-algo}
 
-\begin{algorithm}[t]
+\begin{algorithm}
+	\caption{Main amplification loop of \dspot.}
+	\label{algo:dspot_main}
 	\begin{algorithmic}[1]
 		\Require{Program $P$}
 		\Require{Test suite $TS$}
@@ -361,8 +364,6 @@ testIterationOrder() {
 		\EndFor
 		\Return{$ATS$}
 	\end{algorithmic}
-	\caption{Main amplification loop of \dspot.}
-	\label{algo:dspot_main}
 \end{algorithm}
 
 \autoref{algo:dspot_main} shows the main loop of \dspot. 
