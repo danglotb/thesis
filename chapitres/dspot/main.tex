@@ -127,12 +127,24 @@ An amplified test method's integration can be done in two way:
 2) the developer integrate only the changes between the original test method and the amplified test method.
 This enrich directly an existing test method.
 
-\begin{figure}[h]
-	\caption{Example of what \dspot produces: a diff to improve an existing test case.}
-	\label{fig:diff-protostuff}
-	\centering\fbox{\includegraphics[width=0.98\textwidth, trim=4.15cm 17.52cm 4.05cm 10.76cm, clip]{protostuff.pdf}}
-\end{figure}
+%\begin{figure}[h]
+%	\caption{Example of what \dspot produces: a diff to improve an existing test case.}
+%	\label{fig:diff-protostuff}
+%	\centering\fbox{\includegraphics[width=0.98\textwidth, trim=4.15cm 17.52cm 4.05cm 10.76cm, clip]{protostuff.pdf}}
+%\end{figure}
 
+\begin{lstlisting}[language=diff,caption=Example of what \dspot produces: a diff to improve an existing test case.,label=fig:diff-protostuff]
+@@ -144,7 +144,8 @@ public void testEmptyList() throws Exception
+    ArrayList<Foo> foos = new ArrayList<Foo>();
+
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+-   writeListTo(out, foos, SerializableObjects.foo.cachedSchema());
++   final int bytesWritten =
++     writeListTo(out, foos, SerializableObjects.foo.cachedSchema()
++   );
++   assertEquals(0, bytesWritten);
+    byte[] data = out.toByteArray();
+\end{lstlisting}
 \autoref{fig:diff-protostuff} shows an example of changes' set obtained using DSpot.
 
 By construction, all \dspot's amplification can be represented as a diff on an existing test method since amplified test methods are variants of existing ones.
