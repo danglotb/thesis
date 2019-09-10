@@ -5,7 +5,7 @@
 
 \graphicspath{{.}{chapitres/conclusion/}}
 
-\section{Contributions Summary}
+\section{Contribution Summary}
 \label{sec:conclusion:contributions-summary}
 
 \subsection{\dspot}
@@ -94,7 +94,7 @@ To sum up, UnsatGuided can effectively alleviate the overfitting issue of regres
 In this study, we used Evosuite, a state-of-the-art test generation tool.
 An alternative would be to use a test amplification tool, such as \dspot in order to overcome the overfitting problems.
 
-\section{Short-term perspectives}
+\section{Short-term Perspectives}
 \label{sec:conclusion:short-prespectives}
 
 In this section, I introduce short-term perspectives for \dspot.
@@ -114,7 +114,7 @@ This would have 2 benefits:
 1) Users would be welcomed with a friendly interface, and could discover test amplification step-by-step without modifying anything on their own computer.
 2) It would collect data on the usage of test amplification and make a large experimentation thanks to users that, on their own, would use the amplification tool.
 
-\subsection{Prettifying amplified test methods}
+\subsection{Prettifying Amplified Test Methods}
 \label{subsec:conclusion:short-prespectives:prettifier}
 
 This section presents an algorithm that would make prettier amplified test methods.
@@ -162,7 +162,7 @@ otherwise, it measure the quality of the new test method according to the test c
 if it remains the same, it can remove the statement definitively, otherwise it cannot be removed;
 It will repeat this process for all the statement inside the test method, starting by the end of the body.
 
-\subsubsection{Rename local variables}
+\subsubsection{Rename Local Variables}
 \label{subsubsec:conclusion:short-prespectives:prettifier:rename-local}
 
 After that the algorithm would have minimize the statements, the next step would be to rename all the local variables.
@@ -173,7 +173,7 @@ The idea behind Context2Name is to exploit the usage context, \ie the surroundin
 For each local variables, the algorithm would use Context2Name to generate a new name for the local variable.
 
 
-\subsubsection{Rename amplified test method}
+\subsubsection{Rename Amplified Test Method}
 \label{subsubsec:conclusion:short-prespectives:prettifier:rename-method}
 
 The final step would renaming the amplified test method.
@@ -185,7 +185,7 @@ The major stake would be that developers are more likely to integrate amplified 
 To do this, I could use Code2Vec\footnote{\url{https://github.com/tech-srl/code2vec}}\cite{DBLP:journals/corr/abs-1803-09473} which is a neural network for learning distributed representations of code.
 However, since Code2Vec would use the whole body the test method, it would be mandatory that the algorithm renames the local variables before the amplified test methods.
 
-\subsection{Collecting  developers feedback}
+\subsection{Collecting  Developers Feedback}
 \label{subsec:conclusion:short-prespectives:web-interface}
 The idea would be to provide to users a web interface, on which the user would have simply to put the URL of its \gh repository.
 Then, we would retrieve the project and run \dspot on it.
@@ -208,7 +208,7 @@ At the bottom, on can see a list of projects that used recently the test amplifi
 	\fbox{\includegraphics[width=0.9\textwidth]{dspot-web-1.png}}
 \end{figure}
 
-\section{Long-term perspectives}
+\section{Long-term Perspectives}
 \label{sec:conclusion:long-prespectives}
 
 In my vision, there are 2 long-term perspectives for \dspot:
