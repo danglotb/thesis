@@ -1,26 +1,6 @@
 \chapter{State of the Art}
 \label{chap:sota}
 
-\begin{chaptersummary}
-	In this chapter, I expose a systematic review of the literature on the field of test suite amplification.
-	This chapter makes the following contributions:
-	\begin{itemize}
-		\item The first ever snowballing literature review on test amplification
-		\item The classification of the related work into four main categories to help newcomers in the field  (students, industry practitioners)  understand this body of work.
-		\item A discussion about the outstanding research challenges of test amplification.
-	\end{itemize}
-		Note that this chapter has been published~\cite{DANGLOT2019110398}.
-	The remainder of this chapter is as follows:
-	First, \autoref{sec:sota:method}  exposes the methodology used to build this state of the art;
-	This chapter is structured according to the 4 main categories, each of them being presented in a dedicated section.
-	\autoref{sec:sota:category-1} presents techniques that synthesize new tests from manually-written tests.
-	\autoref{sec:sota:category-2} focuses on the works that synthesize new tests dedicated to a specific change in the application code (in particular a specific commit).
-	\autoref{sec:sota:category-3} discusses the less-researched, yet powerful idea of modifying the execution of manually-written tests. 
-	\autoref{sec:sota:category-4} is about the modification of existing tests to improve a specific property.
-	\autoref{sec:sota:analysis} sums up the analysis.
-	Eventually, \autoref{sec:sota:conclusion} concludes this chapter.
-\end{chaptersummary}
-
 \minitoc
 
 \graphicspath{{.}{chapitres/state-of-the-art/}}
@@ -29,14 +9,28 @@ Software testing is the art of evaluating an attribute or capability of a progra
 
 With the advent of agile development methodologies, which advocate testing early and often, a growing number of software projects develop and maintain a test suite~\cite{Madeyski2010}. 
 Those test suites are often large and have been written thanks to a lot of human intelligence and domain knowledge~\cite{azaidmanEMSE2011,DBLP:conf/icst/ZaidmanRDD08}. 
-Developers spend a lot of time in writing the tests~\cite{BellerTSE,beller2015when,beller2015howmuch}, so that those tests exercise interesting cases (including corner cases), and so that an oracle verifies as much as possible the program behavior~\cite{hilton2018coverageevolution}.
+\label{stmt:sota:dvlpers-write-tests}Developers spend a lot of time in writing the tests~\cite{BellerTSE,beller2015when,beller2015howmuch}, so that those tests exercise interesting cases (including corner cases), and so that an oracle verifies as much as possible the program behavior~\cite{hilton2018coverageevolution}.
 
 The wide presence of valuable manually written tests has triggered a new thread of research that consists of leveraging the value of existing manually-written tests to achieve a specific engineering goal.
 This has been coined ``test amplification''.
 The term \emph{amplification} is introduced as an umbrella for the various activities that analyze and operate on existing test suites and that are referred to as augmentation, optimization, enrichment, or refactoring in the literature. 
 
-This chapter surveys the research literature so that existing research efforts are characterized, can be compared and new research opportunities can be identified.
-Furthermore, the conjecture is that with good foundations and maturation, test amplification has the potential to bring software testing to the next level in terms of efficiency and efficacy among practitioners by introducing new automatic processes that improve the manually written tests.
+This chapter makes the following contributions:
+\begin{itemize}
+	\item The first ever snowballing literature review on test amplification
+	\item The classification of the related work into four main categories to help newcomers in the field  (students, industry practitioners)  understand this body of work.
+	\item A discussion about the outstanding research challenges of test amplification.
+\end{itemize}
+
+Note that this chapter has been published as journal paper~\cite{DANGLOT2019110398} and the remainder is as follows:
+First, \autoref{sec:sota:method}  exposes the methodology used to build this state of the art.
+This chapter is structured according to the 4 main categories, each of them being presented in a dedicated section.
+\autoref{sec:sota:category-1} presents techniques that synthesize new tests from manually-written tests.
+\autoref{sec:sota:category-2} focuses on the works that synthesize new tests dedicated to a specific change in the application code (in particular a specific commit).
+\autoref{sec:sota:category-3} discusses the less-researched, yet powerful idea of modifying the execution of manually-written tests. 
+\autoref{sec:sota:category-4} is about the modification of existing tests to improve a specific property.
+\autoref{sec:sota:analysis} sums up the analysis.
+Eventually, \autoref{sec:sota:conclusion} concludes this chapter.
 
 \section{Method}
 \label{sec:sota:method}
@@ -113,15 +107,17 @@ The most intuitive form of test amplification is to consider an existing test su
 This kind of test amplification is denoted as $AMP_{add}$.
 
 \medskip
-\textbf{Definition: A test amplification technique $AMP_{add}$ consists of creating new tests from existing ones to achieve a given engineering goal.
-	The most commonly used engineering goal is to improve coverage according to a coverage criterion.}
+\begin{mdframed}
+\textbf{Definition:} A test amplification technique $AMP_{add}$ consists of creating new tests from existing ones to achieve a given engineering goal.
+	The most commonly used engineering goal is to improve coverage according to a coverage criterion.
+\end{mdframed}
 
 The works listed in this section fall into this category and have been divided according to their main engineering goal.
 
 \subsection{Coverage or Mutation Score Improvement}
 \label{subsec:sota:category-1:coverage-vs-mutation}
 
-Baudry \ie \cite{Baudry05a} \cite{Baudry05d} improve the mutation score of an existing test suite by generating variants of existing tests through the application of specific transformations of the test cases. 
+Baudry \etal \cite{Baudry05a} \cite{Baudry05d} improve the mutation score of an existing test suite by generating variants of existing tests through the application of specific transformations of the test cases. 
 They iteratively run these transformations, and propose an adaptation of genetic algorithms (GA), called a bacteriological algorithm (BA), to guide the search for test cases that kill more mutants.  
 The results demonstrate the ability of search-based amplification to significantly increase the mutation score of a test suite.
 They evaluated their approach on 2 case studies that are .NET classes.
@@ -269,7 +265,9 @@ This can be seen as a specialized form $AMP_{add}$, which considers a specific c
 This kind of test amplification is denoted as $AMP_{change}$. 
 
 \medskip
-\textbf{Definition: Test amplification technique $AMP_{change}$ consists of adding new tests to the current test suite, by creating new tests that cover and/or observe the effects of a change in the application code.}
+\begin{mdframed}
+\textbf{Definition:} Test amplification technique $AMP_{change}$ consists of adding new tests to the current test suite, by creating new tests that cover and/or observe the effects of a change in the application code.
+\end{mdframed}
 
 I first present a series of works by Xu \etal, who develop and compare two alternatives of test suite augmentation, one based on genetic algorithms and the other on concolic execution. 
 A second subsection presents the work of a group of authors that center the attention on finding testing conditions to exercise the portions of code that exhibit changes. 
@@ -389,7 +387,7 @@ They evaluate TCA for signature changes in 9 Java projects of the Apache foundat
 The authors further use five additional open source projects to evaluate their approach when adding new classes to the hierarchy. 
 TCA is able to generate test cases for 60\% of the newly added classes.
 This proposal could also fall in the category of test repairing techniques. 
-Section \autoref{sec:amp_mod} will explore alternatives in a similar direction that produce test changes instead of creating completely new test cases.
+\autoref{sec:sota:category-3} will explore alternatives in a similar direction that produce test changes instead of creating completely new test cases.
 
 In a different direction, Böhme \etal\cite{bohme2013regression} explain that changes in a program should not be treated in isolation. 
 Their proposal focuses on potential interaction errors between software changes. 
@@ -454,7 +452,9 @@ A large scale study on the subject is still missing.
 In order to explore new program states and behavior, it is possible to interfere with the execution at runtime so as to modify the execution of the program under test. 
 
 \medskip
-\textbf{Definition: Test amplification technique $AMP_{exec}$ consists of modifying the test execution process or the test harness in order to maximize the knowledge gained from the testing process.}
+\begin{mdframed}
+\textbf{Definition}: Test amplification technique $AMP_{exec}$ consists of modifying the test execution process or the test harness in order to maximize the knowledge gained from the testing process.
+\end{mdframed}
 
 One of the drawbacks of automated tests is the hidden dependencies that may exist between different unit test cases. 
 In fact, the order in which the test cases are executed may affect the state of the program under test. 
@@ -535,10 +535,11 @@ The main testing infrastructure such as JUnit in Java does not impose anything o
 In literature, there are works on modifying existing tests with respect to a certain engineering goal.
 
 \medskip
-\textbf{Definition: Test amplification technique $AMP_{mod}$ refers to modifying the body of existing test methods. 
+\begin{mdframed}
+\textbf{Definition}: Test amplification technique $AMP_{mod}$ refers to modifying the body of existing test methods. 
 	The goal here is to make the scope of each test methods more precise or to improve the ability of test cases at assessing correctness (with better oracles). 
-	Differently from $AMP_{add}$, it is not about adding new test methods or new tests classes.}
-
+	Differently from $AMP_{add}$, it is not about adding new test methods or new tests classes.
+\end{mdframed}
 \subsection{Input Space Exploration}
 \label{subsec:sota:category-4:input-exploration}
 
@@ -682,7 +683,6 @@ For these edges, the origin node is cited by the target node.
 	\fbox{\includegraphics[width=0.99\linewidth]{graph.png}}
 \end{figure}
 
-
 \subsection{Technical Aspects}
 \label{subsec:sota:analysis:technical-aspects}
 
@@ -697,6 +697,8 @@ JavaScript applications have received very little attention in the area (only on
 \subsection{Tools for Test Amplification}
 \label{subsec:sota:analysis:tools}
 
+\input{chapitres/state-of-the-art/tools_table.tex}
+
 Most test case amplification papers discussed in this paper are experimental in nature, and are based on a prototype tool. 
 For the field to mature, it is good if researchers can reproduce past results, and compare their new techniques against existing ones.
 To this extent, it feels that open-science in the form of publicly-available and usable research prototypes is of utmost importance. 
@@ -706,8 +708,6 @@ The protocol was as follows.
 First, looks for a URL in the paper, pointing to a web page containing the code of the tool or experimental data.  
 For each URL, opens it in a browser between March 1st and March 31st 2018, to check that the page still exists and indeed contains experimental material.
 
-\input{chapitres/state-of-the-art/tools_table.tex}
-
 \autoref{tab:table:tools:urls} contains all valid URLs found. 
 Overall, 17 valid open-science URLs have been identified. 
 It may be considered as a low ratio, and thus calls for more open-science and reproducible research in the field of test amplification.
@@ -715,18 +715,27 @@ It may be considered as a low ratio, and thus calls for more open-science and re
 \section{Conclusion}
 \label{sec:sota:conclusion}
 
-Test suite are now a mandatory component of serious software.
+Test suites are now a mandatory component of serious software development.
 Developers spend time and effort developing these test suites, incorporating precious and unique knowledge inside it.
 These test suites are available to innovate new approaches and in the last decades, the research has been prolific.
 
-In this state of the art, I showed that researchers have been inspired and produced a lot of work.
-However, as highlighted, there are still challenged to be tackled as test amplification according to a multiple changes, scaling-up and most importantly the lack of evidence that result can be generalized on a lot of programs.
-No experimentation have been conducted while including real developers in the loop: none showed the acceptability of test amplification's output.
-Also, I observed that among all of the reviewed works, only 17 provides a link to tool or/and experimental data.
+In this state of the art, I showed that researchers have been inspired by these available test suites
+These research works achieve different goals such as improving the coverage of the test suite, faults detection, purification, etc.
+In one hand, I also showed that test amplification takes different form such as the generation of new test methods as variant of an existing test method or even the modification of the test execution.
+In the other hand, there are still challenges to be tackled as highlighted by this survey.
+For example, test amplification according to multiples changes or for several works.
+Also, I observed that among all of the reviewed works, only 17 out of 49 provides a link to tool or/and experimental data.
 This is a big issue for reproducibility and prevent the research community to build upon existing works.
 
-In the next chapter, I present \dspot, a new test amplification tool.
+Most important gaps are no experimentation has been conducted while including real developers in the loop and the lack of evidence that results can be generalized.
+Test amplification seems never been used to enhance regression testing capability of the test suite.
+In my opinion, test amplification is a good candidate to improve the ability of the test suite to detect regressions, or more generally detect a behavioral difference between two versions of the same program.
+
+In this thesis, I aim at addressing these problems by providing a test suite amplification tool.
+The goal of this tool is to provide test methods that detect a behavioral change, introduced by a developer for example.
+In addition to this, the outcome of this tool must be generalizable to any software.
+This is why I conduct two kinds of experimentation: executing the tool on a large benchmark of real programs from open-source community.
+And obtain the assessment of real developers on the quality of this tool's output.
+This tool, called \dspot, is presented in the next chapter.
 \dspot has the ambition to be strong enough to be applied on an arbitrary program, to bring together approaches that have never be gathered before.
-Also, in the context of STAMP, see \autoref{sec:intro:stamp}, I envision \dspot used in the continuous integration, applied according to real commits.
-\dspot is also open-source and its community is animated thanks to \gh.
 All the data produced for empirical evaluation are also open-source in order to promote open-science and let the research community relies on open-data to pursue the effort in this emerging field that is test amplification.

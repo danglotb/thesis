@@ -26,28 +26,65 @@
 
 \begin{vcenterpage}
 	\todo{write it}
-\end{vcenterpage}%\printnomenclature
-
-\cleardoublepage
-
-\section*{Abstract}
-
-\begin{vcenterpage}
-	\todo{write it}
 \end{vcenterpage}
 
 \cleardoublepage
 
-\section*{Publications}
+\section*{Abstract}
+\begin{vcenterpage}
+%intro
+Over the last decade, strong unit testing has become an essential component of any serious software project, whether in industry or academia.
+The agile development movement has contributed to this cultural change with the global dissemination of test-driven development techniques.
+More recently, the DevOps movement has further strengthened the testing practice with an emphasis on continuous and automated testing.
+However, testing is tedious and costly for industry: it is hard to evaluate return on investment.
+Thus, developers under pressure or by lack of discipline or time might skip writing the tests.
 
-	\todo{write it}
-	
+%problem statement
+To overcome this problem, research investigates the automation of creating strong tests.
+The dream was that a command-line would give you a complete test suite, that verifies the whole program.
+Even if automatically generated test suites achieve high coverage, there are still obstacles on the adoption of such techniques by the industry.
+This can be explained by the difficulties to understand, integrate and maintain generated test suite.
+Also, most of the tools rely on weak or partial oracles, \eg absence of run-time errors, which limits their ability to find bugs.
+In this thesis, I aim at addressing the lack of a tool that assists developers in regression testing.
+To do so, I use test suite amplification.
+
+%stoa
+I defined test amplification and gathered together research works that are using test amplification.
+I revealed main challenges of test amplification and the main lacks of the state of the art.
+Test suite amplification consists of exploiting the existing manually-written tests, treated as a seed, to achieve a given engineering goal.
+
+%dspot
+I propose a new approach based on both test input transformation and assertions generation to amplify the test suite.
+This algorithm is implemented by a tool called \dspot.
+\dspot works at both level of test methods: input and oracles.
+
+%test-improvement
+In this thesis, I evaluated \dspot on open-source projects from \gh.
+First, I improved the \ms of test suites and propose these improvement to developers through pull-request.
+My evaluation showed that developers value the output of \dspot and thus accepted to integrate amplified test methods into their test suite.
+This evidenced that \dspot can improve the quality of real projects' test suites.
+
+%dci
+Second, I used \dspot to detect the behavioral difference between two version of the same program.
+In particular, I used \dspot to detect the behavioral change introduced by a commit in projects on \gh.
+This showed that \dspot can be used in the continuous integration to achieve 2 crucial tasks: 
+1) generate amplified test methods that specify a behavioral change, evolving the test suite;
+2) generate amplified test methods to improve the ability to detect potential regressions.
+
+%transversal contributions
+In this thesis, I also expose 3 transversal contributions that are related to the correctness of program.
+First, the study of programs' correctness under runtime perturbations.
+Second, the study of pseudo-tested methods that are methods that reveal weaknesses of the test suite.
+Third, the study of patch overfitting and test generation for automatic repair.
+
+%future works
+Test amplification
+\end{vcenterpage}
+
 \cleardoublepage
 
 \section*{R\'esum\'e}
-
 	\todo{write it}
-
 \cleardoublepage
 
 \tableofcontents
@@ -68,9 +105,9 @@
 \include{chapitres/transversal_contributions/main}
 \include{chapitres/conclusion/main}
 
-\appendix
+%\appendix
 
-\include{appendix}
+%\include{appendix}
 
 \renewcommand\bibname{Bibliography}
 \bibliographystyle{style}

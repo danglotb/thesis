@@ -1,29 +1,5 @@
-\chapter{Test Amplification For Commit Behavioral Changes Detection}
+\chapter{Test Amplification For Behavioral Changes Detection Of Commits}
 \label{chap:dci}
-
-
-\begin{chaptersummary}
-	In this chapter, I detail an extension of \dspot, called \DCI(\dspot-CI), and its evaluation.
-	When developers use a version control management such as git, they make changes in the software in the form of commits.
-	\DCI consists of obtaining amplified test methods that detect the behavioral changes introduced by commits.
-	This evaluation has be done on 60 commits from 6 open-source projects on \gh.
-	The result is that \DCI has been able to obtain amplified test methods detecting 25 behavioral changes.
-	
-	To sum up, the contributions of this chapter are:
-	\begin{itemize}
-		\item \DCI (\textbf{D}spot-\textbf{CI}), a complete approach to obtain automatically test methods that detect behavioral changes.o
-		\item An open-source implementation of \DCI for Java.
-		\item A curated benchmark of 60 commits that introduce a behavioral change and include a test case to detect it, selected from 6 notable open source Java projects\footnote{\url{https://github.com/STAMP-project/dspot-experiments.git}}.
-		\item A comprehensive evaluation based on 4 research questions that combines quantitative and qualitative analysis with manual assessment.
-	\end{itemize}
-	Note that this chapter is a to be published article\cite{DBLP:journals/corr/abs-1902-08482}.
-	The remainder of this chapter is as follows:
-	\autoref{sec:dci:background} motivates this chapter and gives the background.
-	\autoref{sec:dci:techniques} exposes the technical extension of \dspot: an approach for commit-based test selection. 
-	\autoref{sec:dci:evaluation} introduces our benchmark of commits, the evaluation protocol and the results of our experiments on 50 real commits. 
-	\autoref{sec:dci:threats} relates the threats validity and actions that have been taken to overcome them. 
-	and \autoref{sec:dci:conclusion} concludes this chapter;
-\end{chaptersummary}
 
 \graphicspath{{.}{chapitres/behavioral-change-detection-for-commit/}}
 
@@ -35,6 +11,7 @@ The \emph{Continuous Integration} (CI) server~\cite{fowler2006continuous} merges
 Its ability to detect bugs early makes CI an essential contribution to quality assurance~\cite{Hilton:2016:UsageCI,duvall2007continuous}.
 However, the effectiveness of Continuous Integration depends on one key property: 
 each commit should include at least one test case $t_{new}$ that specifies the intended change.
+
 For instance, assume one wants to integrate a bug fix.
 In this case, the developer is expected to include a new test method, $t_{new}$, that specifies the program's desired behavior after the bug fix is applied.
 This can be mechanically verified: $t_{new}$ should fail on the version of the code that does not include the fix (the \emph{pre-commit} version), and pass on the version that includes the fix (the \emph{post-commit} version).
@@ -42,14 +19,33 @@ However, many commits either do not include a $t_{new}$ or $t_{new}$ does not me
 The reason is that developers sometimes cut corners because of lack of time, expertise or discipline. 
 This is the problem addressed in this chapter.
 
+In this chapter, I detail an extension of \dspot, called \DCI(\dspot-CI), and its evaluation.
 The goal is to automatically generate test methods for each commit that is submitted to the CI.
-In particular, a test method $t_{gen}$ that specifies the behavioral change of each commit.
-A generated test method $t_{gen}$ is considered to be relevant if it satisfies the following property: 
-$t_{gen}$ \textit{passes} on the pre-commit version and \textit{fails} on the post-commit version.
-To do so, I developed a new approach, called \DCI (\textbf{D}etecting behavioral changes in \textbf{CI}), and propose it be used during continuous integration., that works in two steps:
-First, it analyzes the test methods of the pre-commit version and select the ones that exercise the parts of the code modified by the commit.
+In particular, to generate a test method $t_{gen}$ that specifies the behavioral change of each commit.
+
+\DCI works in two steps:
+First, it analyzes the test methods of the pre-commit version and selects the ones that exercise the parts of the code modified by the commit.
 Second, it applies \dspot on this subset of test methods.
 The test selection is done only on amplified test methods that are relevant, \ie $t_{gen}$ \textit{passes} on the pre-commit version and \textit{fails} on the post-commit version.
+
+This evaluation has been performed on 60 commits from 6 open-source projects on \gh.
+The result is that \DCI has been able to obtain amplified test methods detecting 25 behavioral changes.
+
+To sum up, the contributions of this chapter are:
+\begin{itemize}
+	\item \DCI (\textbf{D}spot-\textbf{CI}), a complete approach to obtain automatically test methods that detect behavioral changes.
+	\item An open-source implementation of \DCI for Java.
+	\item A curated benchmark of 60 commits that introduce a behavioral change and include a test case to detect it, selected from 6 notable open source Java projects\footnote{\url{https://github.com/STAMP-project/dspot-experiments.git}}.
+	\item A comprehensive evaluation based on 4 research questions that combines quantitative and qualitative analysis with manual assessment.
+\end{itemize}
+
+Note that this chapter is a to be published article~\cite{DBLP:journals/corr/abs-1902-08482}.
+The remainder of this chapter is as follows:
+\autoref{sec:dci:background} motivates this chapter and gives the background.
+\autoref{sec:dci:techniques} exposes the technical extension of \dspot: an approach for commit-based test selection. 
+\autoref{sec:dci:evaluation} introduces our benchmark of commits, the evaluation protocol and the results of our experiments on 50 real commits. 
+\autoref{sec:dci:threats} relates the threats validity and actions that have been taken to overcome them. 
+and \autoref{sec:dci:conclusion} concludes this chapter.
 
 % -----------------------
 %  MOTIVATION
@@ -108,7 +104,7 @@ There are two potential outcomes:
 In this case, the CI runs as usual, \eg it executes the test suite;
 2) the developer did not provide a new test nor the modification of an existing one, the CI runs \DCI on the commit to obtain a test method that detects the behavioral change and present it to the developer.
 The developer can then validate the new test method that detects the behavioral change.
-Following the test selection\autoref{subsec:dci:introduction:goal}, the new test method passes on the pre-commit version but fails on the post-commit version.
+Following the test selection, the new test method passes on the pre-commit version but fails on the post-commit version.
 The current amplified test method cannot be added to the test suite, since it fails.
 However, this test method is still useful, since one has only to negate the failing assertions, \eg change an \texttt{assertTrue} into an \texttt{assertFalse}, to obtain a valid and passing test method that explicitly executes the new behavior.
 This can be done manually or automatically with approaches such as ReAssert\cite{ReAssert}.
@@ -445,7 +441,7 @@ The changes come with a new test method that specifies the new behavior.
 
 \DCI starts the amplification from the \texttt{testNestingPerson} test method defined in \texttt{JsonToStringStyleTest} showed in \autoref{fig:selected_diff_commons_lang_success}. 
 
-\begin{lstlisting}[language=java,caption=Selected test method as a seed to be amplified for commit \textsc{3fadfdd} from commons-lang.,label=fig:selected_diff_commons_lang_success]
+\begin{lstlisting}[float,language=java,caption=Selected test method as a seed to be amplified for commit \textsc{3fadfdd} from commons-lang.,label=fig:selected_diff_commons_lang_success]
 @Test
 public void testPerson() {
 	final Person p = new Person();
@@ -464,7 +460,7 @@ public void testPerson() {
 
 The test is selected for amplification because it triggers the execution of the changed line.
 
-\begin{lstlisting}[language=java,caption=Test generated by DCI that detects the behavioral change of \textsc{3fadfdd} from commons-lang.,label=fig:amplified_commons_lang_success]
+\begin{lstlisting}[float,language=java,caption=Test generated by DCI that detects the behavioral change of \textsc{3fadfdd} from commons-lang.,label=fig:amplified_commons_lang_success]
 @Test(timeout = 10000)
 public void testPerson_literalMutationString85602() throws Exception {
 	final ToStringStyleTest.Person p = new ToStringStyleTest.Person();
@@ -495,7 +491,7 @@ The amplified test the behavioral change:
 in the pre-commit version, the expected value is: \texttt{"\{ ... per/on":\{"name":"Jane Doe" ...\}"} while in the post-commit version it is \texttt{"\{ ... per\textbackslash/on":\{"name":"Jane Doe" ...\}"} (Line 3).
  
 \begin{mdframed}
-Answer to \textbf{RQ1}: Overall, \DCI detects the behavioral changes in a total of 25/60 commits. 
+\textbf{RQ1}: Overall, \DCI detects the behavioral changes in a total of 25/60 commits. 
 Individually, \DCII finds changes in 25/60, while \DCIA in 9/60 commits.
 Since \DCII also uses \aampl to generate assertions, all \DCIA's commits are contained in \DCII's. 
 However, the search-based algorithm, through exploration, finds many more behavioral changes, making it more effective albeit at the cost of execution time.
@@ -576,7 +572,7 @@ The number of iteration done by \DCII impacts the number of behavioral changes d
 \label{subsubsec:dci:evaluation:rq3}
 
 To answer \textbf{RQ3}, there is no quantitative approach to take, because there is no ground-truth data or metrics to optimize. 
-Per the protocol described in \autoref{subsec:protocol}, the answer to this question is based on manual analysis:
+Per the protocol described in \autoref{subsec:dci:evaluation:protocol}, the answer to this question is based on manual analysis:
 1 commit per project is randomly selected.
 Then the relevance of the selected tests for amplification is analyzed.
 
@@ -616,7 +612,7 @@ This ground-truth test method is also in the test class \texttt{com.github.musta
 The main modification of this commit is on class \texttt{XWikiDocument}.
 Since \texttt{XWikiDocumentTest} is the test class dedicated to \texttt{XWikiDocument}, the selection is considered relevant.
 
-\begin{mdframed}
+\begin{mdframed}[nobreak=true]
 Answer to \textbf{RQ3}: 
 In 4 out of 6 of the manually analyzed cases, the tests selected to be amplified relate, semantically, to the modified application code. 
 In the 2 remaining cases, it selected over and above the tests to be amplified.
@@ -647,7 +643,7 @@ The first line of the test is the construction of a \texttt{BoundedReader} objec
 The first assertion, associated to the new test input, captures the behavioral difference.
 Overall, this can be considered as a successful amplification.
 
-\begin{lstlisting}[language=java,caption=Test generated by \DCII that detects the behavioral change introduced by commit \textsc{81210eb} in commons-io.,label=fig:ampl_commons-io]
+\begin{lstlisting}[float,language=java,caption=Test generated by \DCII that detects the behavioral change introduced by commit \textsc{81210eb} in commons-io.,label=fig:ampl_commons-io]
 @Test(timeout = 10000)
 public void readMulti_literalMutationNumber3() {
 	BoundedReader mr = new BoundedReader(sr, 0);
@@ -668,7 +664,7 @@ In this case, the \DCI test can be considered better than the developer test bec
 1) it relies on assertions and not on timeouts, and
 2) it directly calls the changed method (\texttt{read}) instead of indirectly. 
 
-\begin{lstlisting}[language=java,caption=Developer test for commit \textsc{81210eb} of commons-io.,label=fig:diff_commons-io]
+\begin{lstlisting}[float,language=java,caption=Developer test for commit \textsc{81210eb} of commons-io.,label=fig:diff_commons-io]
 @Test(timeout = 5000)
 public void testReadBytesEOF() {
 	BoundedReader mr = new BoundedReader( sr, 3 );
@@ -686,7 +682,7 @@ This assertion compares the content of the \texttt{StringBuilder} against an exp
 In the pre-commit version, no special character is escaped, \eg '\textbackslash n'.
 In the post-commit version, the amplified test fails since the code now escapes the special character \textbackslash.
 
-\begin{lstlisting}[language=java,caption=Test generated by \DCII that detects the behavioral change of \textsc{e7d16c2} in commons-lang.,label=fig:ampl_commons-lang]
+\begin{lstlisting}[float,language=java,caption=Test generated by \DCII that detects the behavioral change of \textsc{e7d16c2} in commons-lang.,label=fig:ampl_commons-lang]
 @Test(timeout = 10000)
 public void testAppendSuper_literalMutationString64() {
 		String o_testAppendSuper_literalMutationString64__15 = 
@@ -705,7 +701,7 @@ Here, the developer specified the new escaping mechanism with 5 different inputs
 The main difference between the human test and the amplified test is that the human test is more readable and uses 5 different inputs.
 However, the amplified test generated by \DCI is valid since it detects the behavioral change correctly.
 
-\begin{lstlisting}[language=java,caption=Developer test for \textsc{e7d16c2} of commons-lang.,label=fig:diff_commons-lang]
+\begin{lstlisting}[float,language=java,caption=Developer test for \textsc{e7d16c2} of commons-lang.,label=fig:diff_commons-lang]
 @Test
 public void testLANG1395() {
 	assertEquals("{\"name\":\"value\"}",
@@ -731,7 +727,7 @@ In other words, the behavioral change is detected by a different exception (diff
 \footnote{Interestingly, the number is parsed lazily, only when needed. 
 Consequently, the exception is thrown when invoking the \texttt{longValue()} method and not when invoking \texttt{parse()}}.
 
-\begin{lstlisting}[language=java,caption=Test generated by DCI that detects the behavioral change of commit \textsc{44cad04} in Gson.,label=fig:ampl_gson]
+\begin{lstlisting}[float,language=java,caption=Test generated by DCI that detects the behavioral change of commit \textsc{44cad04} in Gson.,label=fig:ampl_gson]
 public void testNumberDeserialization_literalMutationString8_failAssert0() throws Exception {
 	try {
 		String json = "dhs";
@@ -749,7 +745,7 @@ This short test verifies that the program handles a number-as-string correctly.
 For this example, the \DCI test does indeed detect the behavioral change, but in an indirect way.
 On the contrary, the developer test is shorter and directly targets the changed behavior, which is better.
 
-\begin{lstlisting}[language=java,caption=Provided test by the developer for \textsc{44cad04} of Gson.,label=fig:diff_gson]
+\begin{lstlisting}[float,language=java,caption=Provided test by the developer for \textsc{44cad04} of Gson.,label=fig:diff_gson]
 public void testNumberAsStringDeserialization() {
 	Number value = gson.fromJson("\"18\"", Number.class);
 	assertEquals(18, value.intValue());
@@ -758,12 +754,12 @@ public void testNumberAsStringDeserialization() {
 
 %% JSOUP
 \textsc{jsoup\#3676b13}\footnote{\url{https://github.com/jhy/jsoup/commit/3676b13}}: This change is a pull request (\ie a set of commits) and introduces 5 new behavioral changes.
-There are two improvements: skip the first new lines in pre tags and support deflate encoding, and three bug fixes: throw exception when parsing some urls, add spacing when output text, and no collapsing of attribute with empty values.
+There are two improvements: skip the first new lines in pre tags and support deflate encoding, and three bug fixes: throw exception when parsing some URLs, add spacing when output text, and no collapsing of attribute with empty values.
 \autoref{fig:ampl_jsoup} shows an amplified test obtained using \DCII.
 This amplified test has 15 assertions and a duplication of method call.
 Thanks to this duplication and these generated assertions on the \texttt{toString()} method, this test is able to capture the behavioral change introduced by the commit.
 
-\begin{lstlisting}[language=java,caption=Test generated by \DCII that detects the behavioral change of \textsc{3676b13} of Jsoup.,label=fig:ampl_jsoup]
+\begin{lstlisting}[float,language=java,caption=Test generated by \DCII that detects the behavioral change of \textsc{3676b13} of Jsoup.,label=fig:ampl_jsoup]
 @Test(timeout = 10000)
 public void parsesBooleanAttributes_add4942() {
 	String html = "<a normal=\"123\" boolean empty=\"\"></a>";
@@ -783,7 +779,7 @@ For this behavioral change, it concerns the \texttt{Attribute} and not the \text
 So, the amplified test is arguably better, since it is closer to the change than the developer's test.
 But, \DCII generates amplified tests that detect 2 of 5 behavioral changes: adding spacing when output text and no collapsing of attribute with empty values only, so regarding the quantity of changes, the human tests are more complete.
 
-\begin{lstlisting}[language=java,caption=Provided test by the developer for \textsc{3676b13} of Jsoup.,label=fig:diff_jsoup]
+\begin{lstlisting}[float,language=java,caption=Provided test by the developer for \textsc{3676b13} of Jsoup.,label=fig:diff_jsoup]
 @Test
 public void booleanAttributeOutput() {
 	Document doc = Jsoup.parse("<img src=foo noshade='' nohref async=async autofocus=false>");
@@ -800,7 +796,7 @@ The test method \texttt{getReaderNullRootDoesNotFindFileWithAbsolutePath} has be
 It modifies the existing string literal with another string used somewhere else in the test class and generates 3 new assertions.
 The behavioral change is detected thanks to the modified strings: it produces the right test case containing a space.
 
-\begin{lstlisting}[language=java,caption=Test generated by \DCII that detects the behavioral change of \textsc{774ae7a} of Mustache.java.,label=fig:ampl_mustache]
+\begin{lstlisting}[float,language=java,caption=Test generated by \DCII that detects the behavioral change of \textsc{774ae7a} of Mustache.java.,label=fig:ampl_mustache]
 @Test(timeout = 10000)
 public void getReaderNullRootDoesNotFindFileWithAbsolutePath_litStr4() {
 	ClasspathResolver underTest = new ClasspathResolver();
@@ -825,7 +821,7 @@ The difference is that the \DCII's amplified test method provides a non longer v
 However, providing such inputs produce errors afterward which signal the behavioral change.
 In this case, the amplified test is complementary to the human test since it verifies that the wrong inputs are no longer supported and that the system immediately throws an error.
 
-\begin{lstlisting}[language=java,caption=Developer test for \textsc{774ae7a} of Mustache.java.,label=fig:diff_mustache]
+\begin{lstlisting}[float,language=java,caption=Developer test for \textsc{774ae7a} of Mustache.java.,label=fig:diff_mustache]
 @Test
 public void getReaderWithRootAndResourceHasDoubleDotRelativePath() throws Exception {
 	ClasspathResolver underTest = new ClasspathResolver("templates");
@@ -851,7 +847,7 @@ Among them, 1 assertion captures the behavioral change between the two versions 
 The behavioral change that is detected is the presence of a new logging statement in the diff. 
 After verification, there is indeed such a behavioral change in the diff, with the addition of a call to ``logConflict'' in the newly handled case.
 
-\begin{lstlisting}[language=java,caption=Test generated by \DCIA that detects the behavioral change of \textsc{d3101ae} of XWiki.,label=fig:ampl_xwiki]
+\begin{lstlisting}[float,language=java,caption=Test generated by \DCIA that detects the behavioral change of \textsc{d3101ae} of XWiki.,label=fig:ampl_xwiki]
 @Test(timeout = 10000)
 public void testMergeCharList() throws Exception {
 	MergeResult<Character> result;
@@ -885,7 +881,7 @@ the variable names, the explanatory comments and even the vertical space formatt
 Yet, \DCIA's amplified tests capture a behavioral change that was not specified in the human test.
 In this case, amplified tests can be complementary.
 
-\begin{lstlisting}[language=java,caption=Developer test for \textsc{d3101ae} of XWiki.,label=fig:diff_xwiki]
+\begin{lstlisting}[float,language=java,caption=Developer test for \textsc{d3101ae} of XWiki.,label=fig:diff_xwiki]
 @Test
 public void testMergeWhenUserHasChangedAllContent() throws Exception
 {
@@ -988,3 +984,46 @@ To mitigate this threat, I have computed a confidence interval that estimates th
 
 \section{Conclusion}
 \label{sec:dci:conclusion}
+
+This chapter presented the evaluation of \DCI, which aim at setting up \dspot inside the CI.
+The goal of \DCI is to produce automatically test methods that detect a behavioral change, \ie a behavioral difference between two versions of the same program.
+This is done by selecting test methods that execute the changes, then amplify them with \dspot.
+In addition to this, \dspot keeps amplified test methods that detect the behavioral change, approximate by the fact that the amplified test methods pass on the pre-changes version but fail on the post-change version of the program.
+
+\DCI can be integrated to the continuous integration to achieve two major tasks:
+
+1) \DCI can improve the regression detection ability of the test suite with respect to a changes.
+When the behavioral changes highlighted by the test suite is not desired, it means that the developers introduced a regression or a new bug inside the program.
+Using these amplified test methods, the developers can identify and fix the problem faster than without it.
+Thus it prevents the merge of hidden bug that could cost a lot of money if users face it when using the application.
+
+2) \DCI can help the developers to make evolve the test suite by providing amplified test methods that detect the behavioral change.
+When this behavioral change is the one desired, the developers just need to negate, manually or using automatic approach such as ReAssert~\cite{ReAssert}, the assertions.
+The developer will obtain amplified test methods that strengthen the test suite according to her change.
+
+To evaluate \DCI, I selected 60 commits that introduce behavioral changes from 6 open-source projects, from past-evaluation~\cite{descartes,Danglot2018}.
+Then, I executed \DCI on these 60 commits and observe whether or not \DCI can generate amplified test methods that detect the behavioral changes.
+For these 60 commits, \DCI has been able to detect 25 behavioral change.
+To the best of my knowledge, this is the first benchmark of real behavioral changes  from open-source projects.
+This evaluation showed that \DCI is able to generate amplified test methods to detect real behavioral changes, introduced by commits.
+This means that \DCI can be used in an industrial context since the selected changes are complex and required deep knowledge of the application, and the selected application are wide-spread and used programs across the open-source community.
+
+In the next chapter, I expose 3 transverval contributions of this thesis:
+
+First, the study of the correctness of program under runtime perturbation:
+In the previous chapter \autoref{chap:dspot} and this chapter, I evaluated \dspot in two different contexts: offline amplification and amplification in the CI.
+\dspot generates amplified test methods, using the state of the program as oracle to build assertions.
+It means that the current behavior of the program is considered correct by \dspot.
+What does correct mean? In the first transversal contribution, I studied the correctness program.
+In particular, how do programs behave under run-time perturbation?
+
+Second, the study of pseudo-tested methods;
+Pseudo-tested methods are source methods that when the body is removed, the whole test suite pass, while some test methods are executing this methods.
+In \autoref{chap:test-improvement}, I use \ms to measure test suite's quality.
+The detection of pseudo-tested methods can be done using \ms and more particularly specifically designed mutants.
+
+And Third, the study of test generation for automatic repair.
+Automatic repair aims at fixing automatically bugs.
+One family of automatic repair is the test suite based.
+This family uses the test suite as oracle to know whether or not the bug have been fix.
+One can use test generation techniques to enhances these automatic repair techniques and see it as a test amplification process.

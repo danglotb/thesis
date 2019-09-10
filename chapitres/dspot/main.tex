@@ -1,43 +1,39 @@
 \chapter{\dspot: A Test Amplification Technique}
 \label{chap:dspot}
 
-\begin{chaptersummary}
-		In this chapter, I expose the major output of this thesis: \dspot.
-		\dspot is a test amplification tool that have the ambition to improve the test suite of real projects.
-		\dspot achieves this by providing a set of automated procedures done in three majors step:
-		\begin{enumerate}
-			\item it modifies the test inputs in order to trigger new behavior.
-			\item it generates assertions to verify the new behavior of the program.
-			\item it selects amplified test methods according to a specific test-criterion such as branch coverage.
-		\end{enumerate}
-	
-		\dspot's output is a set of amplified test methods that improve the original test suite according to the specified test-criterion.
-		
-		In this chapter, I first define key concepts in \autoref{sec:dspot:definitions};
-		Then, I expose an overview of \dspot with its principle, input\& output, and its workflow in \autoref{sec:dspot:overview};
-		Followed by the explanation of \dspot's algorithm in \autoref{sec:dspot:algorithm};
-		Then, I detail the implementation and the ecosystem of \dspot in \autoref{sec:dspot:implemention}
-		Eventually, I conclude this chapter in \autoref{sec:dspot:conclusion}
-\end{chaptersummary}
-
 \minitoc
 
 \graphicspath{{.}{chapitres/dspot/}}
 
-As mentioned in the previous chapter (see \autoref{chap:sota}), developers are mandated to build strong test suite in parallel of their application.
+As mentioned in the introduction of the previous chapter (see \autoref{chap:sota}), developers are mandated to build strong test suites in parallel of their application.
 This reinforces the confidence that they have in the correctness of their application.
 
-However, test suite are not the first objective and thus make it secondary.
-Their development are focused on regular cases on the way that the program should behave.
+However, test suites are not unfortunately the first objective and thus pass to the background for developers.
+Their development is focused on regular cases on the way that the program should behave.
 In addition to this, developers may cut corners because of lack of time, expertise or discipline.
 
-In the literature, one can find a lot of work trying to solve this issue, such as test suite generation or test suite evolution.
-Test amplification is one of them.
-However, the surveyed works present problems, in particular generalization of result, test amplification according to a multiple changes, scaling-up and assessment of the result by external real developers.
+In the literature, one can find a lot of work trying to solve this issue, such as test suite generation or test suite evolution~\cite{test:data:generation:survey:McMinn,Edvardsson:Survey:Test:Data:Generation}.
+Test amplification~\cite{yoo2012,DANGLOT2019110398} is one of them.
+However, the surveyed works present problems (see \autoref{subsec:sota:category-1:summary}, \autoref{subsec:sota:category-2:summary}, \autoref{subsec:sota:category-3:summary}, \autoref{subsec:sota:category-4:summary}), in particular generalization of results, test amplification according to multiple changes, scaling-up and assessment of the result by external real developers.
 
 In this chapter, I expose the major output of this thesis: \dspot.
-The ambitious with \dspot is to provide an open-source tool that would amplify the test suite.
-Also, I developed \dspot in a way that it support real software, it can be used in the context of continuous integration.
+\dspot is a test amplification tool that has the ambition to improve the test suite of real projects.
+\dspot achieves this by providing a set of automated procedures done in three majors steps:
+\begin{enumerate}
+	\item it modifies the test inputs in order to trigger new behaviors.
+	\item it generates assertions to verify the new behavior of the program.
+    \item it selects amplified test methods according to a specific test-criterion such as branch coverage.
+\end{enumerate}
+	
+\dspot's output is a set of amplified test methods that improve the original test suite according to the specified test-criterion.
+The goal is to suggest these amplified test methods to the developers as possible improvements of the test suite.
+For example, I could use the pull-request mechanisms to seamlessly suggest these improvements to developers, as part of their regular development activities.
+
+In this chapter, I first define key concepts in \autoref{sec:dspot:definitions}.
+Then, I expose an overview of \dspot with its principle, input\& output, and its workflow in \autoref{sec:dspot:overview}.
+Followed by the explanation of \dspot's algorithm in \autoref{sec:dspot:algorithm}.
+Then, I detail the implementation and the ecosystem of \dspot in \autoref{sec:dspot:implemention}
+Eventually, I conclude this chapter in \autoref{sec:dspot:conclusion}.
 
 \section{Definitions}
 \label{sec:dspot:definitions}
@@ -108,7 +104,7 @@ In \dspot there are for now 3 test-criterion available:
 
 \autoref{fig:dspot:principle} shows graphically the principle of \dspot.
 
-\subsection{Input \& Output}
+\subsection{Input\xspace\& Output}
 \label{subsec:dspot:overview:input-and-output}
 
 \dspot's inputs are a program, a set of existing test methods and a test-criterion.
@@ -127,13 +123,7 @@ An amplified test method's integration can be done in two way:
 2) the developer integrate only the changes between the original test method and the amplified test method.
 This enrich directly an existing test method.
 
-%\begin{figure}[h]
-%	\caption{Example of what \dspot produces: a diff to improve an existing test case.}
-%	\label{fig:diff-protostuff}
-%	\centering\fbox{\includegraphics[width=0.98\textwidth, trim=4.15cm 17.52cm 4.05cm 10.76cm, clip]{protostuff.pdf}}
-%\end{figure}
-
-\begin{lstlisting}[language=diff,caption=Example of what \dspot produces: a diff to improve an existing test case.,label=fig:diff-protostuff]
+\begin{lstlisting}[float,language=diff,caption=Example of what \dspot produces: a diff to improve an existing test case.,label=fig:diff-protostuff]
 @@ -144,7 +144,8 @@ public void testEmptyList() throws Exception
     ArrayList<Foo> foos = new ArrayList<Foo>();
 
@@ -215,17 +205,13 @@ Since \dspot needs to execute multiple times the tests under amplification, it m
 
 \section{Algorithm}
 \label{sec:dspot:algorithm}
-% ---------------------------------------------------------------------------------------
-% input space exploration: INPUT GOAL
-% ---------------------------------------------------------------------------------------
 \subsection{Input Space Exploration Algorithm}
 \label{subsec:dspot:algorithm:input-space-exploration}
 
-\dspot aims at exploring the input space so as to set the program in new, never explored states. To do so, \dspot applies code transformations to the original manually-written test methods. 
-
+\dspot aims at exploring the input space so as to set the program in new, never explored states.
+To do so, \dspot applies code transformations to the original manually-written test methods. 
 \textbf{\Iampl} for Input Amplification, is the process of automatically creating new test input points from existing test input points.
-
-\dspot uses three kinds of \Iampl.
+\dspot uses three kinds of \Iampl:
 
 \emph{1) Amplification of literals}: the new input point is obtained by changing a literal used in the test (numeric, boolean, string).
 These transformations are summarized in \autoref{table:test-transformations}.
@@ -268,15 +254,14 @@ These transformations are summarized in \autoref{table:test-transformations}.
 or adds a new invocation to an accessible method with an existing variable as target.
 
 \emph{3) Test objects}:
-if a new object is needed as a parameter while amplifying method calls, \dspot creates a new object of the required type using the default constructor if it exists.
+if a new object is needed as a parameter while amplifying method calls, \dspot creates an object of the correct type.
 In the same way, when a new method call needs primitive value parameters, \dspot generates a random value.
 
 For example, if an \Iampl is applied on the example presented in \autoref{lst:archetype}, it may generate a new method call on \emph{tl}.
 In \autoref{lst:iampl-example}, the added method call is ``removeAll''.
-Since \dspot changes the state of the program, existing assertions may fail. 
-That is why it removes also all existing assertions.
+During this process, \dspot removes existing assertions since they might fail because it changes the state of the program.
 
-\begin{lstlisting}[caption={An example of an \Iampl{}: the amplification added a method call to \emph{removeAll()} on \emph{tl}.},label=lst:iampl-example,float,language=java,numbers=left] 
+\begin{lstlisting}[float,caption={An example of an \Iampl{}: the amplification added a method call to \emph{removeAll()} on \emph{tl}.},label=lst:iampl-example,float,language=java,numbers=left] 
 testIterationOrder() {
 	TreeList tl=new TreeList(); (*@\label{input-begin-iampl}@*)
 	tl.add(1);
@@ -298,10 +283,7 @@ The more iteration \dspot does, the more it explores, the more it takes time to 
 \subsection{Assertion Improvement Algorithm}
 \label{subsec:dspot:algorithm:new-assertions}
 
-To improve existing tests, \dspot adds new assertions as follows.
-
 \textbf{\Aampl:} for Assertion Amplification, is the process of automatically creating new assertions.
-
 In \dspot, assertions are added on objects from the original test case, as follows: 
 1) it instruments the test methods to collect the state of a program after execution (but before the assertions), \ie it creates observation points. 
 The state is defined by all values returned by getter methods.
@@ -310,27 +292,24 @@ This execution result in a map per test method, that gives the values from all g
 3) it generates new assertions in place of the observation points, using the collected values as oracle. 
 In addition, when a new test input sets the program in a state that throws an exception, \dspot produces a test asserting that the program throws a specific exception.
 
-For example, let consider \Aampl on the test method of the example above. 
-
-First, in \autoref{lst:aampl-example-1} \dspot instruments the test method to collect values, by adding method calls to the objects involved in the test case.
-
-\begin{lstlisting}[caption={In \Aampl{}, the second step is to instrument and run the test to collect runtime values.},label=lst:aampl-example-1,float,language=java,numbers=left] 
+\begin{lstlisting}[caption={In \Aampl{}, the second step is to instrument and run the test to collect runtime values.},label=lst:aampl-example-1,language=java,numbers=left] 
 testIterationOrder() {
 	TreeList tl=new TreeList(); (*@\label{input-begin-aampl}@*)
 	tl.add(1);
 	tl.add(2);aampl
 	tl.removeAll();(*@\label{input-end-aampl}@*)
-	
-	// logging current behavior
-	Observations.observe(tl.size()); 
+
+	Observations.observe(tl.size());  // logging current behavior
 	Observations.observe(tl.isEmpty()); 
 }
 \end{lstlisting}
 
+For example, let consider \Aampl on the test method of the example above. 
+First, in \autoref{lst:aampl-example-1} \dspot instruments the test method to collect values, by adding method calls to the objects involved in the test case.
 Second, the test with the added observation points is executed, and subsequently, \dspot generates new assertions based on the collected values. 
 In \autoref{lst:aampl-example-2}, \dspot has generated two new assertions.
 
-\begin{lstlisting}[caption={In \Aampl{}, the last step is to generate the assertions based on the collected values.},label=lst:aampl-example-2,float,language=java,numbers=left] 
+\begin{lstlisting}[caption={In \Aampl{}, the last step is to generate the assertions based on the collected values.},label=lst:aampl-example-2,language=java,numbers=left] 
 testIterationOrder() {
 	TreeList tl=new TreeList(); (*@\label{input-begin-aampl2}@*)
 	tl.add(1);
@@ -425,7 +404,7 @@ It consists of 19295+ logical lines of code (as measured by cloc).
 \subsection{Ecosystem}
 \label{subsec:dspot:implemention:ecosystem}
 
-For the sake of open-science, \dspot is made publicly available on Github\footnote{\url{https://github.com/STAMP-project/dspot}}.
+For the sake of open-science, \dspot is made publicly available on \gh\footnote{\url{https://github.com/STAMP-project/dspot}}.
 This repository is animated by the community around \dspot.
 It uses a pull-request based development to promote open-source contributions.
 
@@ -441,20 +420,20 @@ The latter allows developers to run \dspot as a Jenkins jobs in order to integra
 \section{Conclusion}
 \label{sec:dspot:conclusion}
 
-This chapter presents technical details about \dspot.
-\dspot is a test amplification tool that improve the test suite.
-\dspot works in three main steps:
+This chapter presented technical details about \dspot.
+\dspot is a test amplification tool that improves the test suite.
+\dspot is the implementation of the first algorithm that combines 2 approaches from the state of the art: the input modification by Tonella \etal\cite{tonella} and the assertions generation by Xie\cite{Xie2006}.
+\dspot provides a new tool to improvement test methods automatically.
+It has the potential to assist developers in the extremely important task that is testing the application.
+\dspot's output is a set of amplified test methods that improve the original test suite according to the specified test-criterion.
+\dspot's algorithm is done in 3 main steps:
 \begin{enumerate}
-	\item it modifies the test inputs in order to trigger new behavior.
-	\item it generates assertions to verify the new behavior of the program.
-	\item it selects amplified test methods according to a specific test-criterion such as branch coverage.
-\end{enumerate}
-
-\dspot's output is a set of amplified test methods that improve the original test suite according to the specified test-criterion.\\
+	\item It transforms the input of tests using static analysis and code transformation to create a new state of the program.
+	\item it observes the new state of the program and generate assertions in order to obtain complete test methods.
+	\item it uses a test-criterion to keep only amplified test methods that improve the test suite with respect to this same criterion, \eg branch coverage.
+\end{enumerate} 
 
 In the two following chapters, I evaluate the performance of \dspot to improve existing test suite in two scenarios:
-
-A first scenario where \dspot improve existing test suite of open-source projects from \gh.
+A first scenario where \dspot improves existing test suites of open-source projects from \gh.
 \dspot's output is evaluated by external developers and the test-criterion to improve is the mutation score.
-
-A second scenario where \dspot is enhanced to be executed inside the continuous in order to detect a behavioral changes introduced by commits done by developers on a version control platform such as \gh.
+A second scenario where \dspot is enhanced to be executed inside the continuous integration. The goal is to detect a behavioral changes introduced by commits done by developers on a version control platform such as \gh.

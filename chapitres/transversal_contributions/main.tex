@@ -1,22 +1,28 @@
 \chapter{Transversal Contributions}
 \label{chap:transversal-contributions}
 
-\begin{chaptersummary}
-	In this chapter, I expose 3 transversal contributions thanks to specific skills obtained during my thesis.
-	\begin{itemize}
-		\item \cite{Danglot2018} The first transversal contribution studies the correctness of program under runtime perturbations.
-		\item \cite{descartes} The second transversal contribution studies extreme mutants, \eg a subclass of mutants such as done in mutation analysis, in open-source project. 
-		\item \cite{Yu2019} The third transversal contribution studies the overfitting of patches in test-based automatic repair techniques and how to overcome using test generation.
-	\end{itemize}
-	These 3 transversal contributions are supported by published articles.
-\end{chaptersummary}
-
 \minitoc
 
 \graphicspath{{.}{chapitres/transversal_contributions/}}
 
+In this chapter, I expose 3 transversal contributions that I made during my thesis.
+Thanks to the expertise that I developed during my thesis, I worked with my researchers colleagues on side topics yet linked to this thesis.
+\begin{itemize}
+	\item The first transversal contribution studies the correctness of program under runtime perturbations in \autoref{sec:transversal-contributions:correctness}.
+	This work has been done during my master degree.
+	\item The second transversal contribution studies the pseudo-tested methods \autoref{sec:transversal-contributions:descartes}. 
+	\item The third transversal contribution studies patches' overfitting in test-based repair techniques in \autoref{sec:transversal-contributions:test-for-repair}.
+\end{itemize}
+These 3 transversal contributions are supported by published articles~\cite{Danglot2018,descartes,Yu2019} in \emph{Empirical Software Engineering}.
+However, the reader can skip this chapter since it is additional materials and this chapter does not expose core contributions.
+
 \section{Study of Program Correctness}
 \label{sec:transversal-contributions:correctness}
+
+In this thesis, I study the correctness of programs through test methods.
+\dspot, that has been presented in \autoref{chap:dspot}, is a test suite amplification tool that generates new test methods using the current behavior of the program as oracle to build assertions.
+In other words, \dspot considers considers the current values that compose the state of the program as \textbf{correct}.
+But, what does correct mean? In this first transversal contribution, I study the correctness program under run-time perturbations.
 
 \subsection{Problem Statement}
 \label{subsec:transversal-contributions:correctness:introduction}
@@ -134,11 +140,6 @@ This dataset has been created following this methodology:
 first and foremost, the programs can be specified with a perfect oracle;
 second, they are written in Java;
 third, they come from diverse application domains in order to maximize external validity.
-The resulting programs are summarized in \autoref{tab:description-dataset}. 
-The first column displays the name of the program; 
-the second is the number of lines of code; 
-the third is a short description of the purpose of the program; 
-the last column describes the perfect oracle used to evaluate the correctness of the output.
 
 \subsubsection{The PONE Experiment}
 \label{subsubsec:transversal-contributions:correctness:experimentation:PONE}
@@ -222,6 +223,11 @@ To strengthen it, one could amplifies its test suite with \dspot to have a bette
 \section{Study of Pseudo-tested Methods}
 \label{sec:transversal-contributions:descartes}
 
+Pseudo-tested methods are source methods that when the body is removed, the whole test suite passes, while some test methods are executing this methods.
+In \autoref{chap:test-improvement}, I use \ms to measure the quality of a test suite.
+The detection of pseudo-tested methods can be done using \ms and specifically designed mutants.
+In this second transversal contributions, we study the presence of pseudo-tested methods and the developers assessment if it is worthy or not to fix them.
+In \dspot, the default test-criterion used is the pseudo-tested methods, \ie \dspot keeps amplified test methods that specify pseudo-tested methods.
 
 \subsection{Problem Statement}
 \label{subsec:transversal-contributions:descartes:introduction}
@@ -313,7 +319,7 @@ We considered active projects written in \java{}, that use maven as main build s
 With this evaluation, we aim at characterizing the prevalence of \pseudotested{} methods. 
 It is a conceptual replication of the work by \theoriginalauthors, with a larger set of study objects and a different tool support for the detection of \pseudotested{} methods.
 
-We analyzed each study subject following the procedure described in Section \ref{subsec:transversal-contributions:descartes:definitions}. The results are summarized in Table \ref{tab:testedclass}. The second column shows the total number of methods excluding constructors. The third, lists the methods covered by the test suite. The following column shows the ratio of covered methods. The \textit{\#MUA} column shows the number of methods under analysis, per the criteria described in Section \ref{sec:metrics}. The last two columns give the number of \pseudotested{} methods (\#PSEUDO) and their ratio to the methods under analysis (PS\_RATE).
+We analyzed each study subject following the procedure described in Section \ref{subsec:transversal-contributions:descartes:definitions}. The results are summarized in Table \ref{tab:testedclass}. The second column shows the total number of methods excluding constructors. The third, lists the methods covered by the test suite. The following column shows the ratio of covered methods. The \textit{\#MUA} column shows the number of methods under analysis. The last two columns give the number of \pseudotested{} methods (\#PSEUDO) and their ratio to the methods under analysis (PS\_RATE).
 
 \begin{table}
 	\caption{Number of methods in each project, number of methods under analysis and number of \pseudotested{} methods}
@@ -410,6 +416,11 @@ It means that, \dspot amplifies the test suite in order to detect more extreme m
 \section{Study of Test Generation for Repair}
 \label{sec:transversal-contributions:test-for-repair}
 
+Automatic repair aims at fixing bugs automatically.
+One family of automatic repair is the test suite based.
+This family uses the test suite as an oracle to know whether or not the bug has been fix.
+In this transversal contribution, we use test generation process to enhance automatic repair process and one can see it as a test amplification process.
+As a perspective of this work, we could use \dspot and a specifically designed test-criterion to improve the outcome of test suite based repair techniques.
 
 \subsection{Problem Statement}
 \label{subsec:transversal-contributions:test-for-repair:introduction}
@@ -577,11 +588,12 @@ Thus, some input-amplification operators are well suited to this task such as li
 \section{Conclusion}
 \label{sec:transversal-contributions:conclusion}
 
-In this chapter, I exposed 3 transversal contributions that I made thank to the skill that I developed during my thesis.
+In this chapter, I exposed 3 transversal contributions that I made thanks to the skills that I developed during my thesis.
+I worked with my researchers colleagues on side topics yet linked to this thesis.
 
 First, the study of program correctness under runtime perturbation.
 It highlighted the existence of the correctness attraction phenomenon.
-This first work could be used conjointly with \dspot, by integrating the correctness ratio as a test-criterion in order to strengthen the ability of the test suite to detect more runtime perturbation.
+This first work could be used jointly with \dspot, by integrating the correctness ratio as a test-criterion in order to strengthen the ability of the test suite to detect more runtime perturbation.
 
 Second, the study of pseudo-tested methods and extreme mutations.
 It showed the prevalence of pseudo-tested methods, all the tests pass even if the whole behavior, \ie body, of such methods is removed.

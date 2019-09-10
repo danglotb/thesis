@@ -1,44 +1,39 @@
-\chapter{Test Amplification For Behavioral Changes Detection Improvement}
+\chapter{Test Amplification For Artificial Behavioral Changes Detection Improvement}
 \label{chap:test-improvement}
-
-\begin{chaptersummary}
-	In this chapter, I detail a first evaluation of \dspot. 
-	This evaluation is based on the mutation score as test-criterion.
-	Mutation score measures the test suite's ability to detect artificial behavioral changes.
-	I confronted \dspot's output to real projects from \gh.
-	To do so, I propose to developers to integrate directly the amplified test methods into their test suite.
-	Developer showed their interest in amplified test methods by accepting permanently some \dspot's amplified test methods into their test suite.
-	I also performed an evaluation on 40 test classes from 10 projects from \gh and showed that \dspot improve 26 of them.
- 
- 	To sum up, the contributions of this chapter are:
-	\begin{itemize}
-		\item the design and execution of an experiment to assess the relevance of \dspot, based on feedback from the developers of mature projects;
-		\item a large scale quantitative study of the improvement of 40 real-world test classes taken from 10 mature open-source Java projects.	
-		\item fully open-science data: the experimental data are made publicly available for future research\footnote{\url{https://github.com/STAMP-project/dspot-experiments/}}
-	\end{itemize}
-	Note that this chapter has been published~\cite{Danglot2019}.
-	
-	The remainder of this chapter is as follows:
-	\autoref{sec:test-improvement:experiment-protocol} presents the experimental protocol of our study;
-	\autoref{sec:test-improvement:experiment-results} analyses our empirical results.;
-	\autoref{sec:test-improvement:threats} discusses the threats to validity;
-	and \autoref{sec:test-improvement:conclusion} concludes this chapter;
-\end{chaptersummary}
 
 \minitoc
 
 \graphicspath{{.}{chapitres/test-improvement/}}
 
-% ---------------------------------------------------------------------------------------
-% INTRODUCTION
-% ---------------------------------------------------------------------------------------
+This thesis aims at supporting developers in their developing tasks.
+One of them is to evolve the test suite, \ie modify or add test methods, to strengthen their confidence in the program's correctness.
+In \autoref{chap:dspot}, I introduced \dspot which is a test suite amplification tool.
+In this chapter, I evaluate the effectiveness of \dspot to improve the quality of a test suite and the acceptability of the resulting amplified test methods.
 
-This chapter relates the first study of the result of \dspot.
-The objectives of this evaluation is to assess the \dspot's effectiveness to improve the quality of a test suite and the acceptability of the resulting amplified test methods.
+This evaluation is based on the mutation score as test-criterion.
+I confronted \dspot's output to real projects from \gh.
+To do so, I proposed to developers to integrate directly the amplified test methods into their test suite.
+Developers showed their interest in amplified test methods by permanently accepting some \dspot's amplified test methods into their test suite.
+I also performed an evaluation on 40 test classes from 10 projects from \gh and showed that \dspot improves 26 of them.
 
-To do this evaluation, I choose \ms as test-criterion to be improved by \dspot.
+To sum up, the contributions of this chapter are:
+\begin{itemize}
+	\item the design and execution of an experiment to assess the relevance of \dspot, based on feedback from the developers of mature and active projects;
+	\item the design and execution of a large scale quantitative study of the improvement of 40 real-world test classes taken from 10 mature open-source Java projects.	
+	\item fully open-science data: the experimental data are made publicly available for future research\footnote{\url{https://github.com/STAMP-project/dspot-experiments/}}
+\end{itemize}
+Note that this chapter has been published~\cite{Danglot2019} in the Springer journal \emph{Empirical Software Engineering} and the remainder is as follows:
+\autoref{sec:test-improvement:mutation-score} introduces \ms as a test-criterion.
+\autoref{sec:test-improvement:experiment-protocol} presents the experimental protocol of our study.
+\autoref{sec:test-improvement:experiment-results} analyses our empirical results..
+\autoref{sec:test-improvement:threats} discusses the threats to validity.
+and \autoref{sec:test-improvement:conclusion} concludes this chapter.
+
+\section{Mutation score as test-criterion}
+\label{sec:test-improvement:mutation-score}
+
 Mutation score measures the test suite's ability to detect artificial behavioral changes.
-Briefly, \ms is measured as follow:
+Briefly, it is measured as follow:
 
 1) it injects a fault, or an artificial behavioral change, in the source code, \eg changes a $\ge$ into a $>$.
 This modified program is called ``mutants''.
@@ -89,9 +84,6 @@ In one hand, coverage is only based on the execution of the program and do not r
 Coverage does not measure the proportion of the behavior tested but only the proportion of code executed.
 In the other hand, \ms requires oracles and thus to have a high \ms, the test suite must contains oracles.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% EVALUATION
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Experimental  Protocol}
 \label{sec:test-improvement:experiment-protocol}
 
@@ -165,7 +157,7 @@ one group with strong tests, one other group with low quality tests.
 \ms has been used to distinguish between good and bad test classes.
 Accordingly, the selection process has five steps:
 
-1) Compute the original \ms of each class with \pitest (see \autoref{subsec:test-improvement:introduction:test-criterion};
+1) Compute the original \ms of each class with \pitest (see \autoref{sec:test-improvement:mutation-score};
 
 2) Discard test classes that have 100\% \ms, because they can already be considered as perfect tests 
 (this is the case for eleven classes, showing that the considered projects in the dataset are really well-tested projects);
@@ -219,12 +211,11 @@ This experimental protocol has been designed to study to what extent \dspot and 
 	
 	\item \textbf{\rqeffectiveness}
 	To answer \rqeffectiveness, I see whether the value that is taken as proxy to the developer value -- the \ms -- is appropriately improved.
-	For 40 real-world classes, first \pitest (see \autoref{subsec:test-improvement:introduction:test-criterion}) is ran the mutation testing tool on the test class. 
+	For 40 real-world classes, first \pitest (see \autoref{sec:test-improvement:mutation-score}) is ran the mutation testing tool on the test class. 
 	This gives the \ams for this original class. 
 	Then, the test class under consideration is amplified and the new \ams after amplification is computed. 
 	Finally, the result are compared and analyzed.
 	
-	% A-Ampl I-Ampl
 	\item \textbf{\rqAmplVersusIAmpl}
 	To answer \rqAmplVersusIAmpl, the number of \Aampl and \Iampl amplifications are computed. 
 	The former means that the suggested improvement is very short hence easy to be accepted by the developer while the latter means that more time would be required to understand the improvement.
@@ -244,16 +235,8 @@ This experimental design choice is guided by the approach to select ``focused'' 
 Recall that the number of killed mutants by the amplified test is the key focus indicator. 
 Hence, the more \dspot is able to improve the \ms, the more likely there are good candidates for the developers.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% RESULTS
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Experimental Results}
 \label{sec:test-improvement:experiment-results}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%% RQ : case study
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% !TEX root = main.tex
 
 \subsection{Answer to \rqpullrequest}
 \label{subsec:test-improvement:experiment-results:rq1}
@@ -296,37 +279,37 @@ once a test method has been selected as a candidate pull request, the diff is ma
 
 \subsubsection{Overview}
 
+\begin{table}[!h]
+	\label{tab:res-pr}
+	\centering
+	\rowcolors{2}{white}{gray!25}
+	\caption{Overall result of the opened pull request built from result of \dspot.}
+	\begin{tabular}{lcccc}
+		\toprule
+		Project & \# opened & \# merged & \# closed & \begin{tabular}{cc} \# under \\ discussion \end{tabular}\\
+		\midrule
+		javapoet & 4 & 4 & 0 & 0\\
+		mybatis-3 & 2 & 2 & 0 & 0\\
+		traccar & 2 & 1 & 0 & 1\\
+		stream-lib & 1 & 1 & 0 & 0\\
+		mustache & 2 & 2 & 0 & 0\\
+		twilio & 2 & 1 & 0 & 1\\
+		jsoup & 2 & 1 & 1 & 0\\
+		prostostuff & 2 & 2 & 0 & 0\\
+		logback & 2 & 0 & 0 & 2\\
+		retrofit & 0 & 0 & 0 & 0\\
+		\midrule
+		total & 19 & 14 & 1 & 4\\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
 In total, 19 pull requests has been created, as shown in \autoref{tab:res-pr}. 
 In this table, the first column is the name of the project, the second is number of opened pull requests, \ie the number of amplified test methods proposed to developers. 
 The third column is the number of amplified test methods accepted by the developers and permanently integrated in their test suite. 
 The fourth column is the number of amplified test methods rejected by the developers. 
 The fifth column is the number of pull requests that are still being discussed, \ie nor merged nor closed. 
 Note that these numbers might change over time if pull-requests are merged or closed.
-
-\begin{table}[h]
-	\label{tab:res-pr}
-	\centering
-    \rowcolors{2}{white}{gray!25}
-	\caption{Overall result of the opened pull request built from result of \dspot.}
-		\begin{tabular}{lcccc}
-			\toprule
-			Project & \# opened & \# merged & \# closed & \begin{tabular}{cc} \# under \\ discussion \end{tabular}\\
-			\midrule
-			javapoet & 4 & 4 & 0 & 0\\
-			mybatis-3 & 2 & 2 & 0 & 0\\
-			traccar & 2 & 1 & 0 & 1\\
-			stream-lib & 1 & 1 & 0 & 0\\
-			mustache & 2 & 2 & 0 & 0\\
-			twilio & 2 & 1 & 0 & 1\\
-			jsoup & 2 & 1 & 1 & 0\\
-			prostostuff & 2 & 2 & 0 & 0\\
-			logback & 2 & 0 & 0 & 2\\
-			retrofit & 0 & 0 & 0 & 0\\
-			\midrule
-			total & 19 & 14 & 1 & 4\\
-			\bottomrule
-		\end{tabular}
-\end{table}
 
 \input{chapitres/test-improvement/table_list_prs}
 
@@ -337,12 +320,7 @@ There are 4 under discussion.
 
 In the following, one pull-request per project is analyzed.
 
-% -----------------------------------------------------------------------------
-% JAVAPOET
-% -----------------------------------------------------------------------------
 \subsubsection{javapoet}
-
-% javapoet used: innerClassInGenericType_cf45194
 
 \dspot has been applied to amplify \texttt{TypeNameTest}. 
 \dspot synthesizes a single assertion that kills 3 more mutants, all of them at line 197 of the equals method. 
@@ -362,14 +340,7 @@ Consequently, I have proposed to the Javapoet developers one liner pull request 
 The title of the pull resuest is: ``\emph{Improve test on TypeName}'' with the following short text: ``\emph{Hello, I open this pull request to specify the line 197 in the equals() method of com.squareup.javapoet.TypeName. if (o == null) return false;}''
 This test improvement synthesized by \dspot has been merged by of the lead developer of javapoet one hour after its proposal.
 
-
-% -----------------------------------------------------------------------------
-% MYBATIS
-% -----------------------------------------------------------------------------
 \subsubsection{mybatis-3}
-
-% mybatis-3 used: shouldGetAndSetNestedProperty_cf114673
-%\todo{MyBatis is a object relational mapper framework (aka ORM). The original test suite kills 75.3\% --- 14821 over 19685 of the mutant generated by \pitest. DATASET}
 
 In project mybatis-3, \dspot has been applied to amplify a test for \texttt{MetaClass}. 
 \dspot synthesizes a single assertion that kills 8 more mutants.
@@ -378,7 +349,7 @@ This method builds a String that represents the  property given as input.
 The \texttt{then} branch is responsible to build the String in case the \texttt{property} has a child, \eg the input is ``richType.richProperty''. 
 This behavior is not specified at all in the original test class.
 
-I have proposed to the developers the pull request, showed in \autoref{lst:pr-mybatis}~entitled ``\emph{Improve test on MetaClass}'' with the following short text: ``\emph{Hello, I open this pull request to specify the lines 174-179 in the buildProperty(String, StringBuilder) method of MetaClass.}'', \footnote{\url{https://github.com/mybatis/mybatis-3/pull/912/files}}
+I proposed to the developers the pull request, showed in \autoref{lst:pr-mybatis}~entitled ``\emph{Improve test on MetaClass}'' with the following short text: ``\emph{Hello, I open this pull request to specify the lines 174-179 in the buildProperty(String, StringBuilder) method of MetaClass.}'', \footnote{\url{https://github.com/mybatis/mybatis-3/pull/912/files}}
 
 \begin{lstlisting}[language=diff,caption=Test-improvement proposed to MyBatis-3 developers.,label=lst:pr-mybatis]
 @@ -65,6 +65,8 @@ public void shouldCheckGetterExistance() {
@@ -393,12 +364,7 @@ I have proposed to the developers the pull request, showed in \autoref{lst:pr-my
 
 The developer accepted the test improvement and merged the pull request the same day without a single objection. 
 
-
-% -----------------------------------------------------------------------------
-% TRACCAR
-% -----------------------------------------------------------------------------
 \subsubsection{traccar}
-% top killer : testDecode_cf39
 
 \dspot has been applied to amplify \texttt{ObdDecoderTest}. 
 It identifies a single assertion that kills 14 more mutants.
@@ -422,15 +388,7 @@ The PR is shown in \autoref{lst:pr-traccar}.
 
 The developer of traccar thanked us for the proposed changes and merged it the same day.
 
-
-% -----------------------------------------------------------------------------
-% STREAM LIB
-% -----------------------------------------------------------------------------
 \subsubsection{stream-lib}
-
-%testHash64ByteArrayOverload_cf92
-
-% https://github.com/addthis/stream-lib/pull/128/files
 
 \dspot has been applied to amplify \texttt{TestMurmurHash}. 
 It identifies a new test input that kills 15 more mutants.
@@ -455,7 +413,7 @@ He suggested to open an new pull request with a new test method instead of chang
 I proposed, 6 days later, a second pull request entitled ``\emph{add test for hash() and hash64() against hard coded values}'' with no description, since I estimated that the developer was aware of the test intention.\footnote{\url{https://github.com/addthis/stream-lib/pull/128/files}}.
 This second pull request is shown in \autoref{lst:pr-stream-lib-2}.
 
-\begin{lstlisting}[language=diff,caption=Test-improvement proposed to stream-lib developers with developers' suggestions.,label=lst:pr-stream-lib]
+\begin{lstlisting}[float,language=diff,caption=Test-improvement proposed to stream-lib developers with developers' suggestions.,label=lst:pr-stream-lib-2]
 @@ -52,4 +52,22 @@ public void testHash64ByteArrayOverload() {
 assertEquals("MurmurHash.hash64(Object) given a byte[] did not match MurmurHash.hash64(String)",
 hashOfString, MurmurHash.hash64(bytesAsObject));
@@ -491,13 +449,8 @@ hashOfString, MurmurHash.hash64(bytesAsObject));
 
 The pull request has been merged by the same developer 20 days later.
 
-% -----------------------------------------------------------------------------
-% MUSTACHE.JAVA
-% -----------------------------------------------------------------------------
 \subsubsection{mustache.java}
 \label{subsubsec:test-improvement:experiment-results:rq1:mustache}
-
-%testAbstractClass_add3_literalMutation38_literalMutation326_failAssert19
 
 \dspot has been applied to amplify \texttt{AbstractClassTest}. 
 It identifies a try/catch/fail block that kills 2 more mutants.
@@ -531,9 +484,6 @@ I propose the pull request, shown \autoref{lst:pr-mustache.java}, to the develop
 12 days later, a developer accepted the change, but noted that the test should be in another class.
 He closed the pull request and added the changes himself into the desired class.\footnote{the diff is same:\url{https://github.com/spullara/mustache.java/commit/9efa19d595f893527ff218683e70db2ae4d8fb2d}}. 
 
-% -----------------------------------------------------------------------------
-% TWILIO-JAVA
-% -----------------------------------------------------------------------------
 \subsubsection{twilio-java}
 
 \dspot has been applied to amplify \texttt{RequestTest}. 
@@ -543,7 +493,7 @@ The change specifies that an object \texttt{Request} is not equal to null nor an
 The pull request was entitled ``\emph{add test equals() on request}'', accompanied with the short description ``\emph{Hi, I propose this change to specify the equals() method of com.twilio.http.Request, against object and null value}''. \footnote{\url{https://github.com/twilio/twilio-java/pull/334/files}}
 \autoref{lst:pr-twilio-java} shows this pull request.
 
-\begin{lstlisting}[language=diff,caption=Test-improvement proposed to twilio-java developers.,label=lst:pr-twilio-java]
+\begin{lstlisting}[float,language=diff,caption=Test-improvement proposed to twilio-java developers.,label=lst:pr-twilio-java]
 @@ -166,5 +166,13 @@ public void testRequiresAuthentication() {
 +   assertTrue(request.requiresAuthentication());
 + }
@@ -559,17 +509,6 @@ The pull request was entitled ``\emph{add test equals() on request}'', accompani
 
 A developer merged the change 4 days later.
 
-% 
-% 25 minutes
-% testGetUsername_cf47548_cf49619_cf53871
-% best fitness, all mutant are killed in equals pr easy to build
-% adding assertion manually against null, for having a complete test case.
-
-% ExcludedClasses = com.twilio.http.NetworkHttpClientTest
-
-% -----------------------------------------------------------------------------
-% JSOUP
-% -----------------------------------------------------------------------------
 \subsubsection{jsoup}
 
 \dspot has been applied to amplify \texttt{AttributeTest}. 
@@ -599,15 +538,12 @@ One accepted and one rejected.
 \texttt{hashCode} methods could require a different testing approach to validate the number of potential collisions in a collection of objects rather than checking or comparing the values of a few objects created for one explicit test case.
 The different responses obtained reflect the fact that developer teams and policies ultimately decide how to test the hash code protocol and the outcome could be different from different projects.
 
-% -----------------------------------------------------------------------------
-% PROTOSTUFF
-% -----------------------------------------------------------------------------
 \subsubsection{protostuff}
 
 \dspot has been applied to amplify \texttt{TailDelimiterTest}. 
 It identifies a single assertion that kills 3 more mutants.
 All new mutants killed are in the method \texttt{writeTo} of \texttt{ProtostuffIOUtil} on lines 285 and 286, which is responsible to write a buffer into a given scheme. 
-I proposed a pull request entitled ``\emph{assert the returned value of writeList}'', with the following short description ``\emph{Hi, I propose the following changes to specify the line 285-286 of io.protostuff.ProtostuffIOUtil.}''\footnote{\url{https://github.com/protostuff/protostuff/pull/212/files}}, shown in \autoref{fig:pr-protostuff}.
+I proposed a pull request entitled ``\emph{assert the returned value of writeList}'', with the following short description ``\emph{Hi, I propose the following changes to specify the line 285-286 of io.protostuff.ProtostuffIOUtil.}''\footnote{\url{https://github.com/protostuff/protostuff/pull/212/files}}, shown in \autoref{lst:pr-protostuff}.
 
 \begin{lstlisting}[language=diff,caption=Test-improvement proposed to protostuff developers.,label=lst:pr-protostuff]
 @@ -144,7 +144,8 @@ public void testEmptyList() throws Exception
@@ -624,11 +560,6 @@ I proposed a pull request entitled ``\emph{assert the returned value of writeLis
 
 A developer accepted the proposed changes the same day.
 
-%testEmptyList_add5651
-
-% -----------------------------------------------------------------------------
-% LOGBACK
-% -----------------------------------------------------------------------------
 \subsubsection{logback}
 
 \dspot has been applied to amplify \texttt{FileNamePattern}. 
@@ -652,11 +583,6 @@ The proposed pull request was entitle ``\emph{test: add test on equals of FileNa
 Even if the test asserts the contract that the \texttt{FileNamePattern} is not equals to null, and kills 5 more mutants, the lead developer does not get the point to test this behavior. 
 The pull request has not been accepted.
 
-%testSmoke_cf69003
-
-% -----------------------------------------------------------------------------
-% RETROFIT
-% -----------------------------------------------------------------------------
 \subsubsection{retrofit}
 
 I did not manage to create a pull request based on the amplification of the test suite of retrofit. 
@@ -716,10 +642,6 @@ To the best of my knowledge, this is the first public report of automatically im
 
 \input{chapitres/test-improvement/table_overall_result}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%% RQ : candidates
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \subsection{Answer to \rqcandidates}
 \label{subsec:test-improvement:experiment-results:rq2}
 
@@ -762,26 +684,18 @@ From the developer viewpoint, \dspot is not overwhelming it proposes a small set
 \end{mdframed}
 ~\\
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%% RQ amplification
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%To what extent does an amplified test class kills more mutants than a manual test class?
 \subsection{Answer to \rqeffectiveness}
 \label{subsec:test-improvement:experiment-results:rq3}
 
 \textbf{\rqeffectiveness: To what extent do improved test classed kill more mutants than developer-written test classes?}
 
-% 17 + 8
 In 26 out of 40 cases, \dspot is able to amplify existing test cases and improves the \ms ($MS$) of the original test class.
-% example
+
 For example, let us consider the first row, corresponding to \texttt{TypeNameTest}. 
 This test class originally includes 12 test methods that kill 599 mutants. 
 The improved, amplified version of this test class kills 715 mutants, \ie 116 new mutants are killed.
 This corresponds to an increase of 19\% in the number of killed mutants.
 
-% STRONG TEST
 First, let's discuss the amplification of the test classes that can be considered as being already good tests since they originally have a high \ms:
 those good test classes are the 24 tests in \autoref{tab:overall-results}.
 There is a positive increase of killed mutants for 17 cases.
@@ -807,12 +721,10 @@ This happens because \dspot amplifies test cases with different operators in par
 While \dspot keeps only amplified test methods that kill new mutants, it happens that the same mutant is newly killed by two different amplified tests generated in parallel threads. \\
 In this case, \dspot keeps both amplified test methods.
 
-%Interpretation not able to kills
 There are 7 cases with high \ms for which \dspot does not improve the number of killed mutants. 
 In 5 of these cases, the original \ms is greater than 87\% (IDs: 2, 7, 12, 21, 22), and \dspot does not manage to synthesize improved inputs to cover new mutants and eventually kill them.
 In some cases \dspot cannot improve the test class because they rely on an external resource (a jar file), or use utility methods that are not considered as test methods by \dspot and hence are not modified by our tool.
 
-% WEAK TESTS
 Now consider the tests in the lower part of \autoref{tab:overall-results}.
 Those tests are weaker because they have a lower \ms. 
 When amplifying weak test classes, \dspot improves the number of killed mutants in 9 out of 16 cases. 
@@ -831,10 +743,6 @@ In the latter case, there are test classes that are designed in a way that preve
 ~\\
 The most notable point of this experiment is that there are considered tests that are already really strong (\autoref{tab:overall-results}), with \ms in average of 78\%, with the surprising case of a test class with 99\% \ms that \dspot is able to improve. 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%% RQ 4
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Answer to \rqAmplVersusIAmpl}
 \label{subsec:test-improvement:experiment-results:rq4}
 
@@ -843,7 +751,6 @@ The most notable point of this experiment is that there are considered tests tha
 The relevant results are reported in the tenth and eleventh column of \autoref{tab:overall-results}.
 They give the \ams and the relative increase of the number of killed mutants when only using \Aampl.
 
-% example
 For instance, for \texttt{TypeNameTest} (first row, id \#1), using only \Aampl kills 599 mutants, which is exactly the same number of the original test class. 
 In this case, both the absolute and relative increase are obviously zero.
 On the contrary, for \texttt{WrongNamespacesTest} (id \#27), using only \Aampl is very effective, it enables \dspot to kill 249 mutants, which, compared to the 78 originally killed mutants, represents an improvement of 219\%. 
@@ -860,8 +767,7 @@ First, many assertions in the original test cases are already good and precisely
 Second, it might be due to the limited observability of the program under test (\ie, there is a limited number of points where assertions over the program state can be expressed).
 Third, it happens when one test case covers global properties across many methods: test \#28 \texttt{WrongMapperTest} specifies global properties, but is not well suited to observe fine grained behavior with additional assertions. 
 This latter case is common among the weak test classes of the lower part of \autoref{tab:overall-results}.
-%\autoref{tab:overall-results:low_pms}.
-\
+
 ~\\
 
 \begin{mdframed}
@@ -904,30 +810,26 @@ If the program contains a bug, the resulting amplified test methods would enforc
 This is an inherent threat, inherited from \cite{Xie2006}, which is unavoidable when no additional oracle is available, but only the current version of the program. 
 To that extent, the best usage of \dspot is to improve the test suite of a supposedly almost correct version of the program.
 
-% ---------------------------------------------------------------------------------------
-% CONCLUSION
-% ---------------------------------------------------------------------------------------
 \section{Conclusion}
 \label{sec:test-improvement:conclusion}
 
-To conclude, this chapter relates a first experimentation on \dspot:
+This first evaluation of \dspot gave 2 main results:
 
-This evaluation is two folds:
-
-1) amplified test methods has been proposed to be integrated in test suite from open-source projects. 
+1) 19 amplified test methods have been proposed to be integrated in test suites from open-source projects. 
 The developers of these projects reviewed amplified test methods, proposed in the form of pull requests.
-14 of them has been merged permanently in test suite of projects.
+14 of them have been merged permanently in the test suite of projects.
 It means that developers value amplified test methods produced by \dspot.
-It also means that everyday amplified test methods, obtained using \dspot, are increasing the developers' confidence in the correctness of their program;
+It also means that amplified test methods, obtained using \dspot, are increasing the developers' confidence in the correctness of their program;
 
-2) 40 test classes has been amplified to improve their \ms.
+2) 40 test classes have been amplified to improve their \ms.
 26 of them result with an actual improvement of the \ms.
-This shows that \dspot is able to improve existing test suite.
+This shows that \dspot is able to improve existing test suites.
 
-In this chapter, \ms has been used to amplified test methods.
-Mutants are small and artificial behavioral changes in the code.
-\dspot is able to improve the existing test methods' detection ability of small and artificial changes.
+In this chapter, the \ms has been used to amplified test methods.
+The \ms is a measure of the test suites quality to detect small behavioral changes, as mutants emulate them.
+However, the behavioral changes introduces by mutants may be different from those in real commits.
+That is to say, it does not show any evidence that \dspot would be able to detect behavioral change introduced by commits, which are typically larger, more complex and significant.
 
-In the next chapter, I investigate the capacity of \dspot to improve existing test methods in order to detect real behavioral changes.
+In the next chapter, I investigate the capacity of \dspot to improve existing test methods in order to detect real behavioral changes, introduced by commits.
 To do so, I confront \dspot to real modifications done by developers on their code base from \gh.
-In addition to this, the next chapter exposes an enhancement of \dspot's usage and places it in the continuous integration and regression testing scenarios.
+In addition to this, the next chapter exposes an enhancement of \dspot's usage and puts it in the continuous integration.
